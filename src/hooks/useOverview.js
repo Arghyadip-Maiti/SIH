@@ -130,6 +130,11 @@ export const useOverview = () => {
     [overviewData]
   );
 
+  const worksCompletedTrend = useMemo(
+    () => overviewData?.worksCompletedTrend || [],
+    [overviewData]
+  );
+
   const houseExpenditure = useMemo(
     () => overviewData?.houseExpenditure || {},
     [overviewData]
@@ -159,6 +164,7 @@ export const useOverview = () => {
     statePerformance,
     topDistricts,
     expenditureTrend,
+    worksCompletedTrend,
     houseExpenditure,
     highLevelAttention,
     aiInsights,

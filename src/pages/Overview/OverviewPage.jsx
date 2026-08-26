@@ -28,6 +28,7 @@ export const OverviewPage = () => {
     statePerformance,
     topDistricts,
     expenditureTrend,
+    worksCompletedTrend,
     houseExpenditure,
     highLevelAttention,
     aiInsights,
@@ -88,10 +89,14 @@ export const OverviewPage = () => {
       <StatePerformanceSection
         statePerformance={statePerformance}
         topDistricts={topDistricts}
+        filters={filters}
       />
 
       {/* 8. Expenditure & Works Trends */}
-      <ExpenditureTrendSection expenditureTrend={expenditureTrend} />
+      <ExpenditureTrendSection
+        expenditureTrend={expenditureTrend}
+        worksCompletedTrend={worksCompletedTrend}
+      />
 
       {/* 9. House-wise Expenditure Breakdown */}
       <HouseExpenditureSection houseExpenditure={houseExpenditure} />

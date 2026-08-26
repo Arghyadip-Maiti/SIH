@@ -18,36 +18,39 @@ export const HouseExpenditureSection = ({ houseExpenditure = {} }) => {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Half Donut Chart */}
         <div className="relative h-44 w-full sm:w-1/2 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="70%"
-                startAngle={180}
-                endAngle={0}
-                innerRadius={55}
-                outerRadius={75}
-                paddingAngle={3}
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={2} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(val, name, item) => [`₹${val.toLocaleString('en-IN')} Cr (${item.payload.percentage}%)`, name]}
-                contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center pointer-events-none">
-            <span className="text-lg font-extrabold text-slate-900 font-mono block">
+          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-center pointer-events-none z-0">
+            <span className="text-lg font-extrabold text-slate-900 font-mono block leading-tight">
               ₹{total.toLocaleString('en-IN')} Cr
             </span>
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
               Total
             </span>
+          </div>
+          <div className="relative z-10 w-full h-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="70%"
+                  startAngle={180}
+                  endAngle={0}
+                  innerRadius={55}
+                  outerRadius={75}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  wrapperStyle={{ zIndex: 50 }}
+                  formatter={(val, name, item) => [`₹${val.toLocaleString('en-IN')} Cr (${item.payload.percentage}%)`, name]}
+                  contentStyle={{ borderRadius: '8px', fontSize: '12px', zIndex: 50, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
