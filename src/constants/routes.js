@@ -3,6 +3,7 @@ export const ROUTES = {
   OVERVIEW: '/overview',
   PROJECTS: '/projects',
   PROJECT_DETAILS: '/projects/:projectId',
+  MP_DETAILS: '/mp/:mpId',
   AI_RISK: '/ai-risk',
   AI_RISK_DETAILS: '/ai-risk/:projectId',
   ALERTS: '/alerts',

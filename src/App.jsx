@@ -7,6 +7,7 @@ import { ROUTES } from './constants/routes';
 import OverviewPage from './pages/Overview/OverviewPage';
 import ProjectsPage from './pages/Projects/ProjectsPage';
 import ProjectDetailsPage from './pages/Projects/ProjectDetailsPage';
+import MPDetailsPage from './pages/Projects/MPDetailsPage';
 import AIRiskPage from './pages/AIRisk/AIRiskPage';
 import AIRiskDetailsPage from './pages/AIRisk/AIRiskDetailsPage';
 import AlertsPage from './pages/Alerts/AlertsPage';
@@ -23,6 +24,7 @@ export function App() {
             <Route path="overview" element={<OverviewPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="projects/:projectId" element={<ProjectDetailsPage />} />
+            <Route path="mp/:mpId" element={<MPDetailsPage />} />
             <Route path="ai-risk" element={<AIRiskPage />} />
             <Route path="ai-risk/:projectId" element={<AIRiskDetailsPage />} />
             <Route path="alerts" element={<AlertsPage />} />

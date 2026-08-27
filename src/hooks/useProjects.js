@@ -190,7 +190,7 @@ export const useProjects = (initialFilters = {}) => {
     return result;
   }, [projects, filters]);
 
-  // 2. Statistics derived from globalFilteredProjects (KPI Cards, Pie Charts, State Ranking, MP Overview)
+  // 2. Statistics derived from globalFilteredProjects (KPI Cards, Pie Charts, State Ranking) & Master Projects Dataset (MP Performance Overview)
   const statistics = useMemo(() => {
     return {
       kpis: calculateProjectKPIs(globalFilteredProjects),
@@ -198,9 +198,9 @@ export const useProjects = (initialFilters = {}) => {
       riskDistribution: calculateRiskDistribution(globalFilteredProjects),
       projectTypeDistribution: calculateProjectTypeDistribution(globalFilteredProjects),
       statePerformance: calculateStatePerformance(globalFilteredProjects),
-      mpPerformance: calculateMPPerformance(globalFilteredProjects),
+      mpPerformance: calculateMPPerformance(projects),
     };
-  }, [globalFilteredProjects]);
+  }, [globalFilteredProjects, projects]);
 
   // 3. Isolated Projects Master Directory Table Dataset (Independent of top filter bar, filtered ONLY by tableSearch)
   const tableFilteredProjects = useMemo(() => {

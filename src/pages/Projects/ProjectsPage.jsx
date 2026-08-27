@@ -109,15 +109,12 @@ export const ProjectsPage = () => {
         onTableSearchChange={handleTableSearchChange}
         onSelectProject={(proj) => {
           setSelectedProject(proj);
-          navigate(`/projects/${encodeURIComponent(proj.id)}`, { replace: false });
+          navigate(`/projects/${encodeURIComponent(proj.id)}`, { state: { from: '/projects' } });
         }}
       />
 
       {/* 7. Member of Parliament (MP) Performance Section */}
-      <MPPerformanceSection
-        mpPerformance={statistics.mpPerformance}
-        onFilterByMP={(mpName) => handleFilterChange('mp', mpName)}
-      />
+      <MPPerformanceSection mpPerformance={statistics.mpPerformance} />
 
       {/* 8. Selected Project Details View Modal */}
       {selectedProject && (
