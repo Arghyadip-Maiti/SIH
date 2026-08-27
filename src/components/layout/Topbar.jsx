@@ -15,7 +15,7 @@ export const Topbar = () => {
   const pageTitle = activeNav?.label || 'Dashboard';
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#040C24]/95 backdrop-blur-md border-b border-white/20 px-4 sm:px-6 flex items-center justify-between shadow-md">
+    <header className="sticky top-0 z-40 h-16 bg-[#040C24]/95 backdrop-blur-md border-b border-white/20 px-4 sm:px-6 flex items-center justify-between shadow-md">
       {/* Left: Mobile Toggle & Page Title */}
       <div className="flex items-center gap-3 sm:gap-4">
         <button

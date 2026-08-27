@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatCurrency } from '../../../utils/formatCurrency';
 
 export const FinancialOverviewSection = ({ kpis = {} }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
   const allocated = kpis.totalAllocated || 200000000000;
   const released = kpis.totalReleasedAmount || 183200000000;
   const sanctioned = kpis.totalSanctionedAmount || 171200000000;
@@ -24,14 +27,33 @@ export const FinancialOverviewSection = ({ kpis = {} }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
           {/* Recharts Donut */}
           <div className="relative h-56 flex items-center justify-center">
-            <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none text-center">
-              <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight">
-                {utilizationPct}%
-              </span>
-              <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
-                Utilized
-              </span>
+            {/* Center Text Overlay Layer (z-0) */}
+            <div className="absolute inset-0 z-0 flex flex-col items-center justify-center pointer-events-none text-center p-2">
+              {hoveredIndex !== null && pieData[hoveredIndex] ? (
+                <>
+                  <span className="text-lg font-extrabold text-slate-900 font-mono tracking-tight leading-none">
+                    {formatCurrency(pieData[hoveredIndex].value, true)}
+                  </span>
+                  <span
+                    className="text-[11px] font-bold truncate max-w-[120px] mt-1"
+                    style={{ color: pieData[hoveredIndex].color }}
+                  >
+                    {pieData[hoveredIndex].name}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-2xl font-extrabold text-slate-900 font-mono tracking-tight leading-none">
+                    {utilizationPct}%
+                  </span>
+                  <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mt-1">
+                    Utilized
+                  </span>
+                </>
+              )}
             </div>
+
+            {/* Recharts Pie SVG & Tooltip Container (z-10 with zIndex 100 Tooltip floating above center text) */}
             <div className="relative z-10 w-full h-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -43,15 +65,38 @@ export const FinancialOverviewSection = ({ kpis = {} }) => {
                     outerRadius={85}
                     paddingAngle={3}
                     dataKey="value"
+                    onMouseLeave={() => setHoveredIndex(null)}
                   >
                     {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={2} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.color}
+                        stroke="#FFFFFF"
+                        strokeWidth={2}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        style={{
+                          opacity: hoveredIndex === null || hoveredIndex === index ? 1 : 0.5,
+                          transition: 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out',
+                          transform: hoveredIndex === index ? 'scale(1.03)' : 'scale(1)',
+                          transformOrigin: 'center center',
+                          cursor: 'pointer',
+                        }}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
-                    wrapperStyle={{ zIndex: 50 }}
+                    wrapperStyle={{ zIndex: 100, pointerEvents: 'none' }}
                     formatter={(val) => [formatCurrency(val, true), 'Amount']}
-                    contentStyle={{ borderRadius: '8px', fontSize: '12px', zIndex: 50, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                    contentStyle={{
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                      border: '1px solid #CBD5E1',
+                      backgroundColor: '#FFFFFF',
+                      color: '#0F172A',
+                      padding: '8px 12px',
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -76,7 +121,15 @@ export const FinancialOverviewSection = ({ kpis = {} }) => {
               <span className="font-mono font-bold text-slate-900">{formatCurrency(sanctioned, true)}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-50/60 border border-emerald-100">
+            <div
+              onMouseEnter={() => setHoveredIndex(0)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
+                hoveredIndex === 0
+                  ? 'bg-emerald-100/70 border-emerald-300 shadow-2xs scale-[1.01]'
+                  : 'bg-emerald-50/60 border-emerald-100 hover:bg-emerald-100/50'
+              }`}
+            >
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
                 <span className="font-semibold text-slate-700">Expenditure</span>
@@ -84,7 +137,15 @@ export const FinancialOverviewSection = ({ kpis = {} }) => {
               <span className="font-mono font-bold text-emerald-800">{formatCurrency(expenditure, true)} ({utilizationPct}%)</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded-lg bg-amber-50/60 border border-amber-100">
+            <div
+              onMouseEnter={() => setHoveredIndex(1)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
+                hoveredIndex === 1
+                  ? 'bg-amber-100/70 border-amber-300 shadow-2xs scale-[1.01]'
+                  : 'bg-amber-50/60 border-amber-100 hover:bg-amber-100/50'
+              }`}
+            >
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                 <span className="font-semibold text-slate-700">Unspent</span>
@@ -92,7 +153,15 @@ export const FinancialOverviewSection = ({ kpis = {} }) => {
               <span className="font-mono font-bold text-amber-800">{formatCurrency(unspent, true)}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded-lg bg-rose-50/60 border border-rose-100">
+            <div
+              onMouseEnter={() => setHoveredIndex(2)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
+                hoveredIndex === 2
+                  ? 'bg-rose-100/70 border-rose-300 shadow-2xs scale-[1.01]'
+                  : 'bg-rose-50/60 border-rose-100 hover:bg-rose-100/50'
+              }`}
+            >
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
                 <span className="font-semibold text-slate-700">Unsanctioned</span>

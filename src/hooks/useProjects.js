@@ -8,10 +8,11 @@ import {
   calculateStatePerformance,
   calculateMPPerformance,
 } from '../utils/projectAnalytics';
-import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../services/api/locationService';
+import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP } from '../services/api/locationService';
 
 const DEFAULT_FILTERS = {
   financialYear: '2026-27',
+  house: 'All',
   state: '',
   district: '',
   constituency: '',
@@ -23,17 +24,17 @@ const DEFAULT_FILTERS = {
   riskLevel: '',
   costRange: '',
   progressRange: '',
-  search: '',
 };
 
 export const useProjects = (initialFilters = {}) => {
   const [projects, setProjects] = useState([]);
   const [filters, setFilters] = useState({ ...DEFAULT_FILTERS, ...initialFilters });
+  const [tableSearch, setTableSearch] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Pagination & Sorting State
+  // Pagination & Sorting State for Master Directory Table
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [sortConfig, setSortConfig] = useState({ sortBy: 'riskScore', sortOrder: 'desc' });
@@ -44,7 +45,7 @@ export const useProjects = (initialFilters = {}) => {
     setError(null);
     try {
       const res = await projectService.getProjects();
-      setProjects(res.data || []);
+      setProjects(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       setError(err.message || 'Failed to load project records');
     } finally {
@@ -71,7 +72,7 @@ export const useProjects = (initialFilters = {}) => {
     }
   }, []);
 
-  // Filter change handler with interdependency sync (State -> District -> MP)
+  // Filter change handler for Top Filter Bar (affects ONLY Upper Sections)
   const handleFilterChange = useCallback((key, value) => {
     setFilters((prev) => {
       const updated = { ...prev, [key]: value };
@@ -82,9 +83,6 @@ export const useProjects = (initialFilters = {}) => {
           const validDists = STATE_DISTRICT_MAP[value] || [];
           if (updated.district && !validDists.includes(updated.district)) {
             updated.district = '';
-          }
-          if (updated.mp && MP_LOCATION_MAP[updated.mp]?.state !== value) {
-            updated.mp = '';
           }
         }
       }
@@ -97,21 +95,19 @@ export const useProjects = (initialFilters = {}) => {
         }
       }
 
-      // MP changes
-      if (key === 'mp') {
-        if (value && MP_LOCATION_MAP[value]) {
-          updated.state = MP_LOCATION_MAP[value].state;
-          updated.district = MP_LOCATION_MAP[value].district;
-        }
-      }
-
       return updated;
     });
-    setCurrentPage(1); // Reset to page 1 on filter change
+  }, []);
+
+  // Isolated Table Search Handler (affects ONLY Projects Master Directory Table)
+  const handleTableSearchChange = useCallback((value) => {
+    setTableSearch(value);
+    setCurrentPage(1);
   }, []);
 
   const resetFilters = useCallback(() => {
     setFilters(DEFAULT_FILTERS);
+    setTableSearch('');
     setCurrentPage(1);
   }, []);
 
@@ -125,96 +121,115 @@ export const useProjects = (initialFilters = {}) => {
     setCurrentPage(1);
   }, []);
 
-  // 1. Single Source Filtered Dataset
-  const filteredProjects = useMemo(() => {
-    let result = [...projects];
+  // 1. Single Source Filtered Dataset FOR UPPER SECTIONS ONLY (Top Filter Bar)
+  const globalFilteredProjects = useMemo(() => {
+    let result = Array.isArray(projects) ? [...projects] : [];
 
     if (filters.state) {
-      result = result.filter((p) => p.state.toLowerCase() === filters.state.toLowerCase());
+      const s = filters.state.toLowerCase();
+      result = result.filter((p) => (p?.state || '').toLowerCase() === s);
     }
     if (filters.district) {
-      result = result.filter((p) => p.district.toLowerCase() === filters.district.toLowerCase());
+      const d = filters.district.toLowerCase();
+      result = result.filter((p) => (p?.district || '').toLowerCase() === d);
     }
     if (filters.constituency) {
+      const q = filters.constituency.toLowerCase();
       result = result.filter(
         (p) =>
-          p.constituencyName.toLowerCase().includes(filters.constituency.toLowerCase()) ||
-          p.constituencyId.toLowerCase().includes(filters.constituency.toLowerCase())
+          (p?.constituencyName || '').toLowerCase().includes(q) ||
+          (p?.constituencyId || '').toLowerCase().includes(q) ||
+          (p?.district || '').toLowerCase().includes(q)
       );
     }
     if (filters.mp) {
-      result = result.filter((p) => p.mpName.toLowerCase().includes(filters.mp.toLowerCase()));
+      const q = filters.mp.toLowerCase();
+      result = result.filter((p) =>
+        (p?.mpName || p?.mp || '').toLowerCase().includes(q)
+      );
+    }
+    if (filters.house && filters.house !== 'All') {
+      result = result.filter((p) => p?.house === filters.house);
     }
     if (filters.projectType) {
+      const q = filters.projectType.toLowerCase();
       result = result.filter((p) =>
-        p.projectType.toLowerCase().includes(filters.projectType.toLowerCase())
+        (p?.projectType || '').toLowerCase().includes(q)
       );
     }
     if (filters.agency) {
+      const q = filters.agency.toLowerCase();
       result = result.filter((p) =>
-        p.implementingAgency.toLowerCase().includes(filters.agency.toLowerCase())
+        (p?.implementingAgency || '').toLowerCase().includes(q)
       );
     }
     if (filters.contractor) {
+      const q = filters.contractor.toLowerCase();
       result = result.filter((p) =>
-        p.contractor.toLowerCase().includes(filters.contractor.toLowerCase())
+        (p?.contractor || '').toLowerCase().includes(q)
       );
     }
     if (filters.status) {
-      result = result.filter((p) => p.status === filters.status);
+      result = result.filter((p) => p?.status === filters.status);
     }
     if (filters.riskLevel) {
-      result = result.filter((p) => p.riskLevel === filters.riskLevel);
+      result = result.filter((p) => p?.riskLevel === filters.riskLevel);
     }
     if (filters.costRange) {
-      if (filters.costRange === '<50L') result = result.filter((p) => p.sanctionedAmount < 5000000);
-      else if (filters.costRange === '50L-1Cr') result = result.filter((p) => p.sanctionedAmount >= 5000000 && p.sanctionedAmount <= 10000000);
-      else if (filters.costRange === '>1Cr') result = result.filter((p) => p.sanctionedAmount > 10000000);
+      if (filters.costRange === '<50L') result = result.filter((p) => (p?.sanctionedAmount || 0) < 5000000);
+      else if (filters.costRange === '50L-1Cr') result = result.filter((p) => (p?.sanctionedAmount || 0) >= 5000000 && (p?.sanctionedAmount || 0) <= 10000000);
+      else if (filters.costRange === '>1Cr') result = result.filter((p) => (p?.sanctionedAmount || 0) > 10000000);
     }
     if (filters.progressRange) {
-      if (filters.progressRange === '0-30') result = result.filter((p) => p.progress <= 30);
-      else if (filters.progressRange === '30-80') result = result.filter((p) => p.progress > 30 && p.progress <= 80);
-      else if (filters.progressRange === '80-99') result = result.filter((p) => p.progress > 80 && p.progress < 100);
-      else if (filters.progressRange === '100') result = result.filter((p) => p.progress === 100);
-    }
-    if (filters.search) {
-      const q = filters.search.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.id.toLowerCase().includes(q) ||
-          p.state.toLowerCase().includes(q) ||
-          p.district.toLowerCase().includes(q) ||
-          p.constituencyName.toLowerCase().includes(q) ||
-          p.mpName.toLowerCase().includes(q) ||
-          p.implementingAgency.toLowerCase().includes(q) ||
-          p.contractor.toLowerCase().includes(q)
-      );
+      if (filters.progressRange === '0-30') result = result.filter((p) => (p?.progress || 0) <= 30);
+      else if (filters.progressRange === '30-80') result = result.filter((p) => (p?.progress || 0) > 30 && (p?.progress || 0) <= 80);
+      else if (filters.progressRange === '80-99') result = result.filter((p) => (p?.progress || 0) > 80 && (p?.progress || 0) < 100);
+      else if (filters.progressRange === '100') result = result.filter((p) => p?.progress === 100);
     }
 
     return result;
   }, [projects, filters]);
 
-  // 2. Single Source Statistics derived from filteredProjects
+  // 2. Statistics derived from globalFilteredProjects (KPI Cards, Pie Charts, State Ranking, MP Overview)
   const statistics = useMemo(() => {
     return {
-      kpis: calculateProjectKPIs(filteredProjects),
-      statusDistribution: calculateStatusDistribution(filteredProjects),
-      riskDistribution: calculateRiskDistribution(filteredProjects),
-      projectTypeDistribution: calculateProjectTypeDistribution(filteredProjects),
-      statePerformance: calculateStatePerformance(filteredProjects),
-      mpPerformance: calculateMPPerformance(filteredProjects),
+      kpis: calculateProjectKPIs(globalFilteredProjects),
+      statusDistribution: calculateStatusDistribution(globalFilteredProjects),
+      riskDistribution: calculateRiskDistribution(globalFilteredProjects),
+      projectTypeDistribution: calculateProjectTypeDistribution(globalFilteredProjects),
+      statePerformance: calculateStatePerformance(globalFilteredProjects),
+      mpPerformance: calculateMPPerformance(globalFilteredProjects),
     };
-  }, [filteredProjects]);
+  }, [globalFilteredProjects]);
 
-  // 3. Sorted filtered projects
+  // 3. Isolated Projects Master Directory Table Dataset (Independent of top filter bar, filtered ONLY by tableSearch)
+  const tableFilteredProjects = useMemo(() => {
+    let result = Array.isArray(projects) ? [...projects] : [];
+    if (tableSearch) {
+      const q = tableSearch.toLowerCase();
+      result = result.filter(
+        (p) =>
+          (p?.name || '').toLowerCase().includes(q) ||
+          (p?.id || '').toLowerCase().includes(q) ||
+          (p?.state || '').toLowerCase().includes(q) ||
+          (p?.district || '').toLowerCase().includes(q) ||
+          (p?.constituencyName || '').toLowerCase().includes(q) ||
+          (p?.mpName || p?.mp || '').toLowerCase().includes(q) ||
+          (p?.implementingAgency || '').toLowerCase().includes(q) ||
+          (p?.contractor || '').toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [projects, tableSearch]);
+
+  // 4. Sorted table projects
   const sortedFilteredProjects = useMemo(() => {
-    const sorted = [...filteredProjects];
+    const sorted = [...tableFilteredProjects];
     const { sortBy, sortOrder } = sortConfig;
 
     sorted.sort((a, b) => {
-      let valA = a[sortBy];
-      let valB = b[sortBy];
+      let valA = a?.[sortBy] ?? '';
+      let valB = b?.[sortBy] ?? '';
 
       if (typeof valA === 'string') valA = valA.toLowerCase();
       if (typeof valB === 'string') valB = valB.toLowerCase();
@@ -225,9 +240,9 @@ export const useProjects = (initialFilters = {}) => {
     });
 
     return sorted;
-  }, [filteredProjects, sortConfig]);
+  }, [tableFilteredProjects, sortConfig]);
 
-  // 4. Paginated projects slice
+  // 5. Paginated projects slice for Master Directory Table
   const paginatedProjects = useMemo(() => {
     const startIdx = (currentPage - 1) * pageSize;
     return sortedFilteredProjects.slice(startIdx, startIdx + pageSize);
@@ -237,7 +252,8 @@ export const useProjects = (initialFilters = {}) => {
 
   return {
     projects,
-    filteredProjects,
+    filteredProjects: globalFilteredProjects,
+    tableFilteredProjects,
     sortedFilteredProjects,
     paginatedProjects,
     selectedProject,
@@ -245,6 +261,7 @@ export const useProjects = (initialFilters = {}) => {
     loading,
     error,
     filters,
+    tableSearch,
     statistics,
     pagination: {
       currentPage,
@@ -257,6 +274,7 @@ export const useProjects = (initialFilters = {}) => {
     sortConfig,
     handleSort,
     handleFilterChange,
+    handleTableSearchChange,
     resetFilters,
     fetchProjectById,
     refetch: fetchProjects,

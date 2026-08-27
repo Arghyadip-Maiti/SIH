@@ -26,11 +26,13 @@ export const ProjectsPage = () => {
     loading,
     error,
     filters,
+    tableSearch,
     statistics,
     pagination,
     sortConfig,
     handleSort,
     handleFilterChange,
+    handleTableSearchChange,
     resetFilters,
     refetch,
   } = useProjects();
@@ -94,7 +96,6 @@ export const ProjectsPage = () => {
         <ProjectTypeAnalyticsSection projectTypeDistribution={statistics.projectTypeDistribution} />
         <StateDistrictPerformanceSection
           statePerformance={statistics.statePerformance}
-          onSelectState={(st) => handleFilterChange('state', st)}
         />
       </div>
 
@@ -103,7 +104,9 @@ export const ProjectsPage = () => {
         projects={paginatedProjects}
         pagination={pagination}
         sortConfig={sortConfig}
+        tableSearch={tableSearch}
         onSort={handleSort}
+        onTableSearchChange={handleTableSearchChange}
         onSelectProject={(proj) => {
           setSelectedProject(proj);
           navigate(`/projects/${encodeURIComponent(proj.id)}`, { replace: false });

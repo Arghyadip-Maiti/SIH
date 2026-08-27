@@ -24,8 +24,8 @@ export const DashboardLayout = () => {
         {/* Sticky Topbar */}
         <Topbar />
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        {/* Dynamic Page Content with Reduced Side Margins for Widescreen Layout */}
+        <main className="flex-1 p-3 sm:p-4 lg:p-5 max-w-[1800px] w-full mx-auto">
           <Outlet />
         </main>
       </div>

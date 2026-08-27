@@ -27,7 +27,7 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 bg-[#040C24] text-slate-200 border-r border-white/20 transition-all duration-300 select-none ${
+      className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-50 bg-[#040C24] text-slate-200 border-r border-white/20 transition-all duration-300 select-none ${
         sidebarCollapsed ? 'w-20' : 'w-64'
       }`}
     >

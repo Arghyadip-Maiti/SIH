@@ -1,3 +1,5 @@
+import { CONSTITUENCY_DETAILS_MAP } from '../data/locationMappings';
+
 /**
  * Single source of truth calculation utilities for Projects section.
  * ALL component statistics (KPIs, Charts, Tables, MP Performance, State Ranking)
@@ -41,13 +43,12 @@ export const getStatusBadgeClass = (status) => {
     case 'DELAYED':
       return { label: 'Delayed', bg: 'bg-rose-50 text-rose-700 border-rose-200', dot: 'bg-rose-500', hex: '#DC2626' };
     default:
-      return { label: status, bg: 'bg-slate-50 text-slate-700 border-slate-200', dot: 'bg-slate-500', hex: '#64748B' };
+      return { label: status || 'Unknown', bg: 'bg-slate-50 text-slate-700 border-slate-200', dot: 'bg-slate-500', hex: '#64748B' };
   }
 };
 
 export const calculateProjectKPIs = (projects = []) => {
-  const totalProjects = projects.length;
-  if (totalProjects === 0) {
+  if (!Array.isArray(projects) || projects.length === 0) {
     return {
       totalProjects: 0,
       totalSanctionedAmount: 0,
@@ -69,31 +70,32 @@ export const calculateProjectKPIs = (projects = []) => {
     };
   }
 
-  const totalSanctionedAmount = projects.reduce((sum, p) => sum + (p.sanctionedAmount || 0), 0);
-  const totalExpenditure = projects.reduce((sum, p) => sum + (p.expenditure || 0), 0);
+  const totalProjects = projects.length;
+  const totalSanctionedAmount = projects.reduce((sum, p) => sum + (p?.sanctionedAmount || 0), 0);
+  const totalExpenditure = projects.reduce((sum, p) => sum + (p?.expenditure || 0), 0);
   const unutilizedAmount = Math.max(0, totalSanctionedAmount - totalExpenditure);
   const utilizationPercentage = totalSanctionedAmount > 0
     ? Number(((totalExpenditure / totalSanctionedAmount) * 100).toFixed(1))
     : 0;
 
-  const completedCount = projects.filter((p) => p.status === 'COMPLETED').length;
-  const ongoingCount = projects.filter((p) => p.status === 'ONGOING').length;
-  const nearCompletionCount = projects.filter((p) => p.status === 'NEAR_COMPLETION').length;
-  const startingCount = projects.filter((p) => p.status === 'STARTING').length;
-  const delayedCount = projects.filter((p) => p.status === 'DELAYED').length;
+  const completedCount = projects.filter((p) => p?.status === 'COMPLETED').length;
+  const ongoingCount = projects.filter((p) => p?.status === 'ONGOING').length;
+  const nearCompletionCount = projects.filter((p) => p?.status === 'NEAR_COMPLETION').length;
+  const startingCount = projects.filter((p) => p?.status === 'STARTING').length;
+  const delayedCount = projects.filter((p) => p?.status === 'DELAYED').length;
 
-  const riskScoreSum = projects.reduce((sum, p) => sum + (p.riskScore || 0), 0);
+  const riskScoreSum = projects.reduce((sum, p) => sum + (p?.riskScore || 0), 0);
   const avgRiskScore = Math.round(riskScoreSum / totalProjects);
 
-  const criticalRiskCount = projects.filter((p) => p.riskScore >= 81).length;
-  const highRiskCount = projects.filter((p) => p.riskScore >= 61 && p.riskScore <= 80).length;
-  const mediumRiskCount = projects.filter((p) => p.riskScore >= 31 && p.riskScore <= 60).length;
-  const lowRiskCount = projects.filter((p) => p.riskScore <= 30).length;
+  const criticalRiskCount = projects.filter((p) => (p?.riskScore || 0) >= 81).length;
+  const highRiskCount = projects.filter((p) => (p?.riskScore || 0) >= 61 && (p?.riskScore || 0) <= 80).length;
+  const mediumRiskCount = projects.filter((p) => (p?.riskScore || 0) >= 31 && (p?.riskScore || 0) <= 60).length;
+  const lowRiskCount = projects.filter((p) => (p?.riskScore || 0) <= 30).length;
 
-  const mismatchCount = projects.filter((p) => p.paymentProgressMismatch).length;
-  const delayedItems = projects.filter((p) => p.daysDelayed > 0);
+  const mismatchCount = projects.filter((p) => Boolean(p?.paymentProgressMismatch)).length;
+  const delayedItems = projects.filter((p) => (p?.daysDelayed || 0) > 0);
   const avgDelayDays = delayedItems.length > 0
-    ? Math.round(delayedItems.reduce((sum, p) => sum + p.daysDelayed, 0) / delayedItems.length)
+    ? Math.round(delayedItems.reduce((sum, p) => sum + (p.daysDelayed || 0), 0) / delayedItems.length)
     : 0;
 
   return {
@@ -118,12 +120,13 @@ export const calculateProjectKPIs = (projects = []) => {
 };
 
 export const calculateStatusDistribution = (projects = []) => {
-  const total = projects.length || 1;
-  const completed = projects.filter((p) => p.status === 'COMPLETED').length;
-  const nearCompletion = projects.filter((p) => p.status === 'NEAR_COMPLETION').length;
-  const ongoing = projects.filter((p) => p.status === 'ONGOING').length;
-  const starting = projects.filter((p) => p.status === 'STARTING').length;
-  const delayed = projects.filter((p) => p.status === 'DELAYED').length;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const total = safeProjects.length || 1;
+  const completed = safeProjects.filter((p) => p?.status === 'COMPLETED').length;
+  const nearCompletion = safeProjects.filter((p) => p?.status === 'NEAR_COMPLETION').length;
+  const ongoing = safeProjects.filter((p) => p?.status === 'ONGOING').length;
+  const starting = safeProjects.filter((p) => p?.status === 'STARTING').length;
+  const delayed = safeProjects.filter((p) => p?.status === 'DELAYED').length;
 
   return [
     { name: 'Completed', key: 'COMPLETED', count: completed, percentage: Number(((completed / total) * 100).toFixed(1)), color: '#16A34A' },
@@ -135,11 +138,12 @@ export const calculateStatusDistribution = (projects = []) => {
 };
 
 export const calculateRiskDistribution = (projects = []) => {
-  const total = projects.length || 1;
-  const low = projects.filter((p) => p.riskScore <= 30).length;
-  const medium = projects.filter((p) => p.riskScore >= 31 && p.riskScore <= 60).length;
-  const high = projects.filter((p) => p.riskScore >= 61 && p.riskScore <= 80).length;
-  const critical = projects.filter((p) => p.riskScore >= 81).length;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const total = safeProjects.length || 1;
+  const low = safeProjects.filter((p) => (p?.riskScore || 0) <= 30).length;
+  const medium = safeProjects.filter((p) => (p?.riskScore || 0) >= 31 && (p?.riskScore || 0) <= 60).length;
+  const high = safeProjects.filter((p) => (p?.riskScore || 0) >= 61 && (p?.riskScore || 0) <= 80).length;
+  const critical = safeProjects.filter((p) => (p?.riskScore || 0) >= 81).length;
 
   return [
     { name: 'Low Risk (0-30)', key: 'LOW', count: low, percentage: Number(((low / total) * 100).toFixed(1)), color: '#10B981' },
@@ -150,8 +154,10 @@ export const calculateRiskDistribution = (projects = []) => {
 };
 
 export const calculateProjectTypeDistribution = (projects = []) => {
+  const safeProjects = Array.isArray(projects) ? projects : [];
   const typeMap = {};
-  projects.forEach((p) => {
+  safeProjects.forEach((p) => {
+    if (!p) return;
     const t = p.projectType || 'Others';
     if (!typeMap[t]) {
       typeMap[t] = { name: t, count: 0, expenditure: 0, sanctioned: 0 };
@@ -173,8 +179,10 @@ export const calculateProjectTypeDistribution = (projects = []) => {
 };
 
 export const calculateMPPerformance = (projects = []) => {
+  if (!Array.isArray(projects)) return [];
   const mpMap = {};
   projects.forEach((p) => {
+    if (!p) return;
     const mpName = p.mpName || p.mp || 'Member of Parliament';
     const key = p.mpId || mpName;
     if (!mpMap[key]) {
@@ -182,7 +190,7 @@ export const calculateMPPerformance = (projects = []) => {
         mpId: key,
         mpName: mpName,
         constituency: p.constituencyName || p.district || 'Constituency',
-        state: p.state,
+        state: p.state || 'State',
         house: p.house || 'Lok Sabha',
         totalProjects: 0,
         completedProjects: 0,
@@ -226,8 +234,10 @@ export const calculateMPPerformance = (projects = []) => {
 };
 
 export const calculateStatePerformance = (projects = []) => {
+  if (!Array.isArray(projects)) return [];
   const stateMap = {};
   projects.forEach((p) => {
+    if (!p) return;
     const st = p.state || 'State';
     if (!stateMap[st]) {
       stateMap[st] = {
