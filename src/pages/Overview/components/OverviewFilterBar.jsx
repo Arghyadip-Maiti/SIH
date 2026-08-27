@@ -1,5 +1,5 @@
 import { RotateCcw, X, Filter } from 'lucide-react';
-import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../../../data/locationMappings';
+import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../../../services/api/locationService';
 
 const STATES = [
   'Maharashtra',

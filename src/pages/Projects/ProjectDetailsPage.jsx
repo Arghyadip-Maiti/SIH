@@ -1,20 +1,41 @@
-import { useParams } from 'react-router-dom';
-import { PageHeader } from '../../components/common/PageHeader';
-import { Card } from '../../components/ui/Card';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useProjects } from '../../hooks/useProjects';
+import { LoadingState } from '../../components/ui/LoadingState';
+import { ErrorState } from '../../components/ui/ErrorState';
+import { ProjectDetailsView } from '../../components/projects/ProjectDetailsView';
 
 export const ProjectDetailsPage = () => {
   const { projectId } = useParams();
+  const navigate = useNavigate();
+  const { selectedProject, loading, error, fetchProjectById } = useProjects();
+
+  useEffect(() => {
+    if (projectId) {
+      const decodedId = decodeURIComponent(projectId);
+      fetchProjectById(decodedId);
+    }
+  }, [projectId, fetchProjectById]);
+
+  if (loading && !selectedProject) {
+    return <LoadingState message={`Loading details for Project ${projectId}...`} />;
+  }
+
+  if (error || !selectedProject) {
+    return (
+      <ErrorState
+        title="Project Not Found"
+        message={error || `Could not find project record for ID "${projectId}".`}
+        onRetry={() => navigate('/projects')}
+      />
+    );
+  }
 
   return (
-    <div>
-      <PageHeader
-        title={`Project Details: ${projectId || 'N/A'}`}
-        subtitle="Detailed breakdown of project progress, financial disbursements, geotagged evidence, and implementing agency information."
-      />
-      <Card className="p-8 text-center text-slate-500 border-dashed">
-        <p className="text-sm font-medium">Detailed project breakdown components for {projectId} will be loaded here in Phase 2.</p>
-      </Card>
-    </div>
+    <ProjectDetailsView
+      project={selectedProject}
+      onClose={() => navigate('/projects')}
+    />
   );
 };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { analyticsService } from '../services/api/analyticsService';
-import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../data/locationMappings';
+import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../services/api/locationService';
 
 const DEFAULT_FILTERS = {
   financialYear: '2026-27',
@@ -125,6 +125,11 @@ export const useOverview = () => {
     [overviewData]
   );
 
+  const constituencyPerformance = useMemo(
+    () => overviewData?.constituencyPerformance || [],
+    [overviewData]
+  );
+
   const expenditureTrend = useMemo(
     () => overviewData?.expenditureTrend || [],
     [overviewData]
@@ -163,6 +168,7 @@ export const useOverview = () => {
     sectorDistribution,
     statePerformance,
     topDistricts,
+    constituencyPerformance,
     expenditureTrend,
     worksCompletedTrend,
     houseExpenditure,

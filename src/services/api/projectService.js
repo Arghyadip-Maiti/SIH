@@ -1,70 +1,113 @@
 import axiosClient from './axiosClient';
 import { mockProjects } from '../../data/mockProjects';
+import { getRiskLevel } from '../../utils/projectAnalytics';
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+
+/**
+ * Data Normalization Layer:
+ * Normalizes API/Backend responses or mock data into a stable frontend project schema.
+ */
+export const normalizeProject = (p) => {
+  if (!p) return null;
+
+  const id = p.id || p.projectId || p.project_id || 'MP/UNKNOWN';
+  const name = p.name || p.projectName || p.project_name || 'Infrastructure Project';
+  const sanctioned = Number(p.sanctionedAmount || p.sanctioned_amount || p.amount_sanctioned || 0);
+  const expenditure = Number(p.expenditure || p.amount_spent || p.expenditure_amount || 0);
+  const estimatedCost = Number(p.estimatedCost || p.estimated_cost || sanctioned);
+  const unutilized = Math.max(0, sanctioned - expenditure);
+
+  const physicalProg = Number(p.physicalProgress || p.physical_progress || p.progress || 0);
+  const financialProg = sanctioned > 0 ? Number(((expenditure / sanctioned) * 100).toFixed(1)) : physicalProg;
+
+  const riskScore = Number(p.riskScore || p.risk_score || 0);
+  const riskLevel = p.riskLevel || getRiskLevel(riskScore);
+
+  return {
+    id,
+    projectId: id,
+    name,
+    projectName: name,
+    state: p.state || 'State',
+    district: p.district || 'District',
+    constituencyId: p.constituencyId || p.constituency_id || `PC-${(p.state || 'XX').substring(0, 2)}-01`,
+    constituencyName: p.constituencyName || p.constituency || p.district || 'Constituency',
+    mpId: p.mpId || p.mp_id || 'MP001',
+    mpName: p.mpName || p.mp || 'Member of Parliament',
+    mp: p.mpName || p.mp || 'Member of Parliament',
+    house: p.house || 'Lok Sabha',
+    financialYear: p.financialYear || p.financial_year || '2026-27',
+    projectType: p.projectType || p.project_type || 'Community Infrastructure',
+    implementingAgency: p.implementingAgency || p.implementing_agency || 'Public Works Department',
+    contractor: p.contractor || p.contractor_name || 'State Infrastructure Agency',
+    sanctionedAmount: sanctioned,
+    estimatedCost: estimatedCost,
+    expenditure: expenditure,
+    unutilizedAmount: unutilized,
+    progress: physicalProg,
+    physicalProgress: physicalProg,
+    financialProgress: financialProg,
+    status: p.status || 'ONGOING',
+    startDate: p.startDate || p.sanctionDate || p.start_date || '2024-01-01',
+    sanctionDate: p.sanctionDate || p.startDate || '2024-01-01',
+    expectedCompletion: p.expectedCompletion || p.expectedCompletionDate || '2026-12-31',
+    expectedCompletionDate: p.expectedCompletionDate || p.expectedCompletion || '2026-12-31',
+    actualCompletionDate: p.actualCompletionDate || null,
+    actualExpectedCompletion: p.actualExpectedCompletion || p.expectedCompletion || '2026-12-31',
+    daysDelayed: Number(p.daysDelayed || p.days_delayed || 0),
+    riskScore: riskScore,
+    riskLevel: riskLevel,
+    paymentProgressMismatch: Boolean(p.paymentProgressMismatch || financialProg - physicalProg > 20),
+    costOverrun: Boolean(p.costOverrun || estimatedCost > sanctioned),
+    duplicateRisk: Boolean(p.duplicateRisk || false),
+    suspicious: Boolean(p.suspicious || false),
+    lastUpdated: p.lastUpdated || '2026-08-27',
+    photos: Array.isArray(p.photos) && p.photos.length ? p.photos : [
+      'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80',
+    ],
+    description: p.description || `Sanctioned MPLADS work for ${name} in ${p.district || ''}, ${p.state || ''}.`,
+    latitude: Number(p.latitude || 20.5937),
+    longitude: Number(p.longitude || 78.9629),
+  };
+};
 
 export const projectService = {
   async getProjects(params = {}) {
     if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 200));
-      let results = [...mockProjects];
-      if (params.state) {
-        results = results.filter((p) => p.state.toLowerCase() === params.state.toLowerCase());
-      }
-      if (params.district) {
-        results = results.filter((p) => p.district.toLowerCase() === params.district.toLowerCase());
-      }
-      if (params.status) {
-        results = results.filter((p) => p.status === params.status);
-      }
-      if (params.search) {
-        const query = params.search.toLowerCase();
-        results = results.filter(
-          (p) =>
-            p.name.toLowerCase().includes(query) ||
-            p.id.toLowerCase().includes(query) ||
-            p.mp.toLowerCase().includes(query)
-        );
-      }
-      return { success: true, data: results, count: results.length };
+      await new Promise((res) => setTimeout(res, 120));
+      const normalizedList = mockProjects.map(normalizeProject);
+      return { success: true, data: normalizedList, count: normalizedList.length };
     }
-    return axiosClient.get('/projects', { params });
+
+    const response = await axiosClient.get('/projects', { params });
+    const rawList = response.data?.data || response.data || [];
+    const normalizedList = Array.isArray(rawList) ? rawList.map(normalizeProject) : [];
+    return { success: true, data: normalizedList, count: normalizedList.length };
   },
 
   async getProjectById(id) {
     if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 150));
-      const project = mockProjects.find((p) => p.id === id);
-      if (!project) throw new Error(`Project with ID ${id} not found`);
-      return { success: true, data: project };
+      await new Promise((res) => setTimeout(res, 100));
+      const found = mockProjects.find((p) => p.id === id || p.projectId === id);
+      if (!found) throw new Error(`Project with ID ${id} not found`);
+      return { success: true, data: normalizeProject(found) };
     }
-    return axiosClient.get(`/projects/${id}`);
+
+    const response = await axiosClient.get(`/projects/${id}`);
+    return { success: true, data: normalizeProject(response.data?.data || response.data) };
   },
 
   async getProjectsByMP(mpId) {
     if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 150));
-      const filtered = mockProjects.filter((p) => p.mpId === mpId);
+      await new Promise((res) => setTimeout(res, 100));
+      const filtered = mockProjects.filter((p) => p.mpId === mpId || p.mp === mpId).map(normalizeProject);
       return { success: true, data: filtered };
     }
-    return axiosClient.get(`/projects/mp/${mpId}`);
-  },
 
-  async getProjectsByState(state) {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 150));
-      const filtered = mockProjects.filter((p) => p.state.toLowerCase() === state.toLowerCase());
-      return { success: true, data: filtered };
-    }
-    return axiosClient.get(`/projects/state/${state}`);
-  },
-
-  async getProjectsByDistrict(district) {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 150));
-      const filtered = mockProjects.filter((p) => p.district.toLowerCase() === district.toLowerCase());
-      return { success: true, data: filtered };
-    }
-    return axiosClient.get(`/projects/district/${district}`);
+    const response = await axiosClient.get(`/projects/mp/${mpId}`);
+    const rawList = response.data?.data || response.data || [];
+    return { success: true, data: rawList.map(normalizeProject) };
   },
 };

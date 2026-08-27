@@ -27,6 +27,7 @@ export const OverviewPage = () => {
     sectorDistribution,
     statePerformance,
     topDistricts,
+    constituencyPerformance,
     expenditureTrend,
     worksCompletedTrend,
     houseExpenditure,
@@ -82,8 +83,8 @@ export const OverviewPage = () => {
         <SectorExpenditureSection sectorDistribution={sectorDistribution} />
       </div>
 
-      {/* 6. India Map & Geographic Distribution */}
-      <IndiaMapSection statePerformance={statePerformance} />
+      {/* 6. India Map & Geographic Distribution (Temporarily hidden per request, code preserved intact) */}
+      <IndiaMapSection filters={filters} />
 
       {/* 7. State & Regional Performance */}
       <StatePerformanceSection
