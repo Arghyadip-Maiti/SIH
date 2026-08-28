@@ -17,7 +17,7 @@ export const AgencyRiskOverviewSection = ({
           <Building2 className="w-4.5 h-4.5 text-blue-600 shrink-0" />
           <div>
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-              🏢 Implementing Agency Risk
+              Implementing Agency Risk
             </h3>
             <span className="text-[11px] font-medium text-slate-500 block">
               Baseline National Avg Delay: <strong className="font-semibold font-mono text-slate-700">31 days</strong>

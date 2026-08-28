@@ -80,7 +80,12 @@ export const AIRiskPage = () => {
       </div>
 
       {/* 6. State Risk Overview */}
-      <StateRiskOverviewSection data={stateRiskOverview} />
+      <StateRiskOverviewSection
+        data={stateRiskOverview}
+        selectedState={filters.state}
+        onStateSelect={(stName) => applyCrossFilter('state', stName)}
+        onResetState={() => handleFilterChange('state', 'All States')}
+      />
 
       {/* 7. Implementing Agency Risk & MP Risk Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

@@ -116,7 +116,7 @@ export const AIRiskDetailsPage = () => {
               </span>
               {p.isFlagged && (
                 <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
-                  ⚠ FLAGGED FOR INVESTIGATION
+                  FLAGGED FOR INVESTIGATION
                 </span>
               )}
             </div>
@@ -162,7 +162,7 @@ export const AIRiskDetailsPage = () => {
         </div>
       </Card>
 
-      {/* 2. Why is this project flagged? (Risk Score Breakdown) */}
+      {/* 2. Why is this project flagged? (Risk Score Breakdown & Clubbed AI Investigation Summary) */}
       <Card header={
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-blue-600" />
@@ -195,11 +195,64 @@ export const AIRiskDetailsPage = () => {
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-900 text-white rounded-xl text-xs font-semibold flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-blue-400 shrink-0" />
-            <span>
-              Primary AI Diagnostic Flag: <strong className="text-blue-300 uppercase">{p.primaryAnomaly} ANOMALY DETECTED</strong>. Multiple evidence models indicate statistical deviation from standard compliance parameters.
-            </span>
+          {/* AI Investigation Summary Clubbed Here */}
+          {p.investigationSummary && p.investigationSummary.length > 0 && (
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">
+                <ShieldAlert className="w-4 h-4 text-rose-600" />
+                <span>AI Investigation Findings</span>
+              </div>
+              {p.investigationSummary.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800">
+                  <span className="shrink-0 text-rose-600 font-bold">🔴</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
+
+      {/* 3. AI Predictive Analysis */}
+      <Card header={
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
+            AI Predictive Analysis
+          </h3>
+        </div>
+      }>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-center">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl">
+              <span className="text-[10px] font-extrabold text-rose-700 uppercase block">Delay Probability</span>
+              <span className="text-2xl font-black text-rose-900 font-mono">{pred.delayProbability || 78}%</span>
+            </div>
+            <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl">
+              <span className="text-[10px] font-extrabold text-amber-700 uppercase block">Cost Overrun Risk</span>
+              <span className="text-2xl font-black text-amber-900 font-mono">{pred.costOverrunProbability || 61}%</span>
+            </div>
+            <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
+              <span className="text-[10px] font-extrabold text-blue-700 uppercase block">Predicted Delay</span>
+              <span className="text-2xl font-black text-blue-900 font-mono">43–55 days</span>
+            </div>
+            <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-xl">
+              <span className="text-[10px] font-extrabold text-purple-700 uppercase block">Est. Final Cost</span>
+              <span className="text-2xl font-black text-purple-900 font-mono">₹{(pred.estimatedFinalCost / 100000).toFixed(1)}L</span>
+            </div>
+          </div>
+
+          <div className="p-4 bg-slate-900 text-white rounded-xl text-xs space-y-2">
+            <h4 className="font-extrabold text-blue-300 flex items-center gap-1.5">
+              <Bot className="w-4 h-4" />
+              <span>Why does AI predict this trajectory?</span>
+            </h4>
+            <ul className="list-disc list-inside space-y-1 text-slate-300 font-medium">
+              <li>Physical progress velocity has decelerated by 38% over the last two reporting cycles.</li>
+              <li>Financial claims exceed expected cost baseline for current completion stage.</li>
+              <li>Spatial GPS metadata indicates potential site deviation requiring verification.</li>
+              <li>Payment release rate leads physical execution velocity by &gt;20 percentage points.</li>
+            </ul>
           </div>
         </div>
       </Card>
@@ -209,7 +262,7 @@ export const AIRiskDetailsPage = () => {
         <div className="flex items-center gap-2">
           <IndianRupee className="w-5 h-5 text-emerald-600" />
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-            💰 Financial Anomaly & Expenditure Analysis
+            Financial Anomaly & Expenditure Analysis
           </h3>
         </div>
       }>
@@ -288,7 +341,7 @@ export const AIRiskDetailsPage = () => {
           <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl text-xs space-y-1">
             <h4 className="font-extrabold text-amber-900 flex items-center gap-1.5">
               <Bot className="w-4 h-4 text-amber-700" />
-              <span>🧠 AI Financial Explanation</span>
+              <span>AI Financial Explanation</span>
             </h4>
             <p className="text-amber-800 font-medium leading-relaxed">
               "{fin.explanation || 'Expenditure submitted for foundation and groundwork exceeds baseline costs by 35% compared to peer works in this district.'}"
@@ -303,7 +356,7 @@ export const AIRiskDetailsPage = () => {
           <div className="flex items-center gap-2">
             <Camera className="w-5 h-5 text-purple-600" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-              📸 Photo & Evidence Verification
+              Photo & Evidence Verification
             </h3>
           </div>
           <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
@@ -405,7 +458,7 @@ export const AIRiskDetailsPage = () => {
                 <p>Manipulation Probability: <strong>{photo.manipulationProbability}%</strong></p>
                 <p>Duplicate Similarity: <strong>94% match</strong></p>
                 <span className="inline-block mt-1 font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">
-                  ⚠ IMAGE REGULARITY REVIEW
+                  IMAGE REGULARITY REVIEW
                 </span>
               </div>
             </div>
@@ -420,7 +473,7 @@ export const AIRiskDetailsPage = () => {
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-amber-600" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-              ⏱️ Project Delay & Timeline Diagnostics
+              Project Delay & Timeline Diagnostics
             </h3>
           </div>
         }>
@@ -466,7 +519,7 @@ export const AIRiskDetailsPage = () => {
           <div className="flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-blue-600" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-              📊 Payment Released vs Physical Progress
+              Payment Released vs Physical Progress
             </h3>
           </div>
         }>
@@ -514,68 +567,7 @@ export const AIRiskDetailsPage = () => {
         </Card>
       </div>
 
-      {/* 13 & 14. AI Predictive Analysis */}
-      <Card header={
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-indigo-600" />
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-            🔮 AI Predictive Analysis
-          </h3>
-        </div>
-      }>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-center">
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl">
-              <span className="text-[10px] font-extrabold text-rose-700 uppercase block">Delay Probability</span>
-              <span className="text-2xl font-black text-rose-900 font-mono">{pred.delayProbability || 78}%</span>
-            </div>
-            <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl">
-              <span className="text-[10px] font-extrabold text-amber-700 uppercase block">Cost Overrun Risk</span>
-              <span className="text-2xl font-black text-amber-900 font-mono">{pred.costOverrunProbability || 61}%</span>
-            </div>
-            <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
-              <span className="text-[10px] font-extrabold text-blue-700 uppercase block">Predicted Delay</span>
-              <span className="text-2xl font-black text-blue-900 font-mono">43–55 days</span>
-            </div>
-            <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-xl">
-              <span className="text-[10px] font-extrabold text-purple-700 uppercase block">Est. Final Cost</span>
-              <span className="text-2xl font-black text-purple-900 font-mono">₹{(pred.estimatedFinalCost / 100000).toFixed(1)}L</span>
-            </div>
-          </div>
 
-          <div className="p-4 bg-slate-900 text-white rounded-xl text-xs space-y-2">
-            <h4 className="font-extrabold text-blue-300 flex items-center gap-1.5">
-              <Bot className="w-4 h-4" />
-              <span>🧠 Why does AI predict this trajectory?</span>
-            </h4>
-            <ul className="list-disc list-inside space-y-1 text-slate-300 font-medium">
-              <li>Physical progress velocity has decelerated by 38% over the last two reporting cycles.</li>
-              <li>Financial claims exceed expected cost baseline for current completion stage.</li>
-              <li>Spatial GPS metadata indicates potential site deviation requiring verification.</li>
-              <li>Payment release rate leads physical execution velocity by &gt;20 percentage points.</li>
-            </ul>
-          </div>
-        </div>
-      </Card>
-
-      {/* 15 & 16. AI Investigation Summary */}
-      <Card header={
-        <div className="flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5 text-rose-600" />
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-            🧠 AI INVESTIGATION SUMMARY
-          </h3>
-        </div>
-      }>
-        <div className="space-y-2">
-          {(p.investigationSummary || []).map((item, idx) => (
-            <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800">
-              <span className="shrink-0 text-rose-600 font-bold">🔴</span>
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
 
       {/* 17. Recommended Action & Flag for Investigation */}
       <Card className="p-6 border-2 border-amber-300 bg-amber-50/50 rounded-2xl">
@@ -584,7 +576,7 @@ export const AIRiskDetailsPage = () => {
             <div className="flex items-center gap-2 text-amber-900 font-extrabold">
               <AlertTriangle className="w-5 h-5 text-amber-600" />
               <h3 className="text-base tracking-tight uppercase">
-                ⚠ MANUAL VERIFICATION RECOMMENDED
+                MANUAL VERIFICATION RECOMMENDED
               </h3>
             </div>
             <p className="text-xs text-amber-800 font-medium max-w-xl">
