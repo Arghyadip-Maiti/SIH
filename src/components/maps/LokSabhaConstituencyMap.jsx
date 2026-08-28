@@ -258,3 +258,5 @@ export const LokSabhaConstituencyMap = ({
     </div>
   );
 };
+
+export default LokSabhaConstituencyMap;

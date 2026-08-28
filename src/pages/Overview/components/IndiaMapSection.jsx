@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Card } from '../../../components/ui/Card';
-import { LokSabhaConstituencyMap } from '../../../components/maps/LokSabhaConstituencyMap';
 import { ConstituencyDetailsPanel } from '../../../components/overview/ConstituencyDetailsPanel';
+import { LoadingState } from '../../../components/ui/LoadingState';
 import { MapPin } from 'lucide-react';
+
+const LokSabhaConstituencyMap = lazy(() => import('../../../components/maps/LokSabhaConstituencyMap'));
 
 export const IndiaMapSection = ({ filters = {} }) => {
   const [selectedConstituency, setSelectedConstituency] = useState(null);
@@ -28,13 +30,15 @@ export const IndiaMapSection = ({ filters = {} }) => {
       }
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* MAP SECTION (Left / Top) */}
+        {/* MAP SECTION Lazy Loaded */}
         <div className="lg:col-span-7">
-          <LokSabhaConstituencyMap
-            selectedConstituency={selectedConstituency}
-            onSelectConstituency={setSelectedConstituency}
-            filters={filters}
-          />
+          <Suspense fallback={<LoadingState message="Lazy loading 543 Parliamentary Constituency map..." />}>
+            <LokSabhaConstituencyMap
+              selectedConstituency={selectedConstituency}
+              onSelectConstituency={setSelectedConstituency}
+              filters={filters}
+            />
+          </Suspense>
         </div>
 
         {/* CONSTITUENCY DETAILS PANEL (Right / Stacked below on mobile) */}

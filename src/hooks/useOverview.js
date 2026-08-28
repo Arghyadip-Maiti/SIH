@@ -106,12 +106,12 @@ export const useOverview = () => {
   const kpis = useMemo(() => overviewData?.kpis || {}, [overviewData]);
 
   const statusDistribution = useMemo(
-    () => overviewData?.projectStatusDistribution || [],
+    () => overviewData?.projectStatusDistribution || overviewData?.statusDistribution || [],
     [overviewData]
   );
 
   const sectorDistribution = useMemo(
-    () => overviewData?.sectorExpenditure || [],
+    () => overviewData?.sectorExpenditure || overviewData?.sectorDistribution || [],
     [overviewData]
   );
 

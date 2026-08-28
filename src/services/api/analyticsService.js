@@ -1,78 +1,113 @@
 import axiosClient from './axiosClient';
 import { mockProjects } from '../../data/mockProjects';
-import { overviewService } from './overviewService';
-import { calculateProjectTypeDistribution, calculateStatePerformance } from '../../utils/projectAnalytics';
+import {
+  filterProjects,
+  calculateAnalyticsKPIs,
+  calculateExpenditureTrend,
+  calculateUtilizationTrend,
+  calculateImplementationTrend,
+  calculateStatusDistribution,
+  calculateRiskTrend,
+  calculateDelayAnalytics,
+  calculateCostAnalysis,
+  calculateProjectTypeDistribution,
+  calculateStateRankings,
+  calculateDistrictRankings,
+  calculateMPRankings,
+  calculateAgencyPerformance,
+  getAgencyComparisonData,
+  calculatePerformanceMatrix,
+  calculateYoYComparison,
+  generateAnalyticsInsights,
+} from '../../utils/analyticsEngine';
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA !== 'false';
+
+import { overviewService } from './overviewService';
 
 export const analyticsService = {
   async getOverviewAnalytics(filters = {}) {
     return overviewService.getOverviewAnalytics(filters);
   },
 
-  async getProjectAnalytics(filters = {}) {
+  async getFullAnalytics(filters = {}) {
     if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 100));
-      const sectors = calculateProjectTypeDistribution(mockProjects);
-      return { success: true, data: sectors };
+      await new Promise((res) => setTimeout(res, 50));
+      const filtered = filterProjects(mockProjects, filters);
+      const kpis = calculateAnalyticsKPIs(filtered);
+      const expenditureTrend = calculateExpenditureTrend(filtered, filters.granularity || 'Monthly', filters.metric || 'expenditure');
+      const utilizationTrend = calculateUtilizationTrend(filtered);
+      const implementationTrend = calculateImplementationTrend(filtered);
+      const statusDistribution = calculateStatusDistribution(filtered);
+      const riskTrend = calculateRiskTrend(filtered);
+      const delayAnalytics = calculateDelayAnalytics(filtered);
+      const costAnalysis = calculateCostAnalysis(filtered);
+      const sectorDistribution = calculateProjectTypeDistribution(filtered);
+      const stateRankings = calculateStateRankings(filtered);
+      const districtRankings = calculateDistrictRankings(filtered);
+      const mpRankings = calculateMPRankings(filtered);
+      const agencyPerformance = calculateAgencyPerformance(filtered);
+      const agencyComparison = getAgencyComparisonData(
+        agencyPerformance,
+        filters.agencyA || agencyPerformance[0]?.agency,
+        filters.agencyB || agencyPerformance[1]?.agency
+      );
+      const performanceMatrix = calculatePerformanceMatrix(filtered, filters.matrixEntity || 'State');
+      const yoyComparison = calculateYoYComparison(filtered);
+      const insights = generateAnalyticsInsights(filtered, kpis);
+
+      return {
+        success: true,
+        data: {
+          filteredProjects: filtered,
+          totalCount: filtered.length,
+          kpis,
+          expenditureTrend,
+          utilizationTrend,
+          implementationTrend,
+          statusDistribution,
+          riskTrend,
+          delayAnalytics,
+          costAnalysis,
+          sectorDistribution,
+          stateRankings,
+          districtRankings,
+          mpRankings,
+          agencyPerformance,
+          agencyComparison,
+          performanceMatrix,
+          yoyComparison,
+          insights,
+        },
+      };
     }
-    return axiosClient.get('/analytics/projects', { params: filters });
+
+    const response = await axiosClient.get('/analytics/dashboard', { params: filters });
+    return response.data;
+  },
+
+  async getProjectAnalytics(filters = {}) {
+    const res = await this.getFullAnalytics(filters);
+    return { success: true, data: res.data?.sectorDistribution || [] };
   },
 
   async getFinancialAnalytics(filters = {}) {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 100));
-      const totalExp = mockProjects.reduce((sum, p) => sum + (p.expenditure || 0), 0);
-      const monthly = [
-        { month: 'Apr', expenditureCr: Number(((totalExp / 10000000) * 0.08).toFixed(2)) },
-        { month: 'May', expenditureCr: Number(((totalExp / 10000000) * 0.12).toFixed(2)) },
-        { month: 'Jun', expenditureCr: Number(((totalExp / 10000000) * 0.15).toFixed(2)) },
-        { month: 'Jul', expenditureCr: Number(((totalExp / 10000000) * 0.18).toFixed(2)) },
-        { month: 'Aug', expenditureCr: Number(((totalExp / 10000000) * 0.22).toFixed(2)) },
-        { month: 'Sep', expenditureCr: Number(((totalExp / 10000000) * 0.25).toFixed(2)) },
-      ];
-      return { success: true, data: monthly };
-    }
-    return axiosClient.get('/analytics/financials', { params: filters });
+    const res = await this.getFullAnalytics(filters);
+    return { success: true, data: res.data?.expenditureTrend || [] };
   },
 
   async getStateAnalytics(filters = {}) {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 100));
-      const statePerf = calculateStatePerformance(mockProjects);
-      return { success: true, data: statePerf };
-    }
-    return axiosClient.get('/analytics/states', { params: filters });
+    const res = await this.getFullAnalytics(filters);
+    return { success: true, data: res.data?.stateRankings || [] };
   },
 
   async getDistrictAnalytics(state) {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 100));
-      let distProjects = mockProjects;
-      if (state) distProjects = distProjects.filter((p) => p.state.toLowerCase() === state.toLowerCase());
-      const distMap = {};
-      distProjects.forEach((p) => {
-        if (!distMap[p.district]) distMap[p.district] = { district: p.district, count: 0, expenditure: 0 };
-        distMap[p.district].count += 1;
-        distMap[p.district].expenditure += p.expenditure || 0;
-      });
-      return { success: true, data: Object.values(distMap) };
-    }
-    return axiosClient.get(`/analytics/districts`, { params: { state } });
+    const res = await this.getFullAnalytics({ state });
+    return { success: true, data: res.data?.districtRankings?.allDistricts || [] };
   },
 
-  async getAgencyAnalytics() {
-    if (USE_MOCK) {
-      await new Promise((res) => setTimeout(res, 100));
-      const agencyMap = {};
-      mockProjects.forEach((p) => {
-        const a = p.implementingAgency || 'PWD';
-        if (!agencyMap[a]) agencyMap[a] = { agency: a, totalWorks: 0, totalExpenditure: 0 };
-        agencyMap[a].totalWorks += 1;
-        agencyMap[a].totalExpenditure += p.expenditure || 0;
-      });
-      return { success: true, data: Object.values(agencyMap) };
-    }
-    return axiosClient.get('/analytics/agencies');
+  async getAgencyAnalytics(filters = {}) {
+    const res = await this.getFullAnalytics(filters);
+    return { success: true, data: res.data?.agencyPerformance || [] };
   },
 };

@@ -77,7 +77,7 @@ export const ProjectStatusSection = ({
                 <Tooltip
                   wrapperStyle={{ zIndex: 100, pointerEvents: 'none' }}
                   formatter={(val, name) => [
-                    `${val.toLocaleString('en-IN')} works`,
+                    `${(val || 0).toLocaleString('en-IN')} works`,
                     name,
                   ]}
                   contentStyle={{

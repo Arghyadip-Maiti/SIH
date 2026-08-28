@@ -7,7 +7,7 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
   const data = sectorDistribution;
 
   const totalExpenditureCr = data.reduce(
-    (sum, item) => sum + (Number(item.amountCr) || 0),
+    (sum, item) => sum + (Number(item.amountCr || item.expenditureCr) || 0),
     0
   );
 
@@ -21,7 +21,7 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
             {hoveredIndex !== null && data[hoveredIndex] ? (
               <>
                 <span className="text-xl font-extrabold text-slate-900 font-mono leading-none">
-                  ₹{data[hoveredIndex].amountCr} Cr
+                  ₹{data[hoveredIndex].amountCr || data[hoveredIndex].expenditureCr} Cr
                 </span>
                 <span
                   className="text-[11px] font-bold truncate max-w-[120px] mt-1"
@@ -78,7 +78,7 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
                 </Pie>
                 <Tooltip
                   wrapperStyle={{ zIndex: 100, pointerEvents: 'none' }}
-                  formatter={(val, name, item) => [`${val}% (₹${item.payload.amountCr} Cr)`, 'Share']}
+                  formatter={(val, name, item) => [`${val}% (₹${item.payload.amountCr || item.payload.expenditureCr} Cr)`, 'Share']}
                   contentStyle={{
                     borderRadius: '8px',
                     fontSize: '12px',
@@ -114,7 +114,7 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-mono font-semibold text-slate-500">{item.percentage}%</span>
-                <span className="font-mono font-bold text-slate-900">₹{item.amountCr} Cr</span>
+                <span className="font-mono font-bold text-slate-900">₹{item.amountCr || item.expenditureCr} Cr</span>
               </div>
             </div>
           ))}
