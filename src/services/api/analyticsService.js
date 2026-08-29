@@ -19,6 +19,19 @@ import {
   calculatePerformanceMatrix,
   calculateYoYComparison,
   generateAnalyticsInsights,
+  calculateFutureOutlook,
+  calculateCompletionForecast,
+  calculateBottleneckAnalysis,
+  calculateFinancialOutlook,
+  calculateCostPressureAnalysis,
+  calculateGeographicAnalytics,
+  calculateStatePerformanceOutlook,
+  calculateMpPerformanceOutlook,
+  calculateAgencyPerformanceOutlook,
+  calculatePatternDiscovery,
+  calculateFutureHotspots,
+  calculateRecommendations,
+  calculateWhatIfSimulation,
 } from '../../utils/analyticsEngine';
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA !== 'false';
@@ -56,6 +69,21 @@ export const analyticsService = {
       const yoyComparison = calculateYoYComparison(filtered);
       const insights = generateAnalyticsInsights(filtered, kpis);
 
+      // Strategic Planning & Forecast Calculations
+      const futureOutlook = calculateFutureOutlook(filtered);
+      const completionForecast = calculateCompletionForecast(filtered);
+      const bottleneckAnalysis = calculateBottleneckAnalysis(filtered);
+      const financialOutlook = calculateFinancialOutlook(filtered);
+      const costPressureAnalysis = calculateCostPressureAnalysis(filtered);
+      const geographicAnalytics = calculateGeographicAnalytics(filtered, filters.mapMetric || 'utilization');
+      const stateOutlook = calculateStatePerformanceOutlook(filtered);
+      const mpOutlook = calculateMpPerformanceOutlook(filtered);
+      const agencyOutlook = calculateAgencyPerformanceOutlook(filtered);
+      const patternDiscovery = calculatePatternDiscovery(filtered);
+      const futureHotspots = calculateFutureHotspots(filtered);
+      const recommendations = calculateRecommendations(filtered);
+      const whatIfSimulation = calculateWhatIfSimulation(filtered, filters.scenarioParams || {});
+
       return {
         success: true,
         data: {
@@ -78,6 +106,19 @@ export const analyticsService = {
           performanceMatrix,
           yoyComparison,
           insights,
+          futureOutlook,
+          completionForecast,
+          bottleneckAnalysis,
+          financialOutlook,
+          costPressureAnalysis,
+          geographicAnalytics,
+          stateOutlook,
+          mpOutlook,
+          agencyOutlook,
+          patternDiscovery,
+          futureHotspots,
+          recommendations,
+          whatIfSimulation,
         },
       };
     }
@@ -109,5 +150,14 @@ export const analyticsService = {
   async getAgencyAnalytics(filters = {}) {
     const res = await this.getFullAnalytics(filters);
     return { success: true, data: res.data?.agencyPerformance || [] };
+  },
+
+  async simulateScenario(filters = {}, scenarioParams = {}) {
+    if (USE_MOCK) {
+      const filtered = filterProjects(mockProjects, filters);
+      return { success: true, data: calculateWhatIfSimulation(filtered, scenarioParams) };
+    }
+    const response = await axiosClient.post('/analytics/simulate', { filters, scenarioParams });
+    return response.data;
   },
 };

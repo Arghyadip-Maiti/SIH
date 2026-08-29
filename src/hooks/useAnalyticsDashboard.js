@@ -10,7 +10,11 @@ export const useAnalyticsDashboard = () => {
   const [agencyA, setAgencyA] = useState('');
   const [agencyB, setAgencyB] = useState('');
   const [matrixEntity, setMatrixEntity] = useState('State');
-  
+  const [scenarioParams, setScenarioParams] = useState({
+    monitoringIncrease: 10,
+    expenditureEfficiency: 5,
+  });
+
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -30,6 +34,7 @@ export const useAnalyticsDashboard = () => {
         agencyA,
         agencyB,
         matrixEntity,
+        scenarioParams,
       };
 
       const res = await analyticsService.getFullAnalytics(activeParams);
@@ -52,7 +57,7 @@ export const useAnalyticsDashboard = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [filters, granularity, expenditureMetric, agencyA, agencyB, matrixEntity]);
+  }, [filters, granularity, expenditureMetric, agencyA, agencyB, matrixEntity, scenarioParams]);
 
   useEffect(() => {
     fetchAnalytics();
@@ -112,6 +117,7 @@ export const useAnalyticsDashboard = () => {
     setGranularity('Monthly');
     setExpenditureMetric('expenditure');
     setMatrixEntity('State');
+    setScenarioParams({ monitoringIncrease: 10, expenditureEfficiency: 5 });
   };
 
   const exportCSV = () => {
@@ -151,6 +157,7 @@ export const useAnalyticsDashboard = () => {
     agencyA,
     agencyB,
     matrixEntity,
+    scenarioParams,
     analyticsData,
     loading,
     refreshing,
@@ -161,6 +168,7 @@ export const useAnalyticsDashboard = () => {
     setAgencyA,
     setAgencyB,
     setMatrixEntity,
+    setScenarioParams,
     handleFilterChange,
     applyCrossFilter,
     resetFilters,
