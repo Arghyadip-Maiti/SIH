@@ -1,6 +1,7 @@
 import { X, Filter } from 'lucide-react';
 import { CustomSelect } from '../../../components/ui/CustomSelect';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../../../services/api/locationService';
+import { useApp } from '../../../context/AppContext';
 
 const STATES = [
   'Maharashtra',
@@ -33,6 +34,9 @@ export const OverviewFilterBar = ({
   onFilterChange,
   onReset,
 }) => {
+  const { dashboardPreferences } = useApp();
+  const defaultFY = dashboardPreferences?.financialYear || '2026-27';
+
   // Compute dynamic options based on active interdependent selections
   const availableDistricts = filters.state
     ? (STATE_DISTRICT_MAP[filters.state] || [])
@@ -48,10 +52,17 @@ export const OverviewFilterBar = ({
 
   // Active non-default filter keys for tags display
   const activeTags = Object.entries(filters).filter(([key, val]) => {
-    if (key === 'riskLevel' || key === 'agency') return false;
-    if (key === 'financialYear') return val !== '2026-27';
-    if (key === 'house') return val !== 'All';
-    return Boolean(val);
+    if (!val) return false;
+    if (key === 'financialYear') return val !== defaultFY && val !== '2026-27';
+    if (key === 'house') return val !== 'All' && val !== 'All Houses';
+    if (key === 'state') return val !== '' && val !== 'All States' && val !== 'All';
+    if (key === 'district') return val !== '' && val !== 'All Districts' && val !== 'All';
+    if (key === 'mp') return val !== '' && val !== 'All MPs' && val !== 'All';
+    if (key === 'projectType') return val !== '' && val !== 'All Sectors' && val !== 'All Types' && val !== 'All';
+    if (key === 'status') return val !== '' && val !== 'All Statuses' && val !== 'All';
+    if (key === 'riskLevel') return val !== '' && val !== 'All Risk Levels' && val !== 'All';
+    if (key === 'agency') return val !== '' && val !== 'All Agencies' && val !== 'All';
+    return true;
   });
 
   return (

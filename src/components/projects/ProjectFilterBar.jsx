@@ -1,18 +1,42 @@
 import { X, Filter } from 'lucide-react';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP } from '../../services/api/locationService';
 import { CustomSelect } from '../ui/CustomSelect';
+import { useApp } from '../../context/AppContext';
 
 export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
+  const { dashboardPreferences } = useApp();
+  const defaultFY = dashboardPreferences?.financialYear || '2026-27';
+  const defaultView = dashboardPreferences?.projectView || 'All Projects';
+
+  let defaultStatus = '';
+  let defaultRisk = '';
+  if (defaultView === 'Completed') defaultStatus = 'Completed';
+  else if (defaultView === 'Ongoing') defaultStatus = 'Ongoing';
+  else if (defaultView === 'Delayed') defaultStatus = 'Delayed';
+  else if (defaultView === 'High Risk') defaultRisk = 'High';
+
   const availableDistricts = filters.state
     ? (STATE_DISTRICT_MAP[filters.state] || [])
     : Object.keys(DISTRICT_STATE_MAP);
 
   // Active non-default filter keys for tags display
   const activeTags = Object.entries(filters).filter(([key, val]) => {
-    if (key === 'search') return false;
-    if (key === 'financialYear') return val !== '2026-27';
-    if (key === 'house') return val !== 'All';
-    return Boolean(val);
+    if (!val) return false;
+    if (key === 'search' || key === 'tableSearch') return false;
+    if (key === 'financialYear') return val !== defaultFY && val !== '2026-27';
+    if (key === 'house') return val !== 'All' && val !== 'All Houses';
+    if (key === 'status') return val !== defaultStatus && val !== '' && val !== 'All Statuses' && val !== 'All';
+    if (key === 'riskLevel') return val !== defaultRisk && val !== '' && val !== 'All Risk Levels' && val !== 'All';
+    if (key === 'state') return val !== '' && val !== 'All States' && val !== 'All';
+    if (key === 'district') return val !== '' && val !== 'All Districts' && val !== 'All';
+    if (key === 'mp') return val !== '' && val !== 'All MPs' && val !== 'All';
+    if (key === 'constituency') return val !== '';
+    if (key === 'projectType') return val !== '' && val !== 'All Sectors' && val !== 'All Types' && val !== 'All';
+    if (key === 'agency') return val !== '' && val !== 'All Agencies' && val !== 'All';
+    if (key === 'contractor') return val !== '';
+    if (key === 'costRange') return val !== '';
+    if (key === 'progressRange') return val !== '';
+    return true;
   });
 
   return (

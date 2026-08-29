@@ -1,8 +1,7 @@
 import { useAnalyticsDashboard } from '../../hooks/useAnalyticsDashboard';
+import { AnalyticsHeader } from '../../components/analytics/AnalyticsHeader';
 import { AnalyticsFilterBar } from '../../components/analytics/AnalyticsFilterBar';
 import { FutureOutlookHero } from '../../components/analytics/FutureOutlookHero';
-import { AiInsightsSection } from '../../components/analytics/AiInsightsSection';
-import { InteractiveTrendVisualizer } from '../../components/analytics/InteractiveTrendVisualizer';
 import { ProjectCompletionForecast } from '../../components/analytics/ProjectCompletionForecast';
 import { DelayBottleneckAnalysis } from '../../components/analytics/DelayBottleneckAnalysis';
 import { FinancialOutlookSection } from '../../components/analytics/FinancialOutlookSection';
@@ -15,7 +14,7 @@ import { PatternDiscoverySection } from '../../components/analytics/PatternDisco
 import { FutureHotspotsSection } from '../../components/analytics/FutureHotspotsSection';
 import { DecisionRecommendationsSection } from '../../components/analytics/DecisionRecommendationsSection';
 import { WhatIfScenarioSimulator } from '../../components/analytics/WhatIfScenarioSimulator';
-import { AlertCircle, RefreshCw, BarChart2, Filter } from 'lucide-react';
+import { AlertCircle, RefreshCw, Filter } from 'lucide-react';
 
 export const AnalyticsPage = () => {
   const {
@@ -24,7 +23,9 @@ export const AnalyticsPage = () => {
     scenarioParams,
     analyticsData,
     loading,
+    refreshing,
     error,
+    lastUpdated,
     setGranularity,
     setScenarioParams,
     handleFilterChange,
@@ -52,26 +53,12 @@ export const AnalyticsPage = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      {/* 5. PAGE HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-100 inline-flex items-center gap-1.5">
-              <BarChart2 className="w-3.5 h-3.5" />
-              Strategic Planning Center
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            Analytics & Trends
-          </h1>
-          <h2 className="text-sm font-extrabold text-blue-700 mt-1">
-            MPLADS Decision Intelligence
-          </h2>
-          <p className="text-xs font-medium text-slate-500 mt-1 max-w-3xl leading-relaxed">
-            Analyze historical patterns, understand current trends, forecast future outcomes and identify areas requiring administrative attention.
-          </p>
-        </div>
-      </div>
+      {/* PAGE HEADER */}
+      <AnalyticsHeader
+        lastUpdated={lastUpdated}
+        refreshing={refreshing}
+        onRefresh={refreshData}
+      />
 
       {/* 4. GLOBAL FILTERS */}
       <AnalyticsFilterBar
@@ -112,16 +99,7 @@ export const AnalyticsPage = () => {
           {/* 6. 🔮 FUTURE OUTLOOK HERO */}
           <FutureOutlookHero data={analyticsData?.futureOutlook} />
 
-          {/* 7. 🧠 AI-GENERATED INSIGHTS */}
-          <AiInsightsSection insights={analyticsData?.insights} kpis={analyticsData?.kpis} />
-
           {/* STEP 2: WHY IS IT HAPPENING? */}
-          {/* 8. 📈 TREND ANALYSIS */}
-          <InteractiveTrendVisualizer
-            analyticsData={analyticsData}
-            granularity={granularity}
-            onGranularityChange={setGranularity}
-          />
 
           {/* 9. 🏗️ PROJECT COMPLETION FORECAST */}
           <ProjectCompletionForecast data={analyticsData?.completionForecast} />

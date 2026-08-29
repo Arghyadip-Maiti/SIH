@@ -15,7 +15,6 @@ export const FutureOutlookHero = ({ data }) => {
     utilization: { label: 'Fund Utilization', unit: '%', color: '#16A34A', key: 'utilization' },
     completion: { label: 'Project Completion Rate', unit: '%', color: '#8B5CF6', key: 'completion' },
     delayDays: { label: 'Average Delay', unit: 'Days', color: '#EF4444', key: 'delayDays' },
-    avgCost: { label: 'Average Cost per Work', unit: '₹ Lakhs', color: '#F59E0B', key: 'avgCost' },
   };
 
   const activeConfig = metricConfigs[selectedMetric];
@@ -38,27 +37,18 @@ export const FutureOutlookHero = ({ data }) => {
       {/* Header Bar */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              Strategic Intelligence Hero
-            </span>
-          </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
             MPLADS Future Outlook
           </h2>
-          <p className="text-sm text-slate-300 mt-1 max-w-2xl">
-            Seamless predictive transition from actual recorded data to AI-driven short-term fiscal and implementation forecasts.
-          </p>
         </div>
 
         {/* Metric Switcher Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/60">
+        <div className="flex flex-nowrap items-center gap-1.5 bg-slate-800/80 p-1.5 rounded-2xl border border-slate-700/60 overflow-x-auto max-w-full shrink-0">
           {Object.entries(metricConfigs).map(([key, cfg]) => (
             <button
               key={key}
               onClick={() => setSelectedMetric(key)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap shrink-0 ${
                 selectedMetric === key
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
@@ -106,7 +96,7 @@ export const FutureOutlookHero = ({ data }) => {
           <div>
             <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-300 uppercase tracking-wider">
               <TrendingUp className="w-3.5 h-3.5 text-indigo-400" />
-              Forecast Horizon (Q+3)
+              Forecast Horizon (Mar)
             </div>
             <div className="text-2xl font-black text-indigo-200 mt-1">
               {currentMetricObj.forecast} <span className="text-xs font-semibold text-indigo-300/80">{currentMetricObj.unit}</span>
@@ -123,14 +113,14 @@ export const FutureOutlookHero = ({ data }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-300">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> Actual Data
+              <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> Recorded Data
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-indigo-400 border border-dashed border-indigo-200 inline-block" /> Forecast Path
             </span>
           </div>
           <div className="text-xs text-slate-400 italic">
-            Dashed line demarcation represents current transition point
+            Dashed line demarcation represents present transition point (NOW)
           </div>
         </div>
 
@@ -148,7 +138,7 @@ export const FutureOutlookHero = ({ data }) => {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
-              <XAxis dataKey="label" stroke="#94A3B8" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="period" stroke="#94A3B8" tick={{ fontSize: 11 }} />
               <YAxis stroke="#94A3B8" tick={{ fontSize: 11 }} />
               <Tooltip
                 content={({ active, payload }) => {
@@ -157,7 +147,7 @@ export const FutureOutlookHero = ({ data }) => {
                     const val = dataPoint.actual !== null ? dataPoint.actual : dataPoint.forecast;
                     return (
                       <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl shadow-xl text-xs">
-                        <div className="font-bold text-white mb-1">{dataPoint.label} ({dataPoint.type})</div>
+                        <div className="font-bold text-white mb-1">{dataPoint.label}</div>
                         <div className="text-slate-300">
                           {activeConfig.label}: <span className="font-extrabold text-blue-400">{val} {activeConfig.unit}</span>
                         </div>
@@ -167,7 +157,7 @@ export const FutureOutlookHero = ({ data }) => {
                   return null;
                 }}
               />
-              <ReferenceLine x="Current Q4" stroke="#F59E0B" strokeDasharray="4 4" label={{ value: 'NOW', fill: '#F59E0B', fontSize: 10, fontWeight: 'bold', position: 'top' }} />
+              <ReferenceLine x="Nov (Current)" stroke="#F59E0B" strokeDasharray="4 4" label={{ value: 'NOW', fill: '#F59E0B', fontSize: 10, fontWeight: 'bold', position: 'top' }} />
               <Area type="monotone" dataKey="actual" stroke={activeConfig.color} strokeWidth={3} fillOpacity={1} fill="url(#actualGrad)" />
               <Area type="monotone" dataKey="forecast" stroke="#818CF8" strokeWidth={3} strokeDasharray="5 5" fillOpacity={1} fill="url(#forecastGrad)" />
             </AreaChart>

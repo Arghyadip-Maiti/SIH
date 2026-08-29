@@ -1,44 +1,54 @@
-import { useState, useMemo } from 'react';
-import { Filter, ChevronDown, Sparkles } from 'lucide-react';
+import { useMemo } from 'react';
+import { X, Filter } from 'lucide-react';
+import { CustomSelect } from '../ui/CustomSelect';
 import { STATE_DISTRICT_MAP, MP_LOCATION_MAP } from '../../data/locationMappings';
+import { useApp } from '../../context/AppContext';
 
-const FY_OPTIONS = ['2026-27', '2025-26', '2024-25', '2023-24', 'All'];
-const HOUSE_OPTIONS = ['All', 'Lok Sabha', 'Rajya Sabha'];
-const PROJECT_TYPES = [
-  'All Types',
+const FY_OPTIONS = [
+  { value: '2026-27', label: '2026–27' },
+  { value: '2025-26', label: '2025–26' },
+  { value: '2024-25', label: '2024–25' },
+  { value: '2023-24', label: '2023–24' },
+  { value: 'All', label: 'All Years' },
+];
+
+const HOUSE_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Lok Sabha', label: 'Lok Sabha' },
+  { value: 'Rajya Sabha', label: 'Rajya Sabha' },
+];
+
+const SECTORS = [
+  'Education & IT',
   'Roads & Bridges',
-  'Education',
-  'Water Supply & Sanitation',
-  'Health & Family Welfare',
+  'Healthcare Infrastructure',
+  'Drinking Water Supply',
+  'Sanitation & Solid Waste',
+  'Renewable Energy',
   'Community Infrastructure',
-  'Irrigation & Flood Control',
-  'Electricity & Solar',
 ];
-const AGENCIES = [
-  'All Agencies',
-  'Public Works Department (PWD)',
-  'District Rural Development Agency (DRDA)',
-  'Central Public Works Department (CPWD)',
-  'Irrigation & Water Resources Dept',
-  'Municipal Corporation Infrastructure Wing',
-];
-const STATUSES = ['All Statuses', 'COMPLETED', 'NEAR_COMPLETION', 'ONGOING', 'STARTING', 'DELAYED'];
-const RISK_LEVELS = ['All Risk Levels', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 
-export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCount = 0 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset }) => {
+  const { dashboardPreferences } = useApp();
+  const defaultFY = dashboardPreferences?.financialYear || '2026-27';
 
   // Dynamic State options list
-  const stateOptions = useMemo(() => ['All States', ...Object.keys(STATE_DISTRICT_MAP).sort()], []);
+  const stateOptions = useMemo(
+    () => [{ value: '', label: 'All States' }, ...Object.keys(STATE_DISTRICT_MAP).sort().map((st) => ({ value: st, label: st }))],
+    []
+  );
 
   // Dynamic District options list based on active state
   const districtOptions = useMemo(() => {
     if (!filters.state || filters.state === 'All States' || filters.state === 'All') {
       const allDists = new Set();
       Object.values(STATE_DISTRICT_MAP).forEach((arr) => arr.forEach((d) => allDists.add(d)));
-      return ['All Districts', ...Array.from(allDists).sort()];
+      return [{ value: '', label: 'All Districts' }, ...Array.from(allDists).sort().map((d) => ({ value: d, label: d }))];
     }
-    return ['All Districts', ...(STATE_DISTRICT_MAP[filters.state] || []).sort()];
+    return [
+      { value: '', label: 'All Districts' },
+      ...(STATE_DISTRICT_MAP[filters.state] || []).sort().map((d) => ({ value: d, label: d })),
+    ];
   }, [filters.state]);
 
   // Dynamic MP options list based on active state/district
@@ -53,209 +63,163 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
       }
       mpSet.add(mpName);
     });
-    return ['All MPs', ...Array.from(mpSet).sort()];
+    return [{ value: '', label: 'All MPs' }, ...Array.from(mpSet).sort().map((m) => ({ value: m, label: m }))];
   }, [filters.state, filters.district]);
 
+  // Active non-default filter keys for tags display
+  const activeTags = Object.entries(filters).filter(([key, val]) => {
+    if (!val) return false;
+    if (key === 'financialYear') return val !== defaultFY && val !== '2026-27';
+    if (key === 'house') return val !== 'All' && val !== 'All Houses';
+    if (key === 'state') return val !== '' && val !== 'All States' && val !== 'All';
+    if (key === 'district') return val !== '' && val !== 'All Districts' && val !== 'All';
+    if (key === 'mp') return val !== '' && val !== 'All MPs' && val !== 'All';
+    if (key === 'projectType') return val !== '' && val !== 'All Sectors' && val !== 'All Types' && val !== 'All';
+    if (key === 'status') return val !== '' && val !== 'All Statuses' && val !== 'All';
+    if (key === 'riskLevel') return val !== '' && val !== 'All Risk Levels' && val !== 'All';
+    if (key === 'agency') return val !== '' && val !== 'All Agencies' && val !== 'All';
+    return true;
+  });
+
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl  p-4 mb-6 transition-all">
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-slate-100 text-slate-800">
-            <Filter className="w-4 h-4" />
-          </div>
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-800">
-              Global Filter Control Center
-            </span>
-            <span className="ml-2 text-[11px] font-semibold text-slate-500 hidden sm:inline">
-              (Applies across all 18 analytics sections)
-            </span>
-          </div>
+    <div className="mb-6 transition-all">
+      {/* Filter Row */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5 items-end">
+        {/* Financial Year */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Financial Year
+          </label>
+          <CustomSelect
+            value={filters.financialYear}
+            onChange={(val) => onFilterChange('financialYear', val)}
+            options={FY_OPTIONS}
+            defaultLabel="2026-27"
+          />
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onReset}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-colors"
-          >
-            <span>Reset</span>
-          </button>
+        {/* House */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            House
+          </label>
+          <CustomSelect
+            value={filters.house}
+            onChange={(val) => onFilterChange('house', val)}
+            options={HOUSE_OPTIONS}
+            defaultLabel="All"
+          />
+        </div>
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="sm:hidden text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1"
-          >
-            <span>{isExpanded ? 'Hide Filters' : 'Show Filters'}</span>
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-          </button>
+        {/* State */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            State
+          </label>
+          <CustomSelect
+            value={filters.state}
+            onChange={(val) => onFilterChange('state', val)}
+            options={stateOptions}
+            defaultLabel="All States"
+          />
+        </div>
+
+        {/* District */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            District
+          </label>
+          <CustomSelect
+            value={filters.district}
+            onChange={(val) => onFilterChange('district', val)}
+            options={districtOptions}
+            defaultLabel="All Districts"
+          />
+        </div>
+
+        {/* MP */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            MP
+          </label>
+          <CustomSelect
+            value={filters.mp}
+            onChange={(val) => onFilterChange('mp', val)}
+            options={mpOptions}
+            defaultLabel="All MPs"
+          />
+        </div>
+
+        {/* Sector */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Sector
+          </label>
+          <CustomSelect
+            value={filters.projectType}
+            onChange={(val) => onFilterChange('projectType', val)}
+            options={[
+              { value: '', label: 'All Sectors' },
+              ...SECTORS.map((sec) => ({ value: sec, label: sec })),
+            ]}
+            defaultLabel="All Sectors"
+          />
+        </div>
+
+        {/* Work Status */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Work Status
+          </label>
+          <CustomSelect
+            value={filters.status}
+            onChange={(val) => onFilterChange('status', val)}
+            options={[
+              { value: '', label: 'All Statuses' },
+              { value: 'COMPLETED', label: 'Completed' },
+              { value: 'ONGOING', label: 'Ongoing' },
+              { value: 'NEAR_COMPLETION', label: 'Near Completion' },
+              { value: 'STARTING', label: 'Starting' },
+              { value: 'DELAYED', label: 'Delayed' },
+            ]}
+            defaultLabel="All Statuses"
+          />
         </div>
       </div>
 
-      {isExpanded && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 gap-3 pt-3">
-          {/* FY */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              Financial Year
-            </label>
-            <select
-              value={filters.financialYear}
-              onChange={(e) => onFilterChange('financialYear', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
+      {/* Active Filter Chips / Badges */}
+      {activeTags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t border-slate-100">
+          <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+            <Filter className="w-3 h-3" /> Active Filters:
+          </span>
+          {activeTags.map(([key, val]) => (
+            <span
+              key={key}
+              className="inline-flex items-center gap-1 text-[11px] font-medium bg-slate-200 text-black px-2 py-0.5 rounded-full border border-black"
             >
-              {FY_OPTIONS.map((fy) => (
-                <option key={fy} value={fy}>
-                  {fy === 'All' ? 'All Years' : `FY ${fy}`}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* House */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              House
-            </label>
-            <select
-              value={filters.house}
-              onChange={(e) => onFilterChange('house', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {HOUSE_OPTIONS.map((h) => (
-                <option key={h} value={h}>
-                  {h}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* State */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              State
-            </label>
-            <select
-              value={filters.state}
-              onChange={(e) => onFilterChange('state', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {stateOptions.map((st) => (
-                <option key={st} value={st}>
-                  {st}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* District */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              District
-            </label>
-            <select
-              value={filters.district}
-              onChange={(e) => onFilterChange('district', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {districtOptions.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* MP */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              MP Name
-            </label>
-            <select
-              value={filters.mp}
-              onChange={(e) => onFilterChange('mp', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {mpOptions.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Project Type */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              Sector / Type
-            </label>
-            <select
-              value={filters.projectType}
-              onChange={(e) => onFilterChange('projectType', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {PROJECT_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Implementing Agency */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              Agency
-            </label>
-            <select
-              value={filters.agency}
-              onChange={(e) => onFilterChange('agency', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {AGENCIES.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              Status
-            </label>
-            <select
-              value={filters.status}
-              onChange={(e) => onFilterChange('status', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s === 'All Statuses' ? 'All Statuses' : s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Risk Level */}
-          <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              Risk Level
-            </label>
-            <select
-              value={filters.riskLevel}
-              onChange={(e) => onFilterChange('riskLevel', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            >
-              {RISK_LEVELS.map((r) => (
-                <option key={r} value={r}>
-                  {r === 'All Risk Levels' ? 'All Risk Levels' : r}
-                </option>
-              ))}
-            </select>
-          </div>
+              <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
+              <strong className="font-semibold">{val}</strong>
+              <button
+                type="button"
+                onClick={() => onFilterChange(key, key === 'financialYear' ? '2026-27' : key === 'house' ? 'All' : '')}
+                className="hover:text-slate-600 ml-0.5"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          ))}
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-[11px] text-slate-500 hover:text-slate-800 underline font-medium ml-auto"
+          >
+            Clear all
+          </button>
         </div>
       )}
     </div>
   );
 };
+
+export default AnalyticsFilterBar;

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { MobileSidebar } from './MobileSidebar';
 import { Topbar } from './Topbar';
@@ -7,6 +7,15 @@ import { useApp } from '../../context/AppContext';
 
 export const DashboardLayout = () => {
   const { sidebarCollapsed, toggleSidebarCollapse } = useApp();
+  const location = useLocation();
+  const mainRef = useRef(null);
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -42,7 +51,7 @@ export const DashboardLayout = () => {
           </div>
 
           {/* Scrollable Main Content */}
-          <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5">
+          <main ref={mainRef} className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5">
             <div className="max-w-[1800px] w-full mx-auto">
               <Outlet />
             </div>

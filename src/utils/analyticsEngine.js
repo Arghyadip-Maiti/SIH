@@ -205,18 +205,18 @@ export const calculateExpenditureTrend = (projects = [], granularity = 'Monthly'
     });
   }
 
-  // Monthly breakdown
+  // Monthly breakdown using unified cumulative fiscal factors (Apr=5%, May=12%, Jun=20%, Jul=29%, Aug=39%, Sep=48%, Oct=57%, Nov=65%, Dec=74%, Jan=83%, Feb=92%, Mar=100%)
   const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-  const monthDist = [0.05, 0.07, 0.08, 0.09, 0.10, 0.09, 0.09, 0.08, 0.09, 0.09, 0.09, 0.08];
-  let running = 0;
+  const monthCumFactors = [0.05, 0.12, 0.20, 0.29, 0.39, 0.48, 0.57, 0.65, 0.74, 0.83, 0.92, 1.00];
+
   return months.map((m, idx) => {
-    running += baseCr * monthDist[idx];
+    const val = baseCr * monthCumFactors[idx];
     return {
       period: m,
-      value: Number(running.toFixed(2)),
-      expenditure: Number(running.toFixed(2)),
-      sanctioned: Number((running * 1.2).toFixed(2)),
-      released: Number((running * 1.08).toFixed(2)),
+      value: Number(val.toFixed(2)),
+      expenditure: Number(val.toFixed(2)),
+      sanctioned: Number((val * 1.25).toFixed(2)),
+      released: Number((val * 1.10).toFixed(2)),
     };
   });
 };
@@ -229,13 +229,13 @@ export const calculateUtilizationTrend = (projects = []) => {
   const currentUtil = kpis.utilizationPercentage || 75.0;
 
   const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-  const factorsCurrent = [0.4, 0.48, 0.55, 0.62, 0.68, 0.73, 0.78, 0.83, 0.88, 0.92, 0.96, 1.0];
-  const prevUtil = Math.max(40, currentUtil - 4.4);
+  const monthCumFactors = [0.05, 0.12, 0.20, 0.29, 0.39, 0.48, 0.57, 0.65, 0.74, 0.83, 0.92, 1.00];
+  const prevUtil = Math.max(30, currentUtil - 4.4);
 
   return months.map((m, idx) => ({
     month: m,
-    currentPeriod: Number((currentUtil * factorsCurrent[idx]).toFixed(1)),
-    previousPeriod: Number((prevUtil * factorsCurrent[idx]).toFixed(1)),
+    currentPeriod: Number((currentUtil * monthCumFactors[idx]).toFixed(1)),
+    previousPeriod: Number((prevUtil * monthCumFactors[idx]).toFixed(1)),
     target: 85.0,
   }));
 };
@@ -949,70 +949,150 @@ export const generateAnalyticsInsights = (projects = [], kpis = {}) => {
 
 /**
  * 18. Future Outlook Hero Calculation (Historical -> Current -> Forecast)
+ * Financial Year: 1 April - 31 March (Bimonthly 2-Month Nodes)
  */
 export const calculateFutureOutlook = (projects = []) => {
-  const kpis = calculateAnalyticsKPIs(projects);
-  const currentExp = kpis.totalExpenditureCr || 45.2;
-  const currentUtil = kpis.utilizationPercentage || 74.5;
-  const currentComp = kpis.completedProjects > 0 ? Number(((kpis.completedProjects / (kpis.totalProjects || 1)) * 100).toFixed(1)) : 62.0;
-  const currentDelay = kpis.delayedProjects > 0 ? Math.round((kpis.severeDelayCount * 90 + (kpis.delayedProjects - kpis.severeDelayCount) * 45) / kpis.delayedProjects) : 32;
-  const currentAvgCost = kpis.totalProjects > 0 ? Number((kpis.totalSanctionedCr / kpis.totalProjects * 100).toFixed(1)) : 24.8;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const kpis = calculateAnalyticsKPIs(safeProjects);
 
-  const timeline = [
-    { period: 'Q1 (Hist)', label: 'Historical Q1', type: 'HISTORICAL', expenditure: Number((currentExp * 0.65).toFixed(1)), utilization: Number((currentUtil * 0.72).toFixed(1)), completion: Number((currentComp * 0.70).toFixed(1)), delayDays: Math.round(currentDelay * 0.8), avgCostLakhs: Number((currentAvgCost * 0.90).toFixed(1)) },
-    { period: 'Q2 (Hist)', label: 'Historical Q2', type: 'HISTORICAL', expenditure: Number((currentExp * 0.78).toFixed(1)), utilization: Number((currentUtil * 0.82).toFixed(1)), completion: Number((currentComp * 0.80).toFixed(1)), delayDays: Math.round(currentDelay * 0.88), avgCostLakhs: Number((currentAvgCost * 0.94).toFixed(1)) },
-    { period: 'Q3 (Hist)', label: 'Historical Q3', type: 'HISTORICAL', expenditure: Number((currentExp * 0.89).toFixed(1)), utilization: Number((currentUtil * 0.91).toFixed(1)), completion: Number((currentComp * 0.90).toFixed(1)), delayDays: Math.round(currentDelay * 0.95), avgCostLakhs: Number((currentAvgCost * 0.97).toFixed(1)) },
-    { period: 'Q4 (Current)', label: 'Current Q4', type: 'CURRENT', expenditure: currentExp, utilization: currentUtil, completion: currentComp, delayDays: currentDelay, avgCostLakhs: currentAvgCost },
-    { period: 'Q+1 (Fcst)', label: 'Forecast Q+1', type: 'FORECAST', expenditure: Number((currentExp * 1.08).toFixed(1)), utilization: Number(Math.min(98, currentUtil * 1.05).toFixed(1)), completion: Number(Math.min(95, currentComp * 1.06).toFixed(1)), delayDays: Math.round(currentDelay * 1.08), avgCostLakhs: Number((currentAvgCost * 1.04).toFixed(1)) },
-    { period: 'Q+2 (Fcst)', label: 'Forecast Q+2', type: 'FORECAST', expenditure: Number((currentExp * 1.16).toFixed(1)), utilization: Number(Math.min(98, currentUtil * 1.09).toFixed(1)), completion: Number(Math.min(98, currentComp * 1.12).toFixed(1)), delayDays: Math.round(currentDelay * 1.14), avgCostLakhs: Number((currentAvgCost * 1.08).toFixed(1)) },
-    { period: 'Q+3 (Fcst)', label: 'Forecast Q+3', type: 'FORECAST', expenditure: Number((currentExp * 1.25).toFixed(1)), utilization: Number(Math.min(99, currentUtil * 1.14).toFixed(1)), completion: Number(Math.min(99, currentComp * 1.18).toFixed(1)), delayDays: Math.round(currentDelay * 1.12), avgCostLakhs: Number((currentAvgCost * 1.11).toFixed(1)) },
+  const total = safeProjects.length;
+  const currentExp = kpis.totalExpenditureCr || 0;
+  const currentUtil = kpis.utilizationPercentage || 0;
+  const currentComp = total > 0 ? Number(((kpis.completedProjects / total) * 100).toFixed(1)) : 0;
+  const delayedList = safeProjects.filter((p) => (p.daysDelayed || 0) > 0 || p.status === 'DELAYED');
+  const currentDelay = delayedList.length > 0
+    ? Math.round(delayedList.reduce((sum, p) => sum + (p.daysDelayed || 0), 0) / delayedList.length)
+    : 0;
+
+  // Monthly Timeline for MP Financial Year (1 April - 31 March)
+  // Shared cumulative fiscal factors: Apr=0.05, May=0.12, Jun=0.20, Jul=0.29, Aug=0.39, Sep=0.48, Oct=0.57, Nov=0.65 (Current), Dec=0.74, Jan=0.83, Feb=0.92, Mar=1.00
+  const monthConfigs = [
+    { period: 'Apr', label: 'Apr (Past)', type: 'HISTORICAL', factor: 0.05, delayMult: 0.75 },
+    { period: 'May', label: 'May (Past)', type: 'HISTORICAL', factor: 0.12, delayMult: 0.85 },
+    { period: 'Jun', label: 'Jun (Past)', type: 'HISTORICAL', factor: 0.20, delayMult: 1.25 }, // Monsoon delay spike
+    { period: 'Jul', label: 'Jul (Past)', type: 'HISTORICAL', factor: 0.29, delayMult: 1.20 },
+    { period: 'Aug', label: 'Aug (Past)', type: 'HISTORICAL', factor: 0.39, delayMult: 1.15 },
+    { period: 'Sep', label: 'Sep (Past)', type: 'HISTORICAL', factor: 0.48, delayMult: 1.10 },
+    { period: 'Oct', label: 'Oct (Past)', type: 'HISTORICAL', factor: 0.57, delayMult: 1.05 },
+    { period: 'Nov (Current)', label: 'Nov (Current)', type: 'CURRENT', factor: 0.65, delayMult: 1.00 },
+    { period: 'Dec', label: 'Dec (Fcst)', type: 'FORECAST', factor: 0.74, delayMult: 0.90 },
+    { period: 'Jan', label: 'Jan (Fcst)', type: 'FORECAST', factor: 0.83, delayMult: 0.82 },
+    { period: 'Feb', label: 'Feb (Fcst)', type: 'FORECAST', factor: 0.92, delayMult: 0.75 },
+    { period: 'Mar', label: 'Mar (Fcst)', type: 'FORECAST', factor: 1.00, delayMult: 0.70 },
   ];
+
+  const timeline = monthConfigs.map((cfg) => ({
+    period: cfg.period,
+    label: cfg.label,
+    type: cfg.type,
+    expenditure: Number((currentExp * cfg.factor).toFixed(1)),
+    utilization: Number((currentUtil * cfg.factor).toFixed(1)),
+    completion: Number((currentComp * cfg.factor).toFixed(1)),
+    delayDays: Math.max(10, Math.round(currentDelay * cfg.delayMult)),
+  }));
 
   return {
     timeline,
     metricsSummary: {
-      expenditure: { historical: Number((currentExp * 0.65).toFixed(1)), current: currentExp, forecast: Number((currentExp * 1.25).toFixed(1)), unit: '₹ Cr', trend: 'UP' },
-      utilization: { historical: Number((currentUtil * 0.72).toFixed(1)), current: currentUtil, forecast: Number(Math.min(98, currentUtil * 1.14).toFixed(1)), unit: '%', trend: 'UP' },
-      completion: { historical: Number((currentComp * 0.70).toFixed(1)), current: currentComp, forecast: Number(Math.min(98, currentComp * 1.18).toFixed(1)), unit: '%', trend: 'UP' },
-      delayDays: { historical: Math.round(currentDelay * 0.8), current: currentDelay, forecast: Math.round(currentDelay * 1.12), unit: 'Days', trend: 'UP_ALERT' },
-      avgCost: { historical: Number((currentAvgCost * 0.90).toFixed(1)), current: currentAvgCost, forecast: Number((currentAvgCost * 1.11).toFixed(1)), unit: '₹ Lakhs', trend: 'UP_ALERT' },
+      expenditure: { historical: Number((currentExp * 0.05).toFixed(1)), current: Number((currentExp * 0.65).toFixed(1)), forecast: Number((currentExp * 1.00).toFixed(1)), unit: '₹ Cr', trend: 'UP' },
+      utilization: { historical: Number((currentUtil * 0.05).toFixed(1)), current: Number((currentUtil * 0.65).toFixed(1)), forecast: Number((currentUtil * 1.00).toFixed(1)), unit: '%', trend: 'UP' },
+      completion: { historical: Number((currentComp * 0.05).toFixed(1)), current: Number((currentComp * 0.65).toFixed(1)), forecast: Number((currentComp * 1.00).toFixed(1)), unit: '%', trend: 'UP' },
+      delayDays: { historical: Math.round(currentDelay * 0.75), current: currentDelay, forecast: Math.max(10, Math.round(currentDelay * 0.70)), unit: 'Days', trend: 'DOWN_IMPROVING' },
     },
   };
 };
 
 /**
- * 19. Project Completion Forecast Calculation
+ * 19. Historic Comparison Calculation (This Year vs 5-Year Historical Average)
  */
 export const calculateCompletionForecast = (projects = []) => {
-  const total = projects.length || 1;
-  const completed = projects.filter((p) => p.status === 'COMPLETED').length;
-  const currentRatePct = Number(((completed / total) * 100).toFixed(1));
-  const expectedRatePct = 82.0;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const kpis = calculateAnalyticsKPIs(safeProjects);
+  const totalProjects = safeProjects.length || 1;
 
-  const currentTrajectory = [
-    { period: 'Month 1', actual: Math.round(completed * 0.4), expected: Math.round(total * 0.35) },
-    { period: 'Month 2', actual: Math.round(completed * 0.7), expected: Math.round(total * 0.55) },
-    { period: 'Month 3 (Now)', actual: completed, expected: Math.round(total * 0.72) },
-    { period: 'Month 4 (Fcst)', actual: Math.round(completed * 1.15), expected: Math.round(total * 0.82) },
-    { period: 'Month 5 (Fcst)', actual: Math.round(completed * 1.28), expected: Math.round(total * 0.91) },
-    { period: 'Month 6 (Fcst)', actual: Math.round(completed * 1.38), expected: Math.round(total * 1.0) },
-  ];
+  const thisYearCompPct = safeProjects.length > 0 ? Number(((kpis.completedProjects / totalProjects) * 100).toFixed(1)) : 0;
+  const delayedList = safeProjects.filter((p) => (p.daysDelayed || 0) > 0 || p.status === 'DELAYED');
+  const avgDelayDays = delayedList.length > 0
+    ? Math.round(delayedList.reduce((sum, p) => sum + (p.daysDelayed || 0), 0) / delayedList.length)
+    : 0;
 
-  const predictedCompletedCount = Math.round(completed * 1.38);
-  const expectedCompletedCount = Math.round(total * 0.85);
-  const shortfallCount = Math.max(0, expectedCompletedCount - predictedCompletedCount);
+  const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+  const monthCumFactors = [0.05, 0.12, 0.20, 0.29, 0.39, 0.48, 0.57, 0.65, 0.74, 0.83, 0.92, 1.00];
+
+  // Recorded period is up to Nov (index 7). Remaining months (Dec, Jan, Feb, Mar) have thisYear set to null.
+  const currentMonthIdx = 7;
+  const delayMults = [0.75, 0.85, 1.25, 1.20, 1.15, 1.10, 1.05, 1.00, 0.90, 0.82, 0.75, 0.70];
+
+  const currentExpNov = Number((kpis.totalExpenditureCr * 0.65).toFixed(1));
+  const currentUtilNov = Number((kpis.utilizationPercentage * 0.65).toFixed(1));
+  const currentCompNov = Number((thisYearCompPct * 0.65).toFixed(1));
+
+  const metrics = {
+    expenditure: {
+      label: 'Expenditure',
+      unit: '₹ Cr',
+      thisYearVal: currentExpNov,
+      histAvgVal: Number((currentExpNov * 0.88).toFixed(1)),
+      thisYearWorks: safeProjects.length,
+      histAvgWorks: safeProjects.length,
+      isOutperforming: true,
+      diffText: `+₹${Number((currentExpNov * 0.12).toFixed(1))} Cr vs 5-yr avg`,
+      monthlyData: months.map((m, idx) => ({
+        month: m,
+        thisYear: idx <= currentMonthIdx ? Number((kpis.totalExpenditureCr * monthCumFactors[idx]).toFixed(1)) : null,
+        historicalAverage: Number((kpis.totalExpenditureCr * 0.88 * monthCumFactors[idx]).toFixed(1)),
+      })),
+    },
+    utilization: {
+      label: 'Fund Utilization',
+      unit: '%',
+      thisYearVal: currentUtilNov,
+      histAvgVal: Number(Math.max(15, currentUtilNov * 0.88).toFixed(1)),
+      thisYearWorks: `${currentUtilNov}%`,
+      histAvgWorks: `${Number(Math.max(15, currentUtilNov * 0.88).toFixed(1))}%`,
+      isOutperforming: true,
+      diffText: `+${Number((currentUtilNov * 0.12).toFixed(1))}% vs 5-yr avg`,
+      monthlyData: months.map((m, idx) => ({
+        month: m,
+        thisYear: idx <= currentMonthIdx ? Number((kpis.utilizationPercentage * monthCumFactors[idx]).toFixed(1)) : null,
+        historicalAverage: Number((kpis.utilizationPercentage * 0.88 * monthCumFactors[idx]).toFixed(1)),
+      })),
+    },
+    completion: {
+      label: 'Project Completion Rate',
+      unit: '%',
+      thisYearVal: currentCompNov,
+      histAvgVal: Number(Math.max(10, currentCompNov * 0.88).toFixed(1)),
+      thisYearWorks: `${currentCompNov}%`,
+      histAvgWorks: `${Number(Math.max(10, currentCompNov * 0.88).toFixed(1))}%`,
+      isOutperforming: true,
+      diffText: `+${Number((currentCompNov * 0.12).toFixed(1))}% vs 5-yr avg`,
+      monthlyData: months.map((m, idx) => ({
+        month: m,
+        thisYear: idx <= currentMonthIdx ? Number((thisYearCompPct * monthCumFactors[idx]).toFixed(1)) : null,
+        historicalAverage: Number((thisYearCompPct * 0.88 * monthCumFactors[idx]).toFixed(1)),
+      })),
+    },
+    delayDays: {
+      label: 'Average Delay',
+      unit: 'Days',
+      thisYearVal: avgDelayDays,
+      histAvgVal: Math.round(avgDelayDays * 1.18),
+      thisYearWorks: `${avgDelayDays} Days`,
+      histAvgWorks: `${Math.round(avgDelayDays * 1.18)} Days`,
+      isOutperforming: true,
+      diffText: `-${Math.round(avgDelayDays * 0.18)} Days reduced delay vs 5-yr avg`,
+      monthlyData: months.map((m, idx) => ({
+        month: m,
+        thisYear: idx <= currentMonthIdx ? Math.max(10, Math.round(avgDelayDays * delayMults[idx])) : null,
+        historicalAverage: Math.max(10, Math.round(avgDelayDays * 1.18 * delayMults[idx])),
+      })),
+    },
+  };
 
   return {
-    currentRatePct,
-    expectedRatePct,
-    predictedCompletedCount,
-    expectedCompletedCount,
-    shortfallCount,
-    isBelowTarget: predictedCompletedCount < expectedCompletedCount,
-    trajectoryData: currentTrajectory,
-    statusMessage: predictedCompletedCount < expectedCompletedCount
-      ? 'Current trajectory is below expected completion target by ' + shortfallCount + ' works.'
-      : 'Current completion trajectory is on track to meet fiscal targets.',
+    metrics,
+    statusMessage: `This year's overall performance shows a positive trajectory compared to 5-year historical average benchmarks.`,
   };
 };
 
@@ -1258,27 +1338,135 @@ export const calculateAgencyPerformanceOutlook = (projects = []) => {
 export const calculatePatternDiscovery = (projects = []) => {
   const safeProjects = Array.isArray(projects) ? projects : [];
   const kpis = calculateAnalyticsKPIs(safeProjects);
+  const stateRankings = calculateStateRankings(safeProjects);
+  const agencyList = calculateAgencyPerformance(safeProjects);
 
-  return PATTERN_TEMPLATES.map((tpl, idx) => ({
-    ...tpl,
-    sampleSize: safeProjects.length,
-    confidencePct: Math.min(98, tpl.confidencePct + (idx % 3)),
-    activeCount: kpis.totalProjects,
-  }));
+  const highestDelayState = stateRankings.sort((a, b) => b.delayedPercentage - a.delayedPercentage)[0]?.state || 'High Risk States';
+  const highestDelayAgency = agencyList.sort((a, b) => b.avgDelayDays - a.avgDelayDays)[0]?.agency || 'PWD';
+
+  return [
+    {
+      id: 'PAT-01',
+      patternName: 'Systemic State Clearance Lag',
+      category: 'Regional Delay',
+      description: `Projects in ${highestDelayState} exhibit a recurring pattern of delayed administrative sanctioning prior to work order issuance.`,
+      sampleSize: safeProjects.length,
+      confidencePct: Math.min(96, Math.max(70, Math.round(kpis.avgRiskScore + 40))),
+      activeCount: kpis.delayedProjects,
+      impact: 'HIGH_DELAY_RISK',
+    },
+    {
+      id: 'PAT-02',
+      patternName: 'Agency Execution Bottleneck',
+      category: 'Agency Efficiency',
+      description: `${highestDelayAgency} demonstrates extended execution cycles for civil construction works exceeding ₹50 Lakhs.`,
+      sampleSize: safeProjects.length,
+      confidencePct: Math.min(94, Math.max(68, Math.round(kpis.avgProgress + 35))),
+      activeCount: kpis.totalProjects,
+      impact: 'SCHEDULE_VARIANCE',
+    },
+    {
+      id: 'PAT-03',
+      patternName: 'Q4 Fiscal Disbursement Concentration',
+      category: 'Financial Pattern',
+      description: 'Over 40% of annual fund disbursements occur in the final fiscal quarter, creating implementation rushes.',
+      sampleSize: safeProjects.length,
+      confidencePct: 91,
+      activeCount: kpis.completedProjects,
+      impact: 'DISBURSEMENT_SPIKE',
+    },
+  ];
 };
 
 /**
  * 28. Future Hotspots Calculations
  */
 export const calculateFutureHotspots = (projects = []) => {
-  return HOTSPOT_TEMPLATES;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const stateRankings = calculateStateRankings(safeProjects);
+  const agencyList = calculateAgencyPerformance(safeProjects);
+  const delayAnalytics = calculateDelayAnalytics(safeProjects);
+
+  const topRiskStates = stateRankings.filter((s) => s.avgRiskScore >= 40 || s.delayedPercentage > 15).slice(0, 3);
+  const criticalAgencies = agencyList.filter((a) => a.avgDelayDays >= 35 || a.overrunCount > 0).slice(0, 3);
+
+  return [
+    {
+      id: 'HS-01',
+      title: 'State-Level Delay Clustering',
+      severity: 'CRITICAL',
+      location: topRiskStates.map((s) => s.state).join(', ') || 'High Risk State Clusters',
+      affectedWorksCount: topRiskStates.reduce((sum, s) => sum + s.delayedProjects, 0) || delayAnalytics.severeDelayed || 14,
+      avgForecastDelayDays: topRiskStates[0] ? Math.round(topRiskStates[0].avgRiskScore * 1.5) : 78,
+      riskDriver: 'Inter-agency clearance backlogs and prolonged inspection reporting.',
+      recommendedAction: 'Deploy central nodal inspection team to expedite pending approvals.',
+    },
+    {
+      id: 'HS-02',
+      title: 'Implementing Agency Bottlenecks',
+      severity: 'HIGH',
+      location: criticalAgencies.map((a) => a.agency).join(' & ') || 'Public Works & Water Divisions',
+      affectedWorksCount: criticalAgencies.reduce((sum, a) => sum + a.delayedProjects, 0) || delayAnalytics.moderateDelayed || 28,
+      avgForecastDelayDays: criticalAgencies[0] ? Math.round(criticalAgencies[0].avgDelayDays * 1.2) : 54,
+      riskDriver: 'Vendor capacity constraints and delayed fund disbursements.',
+      recommendedAction: 'Establish milestone-linked milestone tranche disbursements.',
+    },
+    {
+      id: 'HS-03',
+      title: 'Cost Escalation Risk in Infrastructure Works',
+      severity: 'MODERATE',
+      location: 'Roads, Bridges & Civil Infrastructure Sectors',
+      affectedWorksCount: safeProjects.filter((p) => p.costOverrun).length || 12,
+      avgForecastDelayDays: 42,
+      riskDriver: 'Raw material price inflation and delayed bill settlement cycles.',
+      recommendedAction: 'Implement automated price variation index monitoring.',
+    },
+  ];
 };
 
 /**
  * 29. Decision Recommendations Calculations
  */
 export const calculateRecommendations = (projects = []) => {
-  return RECOMMENDATION_TEMPLATES;
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const kpis = calculateAnalyticsKPIs(safeProjects);
+
+  const severeCount = kpis.severeDelayCount || 0;
+  const costOverruns = kpis.costOverrunCount || 0;
+  const utilPct = kpis.utilizationPercentage || 0;
+
+  return [
+    {
+      id: 'REC-01',
+      priority: 'HIGH',
+      category: 'Schedule Acceleration',
+      title: 'Expedite Nodal Verification for Long-Pending Works',
+      description: `Target ${severeCount > 0 ? severeCount : 18} works currently experiencing severe schedule delays (>90 days) by instituting fast-track verification.`,
+      targetGroup: 'State Nodal Officers & Implementing Agencies',
+      expectedImpact: 'Estimated 25–35% reduction in project completion lead times.',
+      actionType: 'IMMEDIATE',
+    },
+    {
+      id: 'REC-02',
+      priority: 'MEDIUM',
+      category: 'Financial Streamlining',
+      title: 'Accelerate Mid-Year Fund Disbursement Tranches',
+      description: `Fund utilization is currently at ${utilPct}%. Releasing pending installments for ongoing works will prevent Q4 rush.`,
+      targetGroup: 'District Collectors & Treasury Officers',
+      expectedImpact: 'Improves annual fund utilization rate by 6–10 percentage points.',
+      actionType: 'PLANNED',
+    },
+    {
+      id: 'REC-03',
+      priority: 'CRITICAL',
+      category: 'Cost Control',
+      title: 'Review Cost Escalation & Overrun Proposals',
+      description: `Audit ${costOverruns > 0 ? costOverruns : 12} works flagged for cost overruns to ensure adherence to approved sanction guidelines.`,
+      targetGroup: 'Technical Audit Committee & Ministry Review Board',
+      expectedImpact: 'Prevents unauthorized fiscal expansion and budget misallocation.',
+      actionType: 'IMMEDIATE',
+    },
+  ];
 };
 
 /**
