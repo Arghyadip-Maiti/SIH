@@ -10,7 +10,6 @@ import ProjectDetailsPage from './pages/Projects/ProjectDetailsPage';
 import MPDetailsPage from './pages/Projects/MPDetailsPage';
 import AIRiskPage from './pages/AIRisk/AIRiskPage';
 import AIRiskDetailsPage from './pages/AIRisk/AIRiskDetailsPage';
-import AlertsPage from './pages/Alerts/AlertsPage';
 import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import SettingsPage from './pages/Settings/SettingsPage';
 
@@ -27,7 +26,6 @@ export function App() {
             <Route path="mp/:mpId" element={<MPDetailsPage />} />
             <Route path="ai-risk" element={<AIRiskPage />} />
             <Route path="ai-risk/:projectId" element={<AIRiskDetailsPage />} />
-            <Route path="alerts" element={<AlertsPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             {/* Catch-all fallback */}

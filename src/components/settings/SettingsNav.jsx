@@ -1,8 +1,7 @@
-import { User, Bell, Sliders, Shield, Database, Monitor, Info } from 'lucide-react';
+import { User, Sliders, Shield, Database, Monitor, Info } from 'lucide-react';
 
 export const NAV_ITEMS = [
   { id: 'profile', label: 'Profile', icon: User },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'preferences', label: 'Dashboard Preferences', icon: Sliders },
   { id: 'security', label: 'Security', icon: Shield },
   { id: 'data', label: 'Data Preferences', icon: Database },

@@ -3,7 +3,6 @@ import {
   Home,
   FolderKanban,
   ShieldCheck,
-  Bell,
   BarChart3,
   Settings,
   ChevronLeft,
@@ -17,13 +16,12 @@ const iconMap = {
   Home,
   FolderKanban,
   ShieldCheck,
-  Bell,
   BarChart3,
   Settings,
 };
 
 export const Sidebar = () => {
-  const { sidebarCollapsed, toggleSidebarCollapse, unreadAlertsCount } = useApp();
+  const { sidebarCollapsed, toggleSidebarCollapse } = useApp();
 
   return (
     <aside
@@ -101,25 +99,6 @@ export const Sidebar = () => {
                   >
                     {item.label}
                   </span>
-
-                  {/* Alert Count Badge */}
-                  {item.id === 'alerts' && unreadAlertsCount > 0 && (
-                    <span
-                      className={`font-bold rounded-full transition-all duration-300 ease-in-out whitespace-nowrap overflow-hidden ${
-                        sidebarCollapsed
-                          ? 'opacity-0 max-w-0 pointer-events-none'
-                          : 'ml-auto text-[11px] px-2 py-0.5 ' +
-                            (isActive ? 'bg-slate-900 text-white' : 'bg-rose-600 text-white')
-                      }`}
-                    >
-                      {unreadAlertsCount}
-                    </span>
-                  )}
-
-                  {/* Small Alert Dot Badge when Collapsed */}
-                  {item.id === 'alerts' && unreadAlertsCount > 0 && sidebarCollapsed && (
-                    <span className="absolute top-2 right-2.5 w-2.5 h-2.5 rounded-full bg-rose-600 ring-2 ring-white" />
-                  )}
 
                   {/* Tooltip on Hover when Collapsed */}
                   {sidebarCollapsed && (

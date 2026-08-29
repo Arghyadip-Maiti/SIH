@@ -1,7 +1,6 @@
 import { useSettings } from '../../hooks/useSettings';
 import { SettingsNav } from '../../components/settings/SettingsNav';
 import { ProfileSettings } from '../../components/settings/ProfileSettings';
-import { NotificationSettings } from '../../components/settings/NotificationSettings';
 import { DashboardPreferences } from '../../components/settings/DashboardPreferences';
 import { SecuritySettings } from '../../components/settings/SecuritySettings';
 import { DataPreferences } from '../../components/settings/DataPreferences';
@@ -85,14 +84,6 @@ export const SettingsPage = () => {
               <ProfileSettings
                 profileData={settings.profile}
                 onSave={(data, text) => saveSectionSettings('profile', data, text)}
-                saving={saving}
-              />
-            )}
-
-            {activeTab === 'notifications' && (
-              <NotificationSettings
-                notificationData={settings.notifications}
-                onSave={(data, text) => saveSectionSettings('notifications', data, text)}
                 saving={saving}
               />
             )}

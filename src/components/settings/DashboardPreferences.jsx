@@ -78,7 +78,6 @@ export const DashboardPreferences = ({
               <option value="/overview">Overview</option>
               <option value="/projects">Projects</option>
               <option value="/ai-risk">AI Risk Monitor</option>
-              <option value="/alerts">Alerts</option>
               <option value="/analytics">Analytics & Trends</option>
             </select>
           </div>

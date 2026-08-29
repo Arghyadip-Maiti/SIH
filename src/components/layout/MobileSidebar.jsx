@@ -3,7 +3,6 @@ import {
   Home,
   FolderKanban,
   ShieldCheck,
-  Bell,
   BarChart3,
   Settings,
   X,
@@ -16,13 +15,12 @@ const iconMap = {
   Home,
   FolderKanban,
   ShieldCheck,
-  Bell,
   BarChart3,
   Settings,
 };
 
 export const MobileSidebar = () => {
-  const { sidebarOpen, setSidebarOpen, unreadAlertsCount } = useApp();
+  const { sidebarOpen, setSidebarOpen } = useApp();
 
   if (!sidebarOpen) return null;
 
@@ -79,11 +77,6 @@ export const MobileSidebar = () => {
               >
                 <Icon className="w-5 h-5" />
                 {item.label && <span>{item.label}</span>}
-                {item.id === 'alerts' && unreadAlertsCount > 0 && (
-                  <span className="ml-auto bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    {unreadAlertsCount}
-                  </span>
-                )}
               </NavLink>
             );
           })}

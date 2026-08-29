@@ -1,11 +1,11 @@
 import { useLocation } from 'react-router-dom';
-import { Bell, Menu, Shield } from 'lucide-react';
+import { Menu, Shield } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { NAV_ITEMS } from '../../constants/routes';
 
 export const Topbar = () => {
   const location = useLocation();
-  const { currentUser, toggleSidebar, unreadAlertsCount, isMockMode } = useApp();
+  const { currentUser, toggleSidebar, isMockMode } = useApp();
 
   // Find active nav item or default
   const activeNav = NAV_ITEMS.find((item) =>
@@ -43,20 +43,6 @@ export const Topbar = () => {
 
       {/* Right: Actions & User Info */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Notification Icon */}
-        <button
-          type="button"
-          className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors relative"
-          title="Notifications"
-        >
-          <Bell className="w-5 h-5" />
-          {unreadAlertsCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" />
-          )}
-        </button>
-
-        <div className="h-6 w-px bg-slate-200 hidden sm:block" />
-
         {/* User Info & Avatar */}
         <div className="flex items-center gap-3 pl-1">
           <div className="text-right hidden sm:block">
