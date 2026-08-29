@@ -8,7 +8,7 @@ export const KPICard = ({
   trend,
   trendPercentage,
   subtitle,
-  iconBgColor = 'bg-blue-50 text-blue-600',
+  iconBgColor = 'bg-slate-100 text-slate-700',
   className = '',
 }) => {
   const isPositiveTrend = trend === 'up' || (typeof trendPercentage === 'number' && trendPercentage >= 0);

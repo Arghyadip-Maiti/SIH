@@ -49,7 +49,7 @@ export const getConstituencyColor = (value, metric = 'utilization') => {
       return '#10B981';
 
     default:
-      return '#3B82F6';
+      return '#64748b';
   }
 };
 

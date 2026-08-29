@@ -10,7 +10,7 @@ export const DistrictPerformanceSection = ({ districtData = {} }) => {
   const currentList = activeTab === 'top' ? topPerforming : requiringAttention;
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="District Performance Analytics"
@@ -21,7 +21,7 @@ export const DistrictPerformanceSection = ({ districtData = {} }) => {
           <button
             onClick={() => setActiveTab('top')}
             className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'top' ? 'bg-white text-emerald-700 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
+              activeTab === 'top' ? 'bg-white text-emerald-700  font-bold' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Award className="w-3.5 h-3.5" />
@@ -30,7 +30,7 @@ export const DistrictPerformanceSection = ({ districtData = {} }) => {
           <button
             onClick={() => setActiveTab('attention')}
             className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'attention' ? 'bg-white text-rose-700 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
+              activeTab === 'attention' ? 'bg-white text-rose-700  font-bold' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <AlertTriangle className="w-3.5 h-3.5" />
@@ -60,7 +60,7 @@ export const DistrictPerformanceSection = ({ districtData = {} }) => {
                   <td className="py-2.5 px-3 font-semibold text-slate-500">{row.state}</td>
                   <td className="py-2.5 px-3 font-semibold text-slate-700 text-right">{row.totalProjects}</td>
                   <td className="py-2.5 px-3 font-extrabold text-slate-900 text-right">₹{row.expenditureCr} Cr</td>
-                  <td className="py-2.5 px-3 text-right font-bold text-blue-700">{row.utilization}%</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-slate-800">{row.utilization}%</td>
                   <td className="py-2.5 px-3 text-right font-semibold text-emerald-600">{row.completionRate}%</td>
                   <td className="py-2.5 px-3 text-right font-extrabold">
                     <span className={`px-2 py-0.5 rounded-md ${row.avgRiskScore >= 60 ? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700'}`}>

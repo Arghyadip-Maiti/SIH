@@ -3,7 +3,7 @@
 
 :root {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --bg-main: #F5F7FA;
+  --bg-main: #f8fafc;
   --sidebar-bg: #0B1120;
   --sidebar-hover: #1E293B;
   --sidebar-active: #1E3A8A;
@@ -11,6 +11,10 @@
   --text-secondary: #475569;
   --text-muted: #64748B;
   --border-subtle: #E2E8F0;
+}
+
+html {
+  background-color: #f8fafc;
 }
 
 body {
@@ -21,6 +25,36 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Skeleton shimmer preloader effect */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #E2E8F0;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.6) 30%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 1.6s infinite;
 }
 
 /* Custom scrollbar styling */
@@ -42,5 +76,15 @@ body {
 .custom-glass-card {
   background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* Remove focus outlines from leaflet map features and containers */
+.leaflet-container,
+.leaflet-interactive,
+.leaflet-grab {
+  outline: none !important;
+}
+
+path.leaflet-interactive:focus {
+  outline: none !important;
 }

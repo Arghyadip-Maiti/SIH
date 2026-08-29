@@ -14,12 +14,12 @@ export const RiskKpiCards = ({ kpis = {} }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
       {/* 1. Active Projects */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Active Projects
           </span>
-          <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+          <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
             <Activity className="w-4 h-4" />
           </div>
         </div>
@@ -32,7 +32,7 @@ export const RiskKpiCards = ({ kpis = {} }) => {
       </Card>
 
       {/* 2. High Risk */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             High Risk (61-80)
@@ -50,7 +50,7 @@ export const RiskKpiCards = ({ kpis = {} }) => {
       </Card>
 
       {/* 3. Critical Risk */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Critical Risk (81-100)
@@ -68,12 +68,12 @@ export const RiskKpiCards = ({ kpis = {} }) => {
       </Card>
 
       {/* 4. Average Risk Score */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Average Risk Score
           </span>
-          <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+          <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
             <Award className="w-4 h-4" />
           </div>
         </div>
@@ -94,12 +94,12 @@ export const RiskKpiCards = ({ kpis = {} }) => {
       </Card>
 
       {/* 5. Financial Flags */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Financial Flags
           </span>
-          <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+          <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
             <IndianRupee className="w-4 h-4" />
           </div>
         </div>
@@ -112,7 +112,7 @@ export const RiskKpiCards = ({ kpis = {} }) => {
       </Card>
 
       {/* 6. Photo Flags */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Photo & Location Flags

@@ -4,7 +4,7 @@ import { SectionHeader } from '../common/SectionHeader';
 
 export const ProjectTypeAnalysisSection = ({ data = [], onSectorClick }) => {
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <SectionHeader
         title="Projects by Sector / Type"
         subtitle="Sectoral distribution of MPLADS infrastructure works and capital allocation"
@@ -24,7 +24,7 @@ export const ProjectTypeAnalysisSection = ({ data = [], onSectorClick }) => {
               />
               <Bar
                 dataKey="expenditureCr"
-                fill="#2563EB"
+                fill="#475569"
                 radius={[0, 8, 8, 0]}
                 barSize={18}
                 onClick={(entry) => onSectorClick && onSectorClick(entry.name)}
@@ -40,13 +40,13 @@ export const ProjectTypeAnalysisSection = ({ data = [], onSectorClick }) => {
             <button
               key={sector.name}
               onClick={() => onSectorClick && onSectorClick(sector.name)}
-              className="w-full p-2.5 rounded-xl border border-slate-100 bg-slate-50 hover:bg-blue-50/50 hover:border-blue-200 transition-all text-left group"
+              className="w-full p-2.5 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100/50 hover:border-slate-300 transition-all text-left group"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-slate-800 group-hover:text-blue-700">
+                <span className="text-xs font-bold text-slate-800 group-hover:text-slate-800">
                   {sector.name}
                 </span>
-                <span className="text-xs font-extrabold text-blue-700">
+                <span className="text-xs font-extrabold text-slate-800">
                   ₹{sector.expenditureCr} Cr
                 </span>
               </div>

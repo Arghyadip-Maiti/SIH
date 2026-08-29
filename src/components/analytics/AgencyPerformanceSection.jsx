@@ -11,7 +11,7 @@ export const AgencyPerformanceSection = ({
   comparisonData = null,
 }) => {
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <SectionHeader
         title="Implementing Agency Performance & Comparison"
         subtitle="Audit nodal implementing departments and compare agency execution efficiency side-by-side"
@@ -38,13 +38,13 @@ export const AgencyPerformanceSection = ({
               {agencyData.map((row) => (
                 <tr key={row.agency} className="hover:bg-slate-50 transition-colors">
                   <td className="py-2.5 px-3 font-bold text-slate-900 flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <Building2 className="w-4 h-4 text-slate-700 shrink-0" />
                     <span>{row.agency}</span>
                   </td>
                   <td className="py-2.5 px-3 text-right font-semibold text-slate-700">{row.totalProjects}</td>
                   <td className="py-2.5 px-3 text-right font-bold text-emerald-600">{row.completionRate}%</td>
                   <td className="py-2.5 px-3 text-right font-semibold text-rose-600">{row.avgDelayDays}d</td>
-                  <td className="py-2.5 px-3 text-right font-bold text-blue-700">{row.utilization}%</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-slate-800">{row.utilization}%</td>
                   <td className="py-2.5 px-3 text-right font-bold text-slate-800">{row.avgRiskScore}</td>
                 </tr>
               ))}
@@ -56,7 +56,7 @@ export const AgencyPerformanceSection = ({
         <div className="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-3">
-              <ArrowRightLeft className="w-4 h-4 text-blue-600" />
+              <ArrowRightLeft className="w-4 h-4 text-slate-700" />
               <span>Head-to-Head Agency Benchmark</span>
             </div>
 
@@ -67,7 +67,7 @@ export const AgencyPerformanceSection = ({
                 <select
                   value={agencyA}
                   onChange={(e) => onAgencyAChange && onAgencyAChange(e.target.value)}
-                  className="w-full text-xs font-bold bg-white border border-slate-200 rounded-xl p-2 text-slate-900 focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs font-bold bg-white border border-slate-200 rounded-xl p-2 text-slate-900 focus:ring-2 focus:ring-slate-500"
                 >
                   {agencyData.map((a) => (
                     <option key={`a-${a.agency}`} value={a.agency}>
@@ -82,7 +82,7 @@ export const AgencyPerformanceSection = ({
                 <select
                   value={agencyB}
                   onChange={(e) => onAgencyBChange && onAgencyBChange(e.target.value)}
-                  className="w-full text-xs font-bold bg-white border border-slate-200 rounded-xl p-2 text-slate-900 focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs font-bold bg-white border border-slate-200 rounded-xl p-2 text-slate-900 focus:ring-2 focus:ring-slate-500"
                 >
                   {agencyData.map((a) => (
                     <option key={`b-${a.agency}`} value={a.agency}>

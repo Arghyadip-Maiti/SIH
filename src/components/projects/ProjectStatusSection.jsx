@@ -15,7 +15,7 @@ export const ProjectStatusSection = ({ statusDistribution = [] }) => {
     <Card
       header={
         <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-blue-600" />
+          <Layers className="w-4 h-4 text-slate-700" />
           <h3 className="text-base font-bold text-slate-900">Project Status Distribution</h3>
         </div>
       }
@@ -65,12 +65,13 @@ export const ProjectStatusSection = ({ statusDistribution = [] }) => {
                   innerRadius={65}
                   outerRadius={85}
                   paddingAngle={2}
+                  cornerRadius={6}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {statusDistribution.map((entry, index) => (
                     <Cell
                       key={`status-cell-${index}`}
-                      fill={entry.color || '#2563EB'}
+                      fill={entry.color || '#475569'}
                       stroke="#FFFFFF"
                       strokeWidth={2}
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -115,7 +116,7 @@ export const ProjectStatusSection = ({ statusDistribution = [] }) => {
               onMouseLeave={() => setHoveredIndex(null)}
               className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                 hoveredIndex === index
-                  ? 'bg-blue-50/70 border-blue-200 shadow-2xs scale-[1.01]'
+                  ? 'bg-slate-100/70 border-slate-300  scale-[1.01]'
                   : 'bg-slate-50 border-slate-100 hover:bg-slate-100/80'
               }`}
             >

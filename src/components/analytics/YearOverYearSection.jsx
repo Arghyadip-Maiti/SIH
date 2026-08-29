@@ -4,7 +4,7 @@ import { Calendar, TrendingUp, TrendingDown } from 'lucide-react';
 
 export const YearOverYearSection = ({ yoyData = [] }) => {
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <SectionHeader
         title="Year-over-Year Comparative Performance"
         subtitle="Benchmark current financial year (FY 2026–27) against previous financial year (FY 2025–26)"

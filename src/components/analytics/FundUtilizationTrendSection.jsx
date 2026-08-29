@@ -8,7 +8,7 @@ export const FundUtilizationTrendSection = ({ data = [] }) => {
   const diffPctPts = Number((currentUtil - prevUtil).toFixed(1));
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="Fund Utilization Over Time"
@@ -18,7 +18,7 @@ export const FundUtilizationTrendSection = ({ data = [] }) => {
         <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
           <div className="text-right">
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Current Scope</div>
-            <div className="text-sm font-extrabold text-blue-700">{currentUtil}%</div>
+            <div className="text-sm font-extrabold text-slate-800">{currentUtil}%</div>
           </div>
           <div className="h-6 w-px bg-slate-200" />
           <div>
@@ -64,9 +64,9 @@ export const FundUtilizationTrendSection = ({ data = [] }) => {
               type="monotone"
               name="Current Period"
               dataKey="currentPeriod"
-              stroke="#2563EB"
+              stroke="#475569"
               strokeWidth={3}
-              dot={{ r: 3, fill: '#2563EB' }}
+              dot={{ r: 3, fill: '#475569' }}
             />
             <Line
               type="monotone"

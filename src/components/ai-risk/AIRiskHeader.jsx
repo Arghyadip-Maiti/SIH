@@ -8,7 +8,7 @@ export const AIRiskHeader = ({
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6">
       <div>
         <div className="flex items-center gap-3 mb-1">
-          <div className="p-2 rounded-xl bg-blue-600 text-white shadow-xs">
+          <div className="p-2 rounded-xl bg-slate-800 text-white ">
             <Bot className="w-6 h-6" />
           </div>
           <div>
@@ -33,7 +33,7 @@ export const AIRiskHeader = ({
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700">
-          <Activity className="w-4 h-4 text-blue-600" />
+          <Activity className="w-4 h-4 text-slate-700" />
           <span>Currently monitoring: <strong>{totalActiveProjects.toLocaleString()} active projects</strong></span>
         </div>
 

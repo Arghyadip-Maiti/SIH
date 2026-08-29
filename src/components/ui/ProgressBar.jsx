@@ -15,11 +15,11 @@ export const ProgressBar = ({
   };
 
   const colors = {
-    blue: 'bg-blue-600',
+    blue: 'bg-slate-800',
     emerald: 'bg-emerald-600',
     amber: 'bg-amber-500',
     rose: 'bg-rose-600',
-    indigo: 'bg-indigo-600',
+    indigo: 'bg-slate-800',
   };
 
   return (
@@ -32,7 +32,7 @@ export const ProgressBar = ({
       )}
       <div className={`w-full bg-slate-100 rounded-full overflow-hidden ${heights[size]}`}>
         <div
-          className={`h-full transition-all duration-500 ease-out rounded-full ${colors[color] || 'bg-blue-600'}`}
+          className={`h-full transition-all duration-500 ease-out rounded-full ${colors[color] || 'bg-slate-800'}`}
           style={{ width: `${percentage}%` }}
         />
       </div>

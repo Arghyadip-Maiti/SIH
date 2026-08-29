@@ -10,13 +10,13 @@ export const EarlyWarningPanel = ({ earlyWarnings = {}, onWarningClick }) => {
   } = earlyWarnings;
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-slate-900 text-white shadow-md mb-6 relative overflow-hidden">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-slate-900 text-white  mb-6 relative overflow-hidden">
       {/* Background Subtle Gradient Glow */}
-      <div className="absolute -top-12 -right-12 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-12 -right-12 w-64 h-64 bg-slate-700/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="flex items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3 relative z-10">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
+          <div className="p-2 rounded-xl bg-slate-700/20 text-slate-500 border border-slate-600/30">
             <Sparkles className="w-5 h-5 animate-pulse" />
           </div>
           <div>
@@ -100,16 +100,16 @@ export const EarlyWarningPanel = ({ earlyWarnings = {}, onWarningClick }) => {
         {/* Warning 4: Payment vs Physical Progress Mismatch */}
         <div
           onClick={() => onWarningClick && onWarningClick('anomalyType', 'Payment-Progress Mismatch')}
-          className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:border-cyan-500/50 hover:bg-slate-800 transition-all cursor-pointer group"
+          className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:border-slate-600/50 hover:bg-slate-800 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
+            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
               <DollarSign className="w-4 h-4" />
               <span>Payment Mismatch</span>
             </span>
-            <span className="w-2 h-2 rounded-full bg-cyan-500" />
+            <span className="w-2 h-2 rounded-full bg-slate-700" />
           </div>
-          <div className="text-xl font-extrabold text-white tracking-tight group-hover:text-cyan-300 transition-colors">
+          <div className="text-xl font-extrabold text-white tracking-tight group-hover:text-slate-400 transition-colors">
             {paymentMismatchCount.toLocaleString()} works
           </div>
           <p className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">

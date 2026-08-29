@@ -32,6 +32,11 @@ import { Button } from '../ui/Button';
 import { getStatusBadgeClass, getRiskColorClass } from '../../utils/projectAnalytics';
 
 export const ProjectDetailsView = ({ project, onClose }) => {
+  const [selectedStagePercentage, setSelectedStagePercentage] = useState(25);
+  const [selectedPhoto, setSelectedPhoto] = useState(null); // Lightbox photo
+  const [mapType, setMapType] = useState('roadmap'); // 'roadmap' | 'satellite'
+  const [financialFilter, setFinancialFilter] = useState('all'); // 'all' | 'anomaly'
+
   if (!project) return null;
 
   const p = project;
@@ -42,18 +47,6 @@ export const ProjectDetailsView = ({ project, onClose }) => {
   const finProg = Number(p.financialProgress || 0);
   const sanctioned = Number(p.sanctionedAmount || 10000000);
   const expenditure = Number(p.expenditure || 6500000);
-
-  // Default active stage tab: default to 25% or highest reached stage
-  const [selectedStagePercentage, setSelectedStagePercentage] = useState(() => {
-    if (currProg >= 100) return 100;
-    if (currProg >= 75) return 75;
-    if (currProg >= 50) return 50;
-    return 25;
-  });
-
-  const [selectedPhoto, setSelectedPhoto] = useState(null); // Lightbox photo
-  const [mapType, setMapType] = useState('roadmap'); // 'roadmap' | 'satellite'
-  const [financialFilter, setFinancialFilter] = useState('all'); // 'all' | 'anomaly'
 
   const formatCurrency = (val) => {
     if (!val) return '₹0';
@@ -304,27 +297,27 @@ export const ProjectDetailsView = ({ project, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[1100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+      <div className="bg-white rounded-3xl border border-slate-200  max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
         
         {/* ========================================================================= */}
         {/* MODAL TOP HEADER */}
         {/* ========================================================================= */}
         <div className="p-6 bg-slate-900 text-white flex items-start justify-between border-b border-slate-800 shrink-0 relative overflow-hidden">
           {/* Subtle background glow element */}
-          <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-slate-800/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-2 pr-6 z-10">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="font-mono text-xs font-bold text-blue-400 bg-blue-950/90 px-3 py-1 rounded-lg border border-blue-800/80 shadow-sm">
+              <span className="font-mono text-xs font-bold text-slate-500 bg-blue-950/90 px-3 py-1 rounded-lg border border-blue-800/80 ">
                 {p.id}
               </span>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-sm ${statusBadge.bg}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold  ${statusBadge.bg}`}>
                 {statusBadge.label}
               </span>
               <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${riskBadge.bg}`}>
                 AI Risk Score: {p.riskScore}/100 ({p.riskLevel})
               </span>
-              <span className="bg-indigo-950/80 text-indigo-300 text-xs font-bold px-3 py-1 rounded-full border border-indigo-800">
+              <span className="bg-indigo-950/80 text-slate-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-800">
                 FY {p.financialYear}
               </span>
             </div>
@@ -346,7 +339,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all shadow-md z-10 shrink-0"
+            className="p-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all  z-10 shrink-0"
             title="Close modal"
           >
             <X className="w-6 h-6" />
@@ -361,87 +354,87 @@ export const ProjectDetailsView = ({ project, onClose }) => {
           {/* ------------------------------------------------------------------------- */}
           {/* SECTION 1: BASIC INFORMATION (ENLARGED & PROMINENT) */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="bg-gradient-to-br from-slate-50 via-slate-50 to-blue-50/30 p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-6">
+          <div className="bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100/30 p-6 sm:p-7 rounded-3xl border border-slate-200/90  space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 flex-wrap gap-2">
-              <h3 className="text-lg sm:text-xl font-black uppercase tracking-wider text-blue-700 flex items-center gap-2.5">
-                <div className="p-2 bg-blue-600 text-white rounded-xl shadow-md">
+              <h3 className="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-800 flex items-center gap-2.5">
+                <div className="p-2 bg-slate-800 text-white rounded-xl ">
                   <FileText className="w-5 h-5" />
                 </div>
                 <span>Basic Information</span>
               </h3>
-              <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200 ">
                 Official Sanctioned Project Record
               </span>
             </div>
 
             {/* Enlarged Key Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-blue-600" /> Project Title
+                  <Building className="w-3.5 h-3.5 text-slate-700" /> Project Title
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg leading-snug">{p.name}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-blue-600" /> Unique Project ID
+                  <Tag className="w-3.5 h-3.5 text-slate-700" /> Unique Project ID
                 </span>
-                <p className="font-mono font-black text-blue-700 text-base sm:text-lg">{p.id}</p>
+                <p className="font-mono font-black text-slate-800 text-base sm:text-lg">{p.id}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-blue-600" /> State &amp; District
+                  <MapPin className="w-3.5 h-3.5 text-slate-700" /> State &amp; District
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.district}, {p.state}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-blue-600" /> Parliamentary Constituency
+                  <Globe className="w-3.5 h-3.5 text-slate-700" /> Parliamentary Constituency
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.constituencyName} ({p.constituencyId})</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-blue-600" /> Member of Parliament (MP)
+                  <User className="w-3.5 h-3.5 text-slate-700" /> Member of Parliament (MP)
                 </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.mpName} <span className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">{p.house}</span></p>
+                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.mpName} <span className="text-xs text-slate-700 font-bold bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">{p.house}</span></p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-blue-600" /> Sector Work Category
+                  <Layers className="w-3.5 h-3.5 text-slate-700" /> Sector Work Category
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.projectType}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <HardHat className="w-3.5 h-3.5 text-blue-600" /> Nodal Implementing Agency
+                  <HardHat className="w-3.5 h-3.5 text-slate-700" /> Nodal Implementing Agency
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.implementingAgency}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-blue-600" /> Executing Contractor
+                  <Building className="w-3.5 h-3.5 text-slate-700" /> Executing Contractor
                 </span>
                 <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.contractor}</p>
               </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl shadow-2xs hover:shadow-md transition-shadow space-y-1">
+              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
                 <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-blue-600" /> Financial Year
+                  <Calendar className="w-3.5 h-3.5 text-slate-700" /> Financial Year
                 </span>
                 <p className="font-mono font-black text-slate-900 text-base sm:text-lg">FY {p.financialYear}</p>
               </div>
             </div>
 
             {/* Prominent Project Description & Scope Box */}
-            <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-2">
+            <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-2">
               <span className="text-slate-500 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-500" /> Project Scope &amp; Functional Description
               </span>
@@ -456,7 +449,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
           {/* ------------------------------------------------------------------------- */}
           <div className="space-y-6">
             <h3 className="text-base font-black uppercase tracking-wider text-emerald-700 flex items-center gap-2 border-b border-slate-200 pb-2">
-              <div className="p-1.5 bg-emerald-600 text-white rounded-lg shadow-sm">
+              <div className="p-1.5 bg-emerald-600 text-white rounded-lg ">
                 <TrendingUp className="w-4 h-4" />
               </div>
               <span>Financial Allocation &amp; Progress Execution</span>
@@ -464,22 +457,22 @@ export const ProjectDetailsView = ({ project, onClose }) => {
 
             {/* Financial Overview Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 bg-blue-50/80 border border-blue-200 rounded-2xl shadow-2xs">
-                <span className="text-blue-700 text-xs uppercase font-extrabold block">Estimated Cost</span>
-                <span className="text-xl sm:text-2xl font-mono font-black text-blue-950">{formatCurrency(p.estimatedCost)}</span>
+              <div className="p-4 bg-slate-100/80 border border-slate-300 rounded-2xl ">
+                <span className="text-slate-800 text-xs uppercase font-extrabold block">Estimated Cost</span>
+                <span className="text-xl sm:text-2xl font-mono font-black text-slate-950">{formatCurrency(p.estimatedCost)}</span>
               </div>
 
-              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl shadow-2xs">
+              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl ">
                 <span className="text-emerald-700 text-xs uppercase font-extrabold block">Sanctioned Amount</span>
                 <span className="text-xl sm:text-2xl font-mono font-black text-emerald-950">{formatCurrency(p.sanctionedAmount)}</span>
               </div>
 
-              <div className="p-4 bg-indigo-50/80 border border-indigo-200 rounded-2xl shadow-2xs">
-                <span className="text-indigo-700 text-xs uppercase font-extrabold block">Expenditure Spent</span>
+              <div className="p-4 bg-slate-100/80 border border-slate-300 rounded-2xl ">
+                <span className="text-slate-800 text-xs uppercase font-extrabold block">Expenditure Spent</span>
                 <span className="text-xl sm:text-2xl font-mono font-black text-indigo-950">{formatCurrency(p.expenditure)}</span>
               </div>
 
-              <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl shadow-2xs">
+              <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl ">
                 <span className="text-amber-700 text-xs uppercase font-extrabold block">Unutilized Funds</span>
                 <span className="text-xl sm:text-2xl font-mono font-black text-amber-950">{formatCurrency(p.unutilizedAmount)}</span>
               </div>
@@ -489,7 +482,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
             <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
               <div className="flex justify-between items-center flex-wrap gap-2">
                 <span className="font-extrabold text-sm text-slate-800">Physical vs Financial Progress Comparison</span>
-                <span className="font-mono text-xs font-bold text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
+                <span className="font-mono text-xs font-bold text-slate-800 bg-slate-200 px-3 py-1 rounded-full">
                   {p.progress}% Physical / {p.financialProgress}% Financial
                 </span>
               </div>
@@ -502,7 +495,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                   </div>
                   <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-blue-600 transition-all duration-500"
+                      className="h-full rounded-full bg-slate-800 transition-all duration-500"
                       style={{ width: `${Math.min(100, p.progress)}%` }}
                     />
                   </div>
@@ -533,11 +526,11 @@ export const ProjectDetailsView = ({ project, onClose }) => {
             </div>
 
             {/* NEW SUBSECTION: CONTRACTOR ITEMIZED EXPENSE LEDGER & BACKEND AI COST ANOMALY DETECTION */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 space-y-5">
+            <div className="bg-white rounded-3xl border border-slate-200  p-6 space-y-5">
               <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-4">
                 <div>
                   <h4 className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 flex items-center gap-2.5">
-                    <div className="p-2 bg-emerald-600 text-white rounded-xl shadow-md">
+                    <div className="p-2 bg-emerald-600 text-white rounded-xl ">
                       <Receipt className="w-5 h-5" />
                     </div>
                     <span>Contractor Itemized Expense Ledger &amp; AI Cost Audit</span>
@@ -552,13 +545,13 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                   <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-bold">
                     <button
                       onClick={() => setFinancialFilter('all')}
-                      className={`px-3 py-1.5 rounded-lg transition-all ${financialFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
+                      className={`px-3 py-1.5 rounded-lg transition-all ${financialFilter === 'all' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
                     >
                       All Expenses ({financialTransactions.length})
                     </button>
                     <button
                       onClick={() => setFinancialFilter('anomaly')}
-                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 ${financialFilter === 'anomaly' ? 'bg-amber-500 text-white shadow-xs' : 'text-amber-700 hover:text-amber-900'}`}
+                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 ${financialFilter === 'anomaly' ? 'bg-amber-500 text-white ' : 'text-amber-700 hover:text-amber-900'}`}
                     >
                       <AlertTriangle className="w-3.5 h-3.5" />
                       <span>AI Anomalies ({totalAnomalies})</span>
@@ -575,7 +568,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                       key={tx.id}
                       className={`p-4 rounded-2xl border transition-all space-y-3 ${
                         tx.status === 'anomaly'
-                          ? 'bg-amber-50/60 border-amber-300/90 shadow-2xs'
+                          ? 'bg-amber-50/60 border-amber-300/90 '
                           : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-50'
                       }`}
                     >
@@ -586,7 +579,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                             <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-200/80 px-2 py-0.5 rounded">
                               🗓️ {tx.date}
                             </span>
-                            <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">
+                            <span className="text-[11px] font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300">
                               {tx.category}
                             </span>
                             <span className="text-[11px] font-mono text-slate-500">
@@ -650,12 +643,12 @@ export const ProjectDetailsView = ({ project, onClose }) => {
           {/* ------------------------------------------------------------------------- */}
           {/* SECTION 3: STAGE-WISE MILESTONE PHOTO GALLERIES (25%, 50%, 75%, 100%) */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="space-y-6 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-6 sm:p-7 rounded-3xl text-white shadow-xl">
+          <div className="space-y-6 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-6 sm:p-7 rounded-3xl text-white ">
             {/* Header */}
             <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-4">
               <div>
                 <h3 className="text-base sm:text-xl font-black uppercase tracking-wider text-white flex items-center gap-2.5">
-                  <div className="p-2 bg-indigo-500 text-white rounded-xl shadow-md">
+                  <div className="p-2 bg-slate-700 text-white rounded-xl ">
                     <Bot className="w-5 h-5" />
                   </div>
                   <span>Milestone Stage Photo Galleries &amp; AI Verification</span>
@@ -684,7 +677,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                     onClick={() => setSelectedStagePercentage(stage.percentage)}
                     className={`p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
                       isSelected
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 border-white/60 text-white shadow-lg ring-2 ring-blue-400 scale-[1.02]'
+                        ? 'bg-gradient-to-r from-slate-700 to-slate-700 border-white/60 text-white  ring-2 ring-slate-500 scale-[1.02]'
                         : isCompleted
                         ? isMismatch
                           ? 'bg-amber-950/40 border-amber-700/80 text-amber-200 hover:bg-amber-900/50'
@@ -693,7 +686,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                     }`}
                   >
                     <div className="flex items-center justify-between font-mono text-xs font-extrabold mb-1">
-                      <span className={isSelected ? 'text-white' : 'text-blue-400'}>
+                      <span className={isSelected ? 'text-white' : 'text-slate-500'}>
                         {stage.percentage}% Milestone
                       </span>
                       {isCompleted ? (
@@ -723,7 +716,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
               {/* Active Stage Header Bar */}
               <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-blue-600 text-white rounded-2xl font-mono font-black text-sm shadow-md">
+                  <div className="p-2.5 bg-slate-800 text-white rounded-2xl font-mono font-black text-sm ">
                     {currentActiveStage.percentage}%
                   </div>
                   <div>
@@ -762,7 +755,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <ImageIcon className="w-4 h-4 text-blue-400" />
+                      <ImageIcon className="w-4 h-4 text-slate-500" />
                       <span>Submitted Photo Evidence Gallery ({currentActiveStage.photos.length} Images at {currentActiveStage.percentage}% Stage)</span>
                     </span>
                     <span>Contractor: <strong className="text-slate-200">{p.contractor}</strong></span>
@@ -772,7 +765,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                     {currentActiveStage.photos.map((photo, pIdx) => (
                       <div
                         key={photo.id || pIdx}
-                        className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-md hover:border-slate-700 transition-all flex flex-col justify-between group"
+                        className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800  hover:border-slate-700 transition-all flex flex-col justify-between group"
                       >
                         {/* Image Container */}
                         <div
@@ -785,16 +778,16 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5">
+                            <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl  flex items-center gap-1.5">
                               <Maximize2 className="w-3.5 h-3.5" /> Expand Photo &amp; AI Data
                             </span>
                           </div>
 
-                          <div className="absolute top-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-slate-800 shadow-md">
+                          <div className="absolute top-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-slate-800 ">
                             Photo #{pIdx + 1}
                           </div>
 
-                          <div className="absolute bottom-2.5 right-2.5 bg-slate-950/90 text-white text-[10px] font-mono px-2 py-0.5 rounded-md border border-slate-800 shadow-md">
+                          <div className="absolute bottom-2.5 right-2.5 bg-slate-950/90 text-white text-[10px] font-mono px-2 py-0.5 rounded-md border border-slate-800 ">
                             📍 {photo.lat.toFixed(4)}° N, {photo.lng.toFixed(4)}° E
                           </div>
                         </div>
@@ -803,7 +796,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                         <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
                           <div>
                             <div className="flex items-center justify-between text-[11px] text-slate-400 font-bold mb-1">
-                              <span className="text-blue-400 font-mono">Stage Photo {pIdx + 1} of {currentActiveStage.photos.length}</span>
+                              <span className="text-slate-500 font-mono">Stage Photo {pIdx + 1} of {currentActiveStage.photos.length}</span>
                               <span>{photo.submissionDate}</span>
                             </div>
                             <h5 className="font-extrabold text-sm text-white leading-tight">{photo.title}</h5>
@@ -811,7 +804,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
 
                           {/* BACKEND AI OPINION FOR THIS PHOTO */}
                           <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs">
-                            <div className="flex items-center gap-1.5 text-indigo-400 font-bold text-[11px] uppercase">
+                            <div className="flex items-center gap-1.5 text-slate-500 font-bold text-[11px] uppercase">
                               <Bot className="w-3.5 h-3.5 shrink-0" />
                               <span>System AI Opinion Analysis:</span>
                             </div>
@@ -844,11 +837,11 @@ export const ProjectDetailsView = ({ project, onClose }) => {
           {/* ------------------------------------------------------------------------- */}
           {/* SECTION 4: LOCATION & GOOGLE MAPS IFRAME */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="space-y-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="space-y-4 bg-white p-6 rounded-3xl border border-slate-200 ">
             <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-3">
               <div>
                 <h3 className="text-base sm:text-lg font-black uppercase tracking-wider text-rose-700 flex items-center gap-2">
-                  <div className="p-2 bg-rose-600 text-white rounded-xl shadow-md">
+                  <div className="p-2 bg-rose-600 text-white rounded-xl ">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <span>Geographic Location &amp; Site Map</span>
@@ -863,13 +856,13 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                 <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-bold">
                   <button
                     onClick={() => setMapType('roadmap')}
-                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'roadmap' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'roadmap' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
                   >
                     Roadmap
                   </button>
                   <button
                     onClick={() => setMapType('satellite')}
-                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'satellite' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'satellite' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
                   >
                     Satellite
                   </button>
@@ -879,7 +872,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                   href={externalGoogleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
+                  className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors "
                 >
                   <span>Open Google Maps</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -898,7 +891,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
               </div>
 
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
+                <MapPin className="w-4 h-4 text-slate-700 shrink-0" />
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase font-bold block">District &amp; Constituency</span>
                   <span className="font-bold text-slate-900">{p.district}, {p.state} ({p.constituencyName})</span>
@@ -915,7 +908,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
             </div>
 
             {/* GOOGLE MAPS IFRAME */}
-            <div className="relative rounded-2xl overflow-hidden border border-slate-300 shadow-md bg-slate-100">
+            <div className="relative rounded-2xl overflow-hidden border border-slate-300  bg-slate-100">
               <iframe
                 title={`Google Maps Location for ${p.name}`}
                 src={googleMapEmbedUrl}
@@ -943,7 +936,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
             onClick={onClose}
             variant="primary"
             size="md"
-            className="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-md"
+            className="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl "
           >
             Close Details
           </Button>
@@ -955,10 +948,10 @@ export const ProjectDetailsView = ({ project, onClose }) => {
       {/* ========================================================================= */}
       {selectedPhoto && (
         <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-[1300] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col max-h-[90vh]">
+          <div className="relative max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden border border-slate-800  flex flex-col max-h-[90vh]">
             <div className="p-4 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
               <div>
-                <h4 className="font-extrabold text-sm text-indigo-300">{selectedPhoto.stageName || 'Milestone Photo'} - {selectedPhoto.title}</h4>
+                <h4 className="font-extrabold text-sm text-slate-400">{selectedPhoto.stageName || 'Milestone Photo'} - {selectedPhoto.title}</h4>
                 <p className="text-xs text-slate-400">Contractor: {p.contractor} &bull; Date: {selectedPhoto.submissionDate}</p>
               </div>
               <button
@@ -973,7 +966,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
               <img
                 src={selectedPhoto.url}
                 alt={selectedPhoto.title}
-                className="max-h-[55vh] w-auto max-w-full object-contain rounded-xl shadow-2xl"
+                className="max-h-[55vh] w-auto max-w-full object-contain rounded-xl "
               />
             </div>
 
@@ -982,12 +975,12 @@ export const ProjectDetailsView = ({ project, onClose }) => {
                 <span className="font-mono text-emerald-400 font-bold">
                   📍 GPS Geotag: {selectedPhoto.lat ? selectedPhoto.lat.toFixed(6) : lat}° N, {selectedPhoto.lng ? selectedPhoto.lng.toFixed(6) : lng}° E
                 </span>
-                <span className="bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-800 font-bold text-[10px] flex items-center gap-1">
-                  <Bot className="w-3 h-3 text-indigo-400" /> Backend AI Computer Vision Verified
+                <span className="bg-indigo-950 text-slate-400 px-2.5 py-0.5 rounded-full border border-indigo-800 font-bold text-[10px] flex items-center gap-1">
+                  <Bot className="w-3 h-3 text-slate-500" /> Backend AI Computer Vision Verified
                 </span>
               </div>
               <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                <span className="font-bold text-indigo-400 block uppercase text-[10px] tracking-wider">Backend AI System Opinion:</span>
+                <span className="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">Backend AI System Opinion:</span>
                 <p className="text-slate-300 leading-relaxed font-medium">
                   {selectedPhoto.aiOpinion}
                 </p>

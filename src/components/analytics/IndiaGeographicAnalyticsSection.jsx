@@ -10,7 +10,7 @@ export const IndiaGeographicAnalyticsSection = ({ filters = {} }) => {
   const [selectedConstituency, setSelectedConstituency] = useState(null);
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <SectionHeader
         title="Geographic Distribution & Performance"
         subtitle="Interactive 543 Lok Sabha Constituency spatial map and regional analytics detail center"
@@ -34,7 +34,7 @@ export const IndiaGeographicAnalyticsSection = ({ filters = {} }) => {
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 h-full flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <MapPin className="w-5 h-5 text-blue-600 shrink-0" />
+                  <MapPin className="w-5 h-5 text-slate-700 shrink-0" />
                   <h3 className="text-base font-extrabold text-slate-900">
                     {selectedConstituency.constituencyName}
                   </h3>
@@ -48,14 +48,14 @@ export const IndiaGeographicAnalyticsSection = ({ filters = {} }) => {
                   <div className="p-3 rounded-xl bg-white border border-slate-200">
                     <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Representative MP</div>
                     <div className="text-sm font-extrabold text-slate-800 mt-0.5">{selectedConstituency.mpName || 'Member of Parliament'}</div>
-                    <div className="text-xs text-blue-600 font-semibold">{selectedConstituency.party || 'Lok Sabha'}</div>
+                    <div className="text-xs text-slate-700 font-semibold">{selectedConstituency.party || 'Lok Sabha'}</div>
                   </div>
 
                   {/* Financials */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="p-3 rounded-xl bg-white border border-slate-200">
                       <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase">
-                        <IndianRupee className="w-3 h-3 text-blue-600" />
+                        <IndianRupee className="w-3 h-3 text-slate-700" />
                         <span>Expenditure</span>
                       </div>
                       <div className="text-base font-extrabold text-slate-900 mt-1">

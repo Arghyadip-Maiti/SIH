@@ -17,7 +17,7 @@ export const ProjectImplementationTrendSection = ({ data = [] }) => {
   };
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="Project Implementation Trend"
@@ -29,7 +29,7 @@ export const ProjectImplementationTrendSection = ({ data = [] }) => {
           {[
             { key: 'sanctioned', label: 'Sanctioned', color: '#64748B' },
             { key: 'started', label: 'Started', color: '#0284C7' },
-            { key: 'ongoing', label: 'Ongoing', color: '#2563EB' },
+            { key: 'ongoing', label: 'Ongoing', color: '#475569' },
             { key: 'completed', label: 'Completed', color: '#16A34A' },
             { key: 'delayed', label: 'Delayed', color: '#DC2626' },
           ].map((item) => (
@@ -38,7 +38,7 @@ export const ProjectImplementationTrendSection = ({ data = [] }) => {
               onClick={() => toggleSeries(item.key)}
               className={`text-[11px] font-semibold px-2 py-1 rounded-lg flex items-center gap-1.5 transition-all ${
                 activeSeries[item.key]
-                  ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                  ? 'bg-white text-slate-900  font-bold'
                   : 'text-slate-400 hover:text-slate-600 line-through'
               }`}
             >
@@ -81,7 +81,7 @@ export const ProjectImplementationTrendSection = ({ data = [] }) => {
               <Line type="monotone" name="Started" dataKey="started" stroke="#0284C7" strokeWidth={2} dot={false} />
             )}
             {activeSeries.ongoing && (
-              <Line type="monotone" name="Ongoing" dataKey="ongoing" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3 }} />
+              <Line type="monotone" name="Ongoing" dataKey="ongoing" stroke="#475569" strokeWidth={2.5} dot={{ r: 3 }} />
             )}
             {activeSeries.completed && (
               <Line type="monotone" name="Completed" dataKey="completed" stroke="#16A34A" strokeWidth={2.5} dot={{ r: 3 }} />

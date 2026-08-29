@@ -19,7 +19,7 @@ export const RiskDistributionSection = ({ data = [] }) => {
     <Card header={
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-blue-600" />
+          <Shield className="w-4 h-4 text-slate-700" />
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
             Risk Tier Volume Distribution
           </h3>
@@ -71,6 +71,7 @@ export const RiskDistributionSection = ({ data = [] }) => {
                     innerRadius={58}
                     outerRadius={80}
                     paddingAngle={2}
+                  cornerRadius={6}
                     dataKey="count"
                     onMouseLeave={() => setHoveredIndex(null)}
                   >
@@ -116,7 +117,7 @@ export const RiskDistributionSection = ({ data = [] }) => {
                 onMouseLeave={() => setHoveredIndex(null)}
                 className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
                   hoveredIndex === index
-                    ? 'bg-blue-50/80 border-blue-200 shadow-2xs'
+                    ? 'bg-slate-100/80 border-slate-300 '
                     : 'bg-slate-50 border-slate-100'
                 }`}
               >
@@ -174,7 +175,7 @@ export const RiskDistributionSection = ({ data = [] }) => {
               Cumulative Health Baseline
             </span>
             <div className="flex items-center gap-1.5 pt-0.5">
-              <Activity className="w-4 h-4 text-blue-600" />
+              <Activity className="w-4 h-4 text-slate-700" />
               <span className="text-xs font-extrabold text-slate-800">
                 {totalWorks.toLocaleString()} Evaluated
               </span>

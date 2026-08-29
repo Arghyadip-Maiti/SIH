@@ -1,4 +1,4 @@
-import { Building2, RotateCcw } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import { Card } from '../ui/Card';
 
 export const AgencyRiskOverviewSection = ({
@@ -14,7 +14,7 @@ export const AgencyRiskOverviewSection = ({
     <Card header={
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2.5">
-          <Building2 className="w-4.5 h-4.5 text-blue-600 shrink-0" />
+          <Building2 className="w-4.5 h-4.5 text-slate-700 shrink-0" />
           <div>
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               Implementing Agency Risk
@@ -34,10 +34,9 @@ export const AgencyRiskOverviewSection = ({
                 e.stopPropagation();
                 if (onResetAgency) onResetAgency();
               }}
-              className="h-[30px] px-3 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none shrink-0 shadow-2xs cursor-pointer"
+              className="h-[30px] px-3 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none shrink-0  cursor-pointer"
               title="Reset agency filter"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>Reset</span>
             </button>
           </div>
@@ -54,8 +53,8 @@ export const AgencyRiskOverviewSection = ({
               onClick={() => onAgencySelect && onAgencySelect(ag.agency)}
               className={`p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                 isSelected
-                  ? 'bg-blue-50/80 border-blue-400 shadow-xs'
-                  : 'bg-slate-50/50 border-slate-200 hover:bg-white hover:border-blue-300 hover:shadow-2xs'
+                  ? 'bg-slate-100/80 border-slate-500 '
+                  : 'bg-slate-50/50 border-slate-200 hover:bg-white hover:border-slate-400 hover:'
               }`}
             >
               <div>
@@ -67,7 +66,7 @@ export const AgencyRiskOverviewSection = ({
                     {ag.riskTier} RISK
                   </span>
                   {isSelected && (
-                    <span className="text-[10px] font-extrabold bg-blue-600 text-white px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-extrabold bg-slate-800 text-white px-2 py-0.5 rounded-md">
                       Filtered
                     </span>
                   )}

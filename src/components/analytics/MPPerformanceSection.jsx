@@ -20,7 +20,7 @@ export const MPPerformanceSection = ({ data = [] }) => {
   }, [data, searchTerm]);
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="MP Performance Leaderboard"
@@ -34,7 +34,7 @@ export const MPPerformanceSection = ({ data = [] }) => {
             placeholder="Search MP or Constituency..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
           />
         </div>
       </div>
@@ -61,10 +61,10 @@ export const MPPerformanceSection = ({ data = [] }) => {
                 <tr
                   key={mp.mpId}
                   onClick={() => navigate(`/mp/${mp.mpId}`)}
-                  className="hover:bg-blue-50/40 cursor-pointer transition-colors group"
+                  className="hover:bg-slate-100/40 cursor-pointer transition-colors group"
                 >
                   <td className="py-2.5 px-3 text-center font-extrabold text-slate-400">{index + 1}</td>
-                  <td className="py-2.5 px-3 font-bold text-slate-900 group-hover:text-blue-700">
+                  <td className="py-2.5 px-3 font-bold text-slate-900 group-hover:text-slate-800">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-[10px] font-extrabold shrink-0">
                         <User className="w-3.5 h-3.5" />
@@ -76,11 +76,11 @@ export const MPPerformanceSection = ({ data = [] }) => {
                   <td className="py-2.5 px-3 text-slate-500 font-semibold">{mp.state}</td>
                   <td className="py-2.5 px-3 text-right font-semibold text-slate-700">{mp.totalProjects}</td>
                   <td className="py-2.5 px-3 text-right font-extrabold text-slate-900">₹{mp.expenditureCr} Cr</td>
-                  <td className="py-2.5 px-3 text-right font-extrabold text-blue-700">{mp.utilization}%</td>
+                  <td className="py-2.5 px-3 text-right font-extrabold text-slate-800">{mp.utilization}%</td>
                   <td className="py-2.5 px-3 text-right font-semibold text-emerald-600">{mp.completionRate}%</td>
                   <td className="py-2.5 px-3 text-right font-bold text-slate-800">{mp.averageRiskScore || mp.avgRiskScore}</td>
                   <td className="py-2.5 px-3 text-center">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:underline">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 hover:underline">
                       <span>View</span>
                       <ExternalLink className="w-3 h-3" />
                     </span>

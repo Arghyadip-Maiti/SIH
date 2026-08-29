@@ -16,7 +16,7 @@ export const ProjectRiskSummarySection = ({ riskDistribution = [] }) => {
       header={
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-blue-600" />
+            <ShieldAlert className="w-4 h-4 text-slate-700" />
             <h3 className="text-base font-bold text-slate-900">Project Risk Distribution</h3>
           </div>
           <span className="text-xs font-semibold text-slate-500">AI Risk Classification</span>
@@ -68,12 +68,13 @@ export const ProjectRiskSummarySection = ({ riskDistribution = [] }) => {
                   innerRadius={65}
                   outerRadius={85}
                   paddingAngle={2}
+                  cornerRadius={6}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {riskDistribution.map((entry, index) => (
                     <Cell
                       key={`risk-cell-${index}`}
-                      fill={entry.color || '#2563EB'}
+                      fill={entry.color || '#475569'}
                       stroke="#FFFFFF"
                       strokeWidth={2}
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -118,8 +119,8 @@ export const ProjectRiskSummarySection = ({ riskDistribution = [] }) => {
               onMouseLeave={() => setHoveredIndex(null)}
               className={`p-3 rounded-xl border transition-all cursor-pointer ${
                 hoveredIndex === index
-                  ? 'shadow-xs scale-[1.02] border-opacity-100 ring-2 ring-blue-400/30'
-                  : 'hover:shadow-2xs'
+                  ? ' scale-[1.02] border-opacity-100 ring-2 ring-slate-500/30'
+                  : 'hover:'
               }`}
               style={{
                 backgroundColor: `${r.color}10`,

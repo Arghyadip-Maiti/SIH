@@ -92,7 +92,7 @@ export const ProjectsRequiringAttentionTable = ({
     <Card header={
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-rose-50 text-rose-600 shadow-2xs">
+          <div className="p-2 rounded-xl bg-rose-50 text-rose-600 ">
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div>
@@ -118,7 +118,7 @@ export const ProjectsRequiringAttentionTable = ({
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto overscroll-x-none">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs bg-slate-50/80">
@@ -167,12 +167,12 @@ export const ProjectsRequiringAttentionTable = ({
                     <tr
                       key={p.id}
                       onClick={() => handleRowClick(p)}
-                      className="hover:bg-blue-50/70 cursor-pointer transition-colors group"
+                      className="hover:bg-slate-100/70 cursor-pointer transition-colors group"
                       title="Click row to view AI Project Investigation"
                     >
                       {/* Project & ID */}
                       <td className="py-4 px-4">
-                        <div className="font-extrabold text-slate-900 group-hover:text-blue-700 transition-colors text-sm sm:text-base leading-snug">
+                        <div className="font-extrabold text-slate-900 group-hover:text-slate-800 transition-colors text-sm sm:text-base leading-snug">
                           {p.name}
                         </div>
                         <div className="text-xs font-mono text-slate-400 font-semibold mt-1">
@@ -198,9 +198,9 @@ export const ProjectsRequiringAttentionTable = ({
                       {/* Progress (Wider Progress Bar) */}
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-36 sm:w-48 bg-slate-100 rounded-full h-2.5 overflow-hidden shadow-2xs shrink-0">
+                          <div className="w-36 sm:w-48 bg-slate-100 rounded-full h-2.5 overflow-hidden  shrink-0">
                             <div
-                              className="h-full bg-blue-600 rounded-full transition-all"
+                              className="h-full bg-slate-800 rounded-full transition-all"
                               style={{ width: `${Math.min(100, Math.max(0, p.physicalProgress || 0))}%` }}
                             />
                           </div>
@@ -214,7 +214,7 @@ export const ProjectsRequiringAttentionTable = ({
                       <td className="py-4 px-4 text-right">
                         <div className="inline-flex items-center gap-1.5 font-mono font-black text-base">
                           <span className="text-base">{riskIcon}</span>
-                          <span className={`px-2.5 py-1 rounded-xl border text-xs font-bold shadow-2xs ${badgeColor}`}>
+                          <span className={`px-2.5 py-1 rounded-xl border text-xs font-bold  ${badgeColor}`}>
                             {p.riskScore}
                           </span>
                         </div>
@@ -251,7 +251,7 @@ export const ProjectsRequiringAttentionTable = ({
                     setPageSize(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 font-mono text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 font-mono text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-600"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -262,57 +262,57 @@ export const ProjectsRequiringAttentionTable = ({
             </div>
 
             {totalPages > 1 && (
-              <div className="flex flex-wrap items-center gap-1.5">
+              <div className="flex flex-wrap items-center gap-2">
                 {/* Previous Page Arrow Button */}
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  title="Previous Page"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
+              <button
+                type="button"
+                onClick={() => setPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="p-1.5 rounded-full text-slate-800 hover:bg-slate-200/70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                title="Previous Page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
 
-                {/* Dynamic Numbered Page Buttons with Ellipsis */}
-                {pageItems.map((item) => {
-                  if (typeof item === 'string' && item.startsWith('ellipsis')) {
-                    return (
-                      <span key={item} className="px-1 text-slate-400 font-bold select-none">
-                        •••
-                      </span>
-                    );
-                  }
-
-                  const pageNum = item;
-                  const isActive = pageNum === currentPage;
+              {/* Dynamic Numbered Page Buttons with Ellipsis */}
+              {pageItems.map((item) => {
+                if (typeof item === 'string' && item.startsWith('ellipsis')) {
                   return (
-                    <button
-                      key={`page-btn-${pageNum}`}
-                      type="button"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={`min-w-[32px] h-[32px] px-2 rounded-lg text-xs font-bold font-mono transition-all ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-xs scale-105 border border-blue-600'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
+                    <span key={item} className="px-1 text-slate-800 font-semibold select-none">
+                      ...
+                    </span>
                   );
-                })}
+                }
 
-                {/* Next Page Arrow Button */}
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  title="Next Page"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
+                const pageNum = item;
+                const isActive = pageNum === currentPage;
+                return (
+                  <button
+                    key={`page-btn-${pageNum}`}
+                    type="button"
+                    onClick={() => setPage(pageNum)}
+                    className={`min-w-[32px] h-[32px] flex items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                      isActive
+                        ? 'bg-black text-white'
+                        : 'text-slate-800 hover:bg-slate-200/70 bg-transparent'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              {/* Next Page Arrow Button */}
+              <button
+                type="button"
+                onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="p-1.5 rounded-full text-slate-800 hover:bg-slate-200/70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                title="Next Page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
             )}
           </div>
         </>

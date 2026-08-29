@@ -106,7 +106,7 @@ export const computeFilteredOverview = (filters = {}) => {
     sectorMap[t].count += 1;
   });
 
-  const sectorColors = ['#2563EB', '#0284C7', '#16A34A', '#06B6D4', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
+  const sectorColors = ['#475569', '#0284C7', '#16A34A', '#64748b', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
   const dynamicSectorExpenditure = Object.values(sectorMap)
     .sort((a, b) => b.expenditure - a.expenditure)
     .map((s, idx) => ({
@@ -242,7 +242,7 @@ export const computeFilteredOverview = (filters = {}) => {
 
     const avgRisk = c.totalWorks > 0 ? Math.round(c.riskScoreSum / c.totalWorks) : 0;
     const sectorBreakdown = Object.entries(c.sectorExpMap).map(([sName, sExp], idx) => {
-      const colors = ['#2563EB', '#0284C7', '#16A34A', '#06B6D4', '#8B5CF6', '#F59E0B'];
+      const colors = ['#475569', '#0284C7', '#16A34A', '#64748b', '#8B5CF6', '#F59E0B'];
       const p = c.expenditure > 0 ? Number(((sExp / c.expenditure) * 100).toFixed(1)) : 0;
       return {
         name: sName,
@@ -329,7 +329,7 @@ export const computeFilteredOverview = (filters = {}) => {
     },
     projectStatusDistribution: [
       { name: "Completed", key: "COMPLETED", count: completedWorks, percentage: completedPct, color: "#16A34A" },
-      { name: "Ongoing (In Progress)", key: "ONGOING", count: ongoingWorks, percentage: ongoingPct, color: "#2563EB" },
+      { name: "Ongoing (In Progress)", key: "ONGOING", count: ongoingWorks, percentage: ongoingPct, color: "#475569" },
       { name: "Near Completion", key: "NEAR_COMPLETION", count: nearCompletionWorks, percentage: nearCompPct, color: "#F59E0B" },
       { name: "Starting", key: "STARTING", count: startingWorks, percentage: startingPct, color: "#94A3B8" },
       { name: "Delayed", key: "DELAYED", count: delayedWorks, percentage: delayedPct, color: "#DC2626" },

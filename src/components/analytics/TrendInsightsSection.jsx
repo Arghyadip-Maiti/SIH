@@ -29,17 +29,17 @@ export const TrendInsightsSection = ({ insights = [] }) => {
       default:
         return {
           icon: Info,
-          border: 'border-blue-200 bg-blue-50/60 text-blue-900',
-          badge: 'bg-blue-100 text-blue-800',
-          iconColor: 'text-blue-600',
+          border: 'border-slate-300 bg-slate-100/60 text-slate-950',
+          badge: 'bg-slate-200 text-slate-900',
+          iconColor: 'text-slate-700',
         };
     }
   };
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex items-center gap-2 mb-4">
-        <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700">
+        <div className="p-1.5 rounded-lg bg-slate-100 text-slate-800">
           <Sparkles className="w-5 h-5" />
         </div>
         <SectionHeader
@@ -58,7 +58,7 @@ export const TrendInsightsSection = ({ insights = [] }) => {
               key={item.id}
               className={`p-4 rounded-2xl border ${style.border} flex items-start gap-3 transition-all`}
             >
-              <div className={`p-2 rounded-xl bg-white shadow-2xs shrink-0 ${style.iconColor}`}>
+              <div className={`p-2 rounded-xl bg-white  shrink-0 ${style.iconColor}`}>
                 <Icon className="w-5 h-5" />
               </div>
 

@@ -185,7 +185,7 @@ export const useAiRiskData = (projectIdParam = null) => {
     });
 
     const colors = {
-      'Financial': '#2563EB',
+      'Financial': '#475569',
       'Photo': '#8B5CF6',
       'Location': '#F97316',
       'Duplicate Photo': '#EF4444',
