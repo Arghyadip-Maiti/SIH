@@ -6,11 +6,7 @@ import { ProjectCompletionForecast } from '../../components/analytics/ProjectCom
 import { DelayBottleneckAnalysis } from '../../components/analytics/DelayBottleneckAnalysis';
 import { CostPressureAnalysis } from '../../components/analytics/CostPressureAnalysis';
 import { GeographicIntelligenceMap } from '../../components/analytics/GeographicIntelligenceMap';
-import { MpOutlookSection } from '../../components/analytics/MpOutlookSection';
 import { AgencyOutlookSection } from '../../components/analytics/AgencyOutlookSection';
-import { PatternDiscoverySection } from '../../components/analytics/PatternDiscoverySection';
-import { FutureHotspotsSection } from '../../components/analytics/FutureHotspotsSection';
-import { DecisionRecommendationsSection } from '../../components/analytics/DecisionRecommendationsSection';
 import { WhatIfScenarioSimulator } from '../../components/analytics/WhatIfScenarioSimulator';
 import { AlertCircle, RefreshCw, Filter } from 'lucide-react';
 
@@ -116,23 +112,10 @@ export const AnalyticsPage = () => {
             onApplyFilter={applyCrossFilter}
           />
 
-          {/* 16 & 17. MP OUTLOOK & AGENCY INTEL */}
-          <MpOutlookSection data={analyticsData?.mpOutlook} />
+          {/* 17. AGENCY INTEL */}
           <AgencyOutlookSection data={analyticsData?.agencyOutlook} />
 
-          {/* 18. 🔎 PATTERN DISCOVERY */}
-          <PatternDiscoverySection data={analyticsData?.patternDiscovery} />
-
-          {/* 19. ⚠️ FUTURE HOTSPOTS */}
-          <FutureHotspotsSection
-            data={analyticsData?.futureHotspots}
-            onApplyFilter={applyCrossFilter}
-          />
-
           {/* STEP 4: WHAT SHOULD WE DO? */}
-          {/* 20. 🎯 DECISION RECOMMENDATIONS */}
-          <DecisionRecommendationsSection data={analyticsData?.recommendations} />
-
           {/* 21. 🧪 WHAT-IF SCENARIO ANALYSIS */}
           <WhatIfScenarioSimulator
             simulationData={analyticsData?.whatIfSimulation}
