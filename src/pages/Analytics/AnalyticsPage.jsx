@@ -4,10 +4,8 @@ import { AnalyticsFilterBar } from '../../components/analytics/AnalyticsFilterBa
 import { FutureOutlookHero } from '../../components/analytics/FutureOutlookHero';
 import { ProjectCompletionForecast } from '../../components/analytics/ProjectCompletionForecast';
 import { DelayBottleneckAnalysis } from '../../components/analytics/DelayBottleneckAnalysis';
-import { FinancialOutlookSection } from '../../components/analytics/FinancialOutlookSection';
 import { CostPressureAnalysis } from '../../components/analytics/CostPressureAnalysis';
 import { GeographicIntelligenceMap } from '../../components/analytics/GeographicIntelligenceMap';
-import { StateOutlookSection } from '../../components/analytics/StateOutlookSection';
 import { MpOutlookSection } from '../../components/analytics/MpOutlookSection';
 import { AgencyOutlookSection } from '../../components/analytics/AgencyOutlookSection';
 import { PatternDiscoverySection } from '../../components/analytics/PatternDiscoverySection';
@@ -101,17 +99,14 @@ export const AnalyticsPage = () => {
 
           {/* STEP 2: WHY IS IT HAPPENING? */}
 
-          {/* 9. 🏗️ PROJECT COMPLETION FORECAST */}
+          {/* 9. 🏗️ HISTORIC COMPARISON */}
           <ProjectCompletionForecast data={analyticsData?.completionForecast} />
 
-          {/* 10. ⏱️ DELAY & BOTTLENECK ANALYSIS */}
+          {/* 10. ⏱️ AVERAGE DELAY & BOTTLENECK ANALYSIS */}
           <DelayBottleneckAnalysis data={analyticsData?.bottleneckAnalysis} />
 
-          {/* 11 & 12. FINANCIAL OUTLOOK & COST PRESSURE ANALYSIS */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <FinancialOutlookSection data={analyticsData?.financialOutlook} />
-            <CostPressureAnalysis data={analyticsData?.costPressureAnalysis} />
-          </div>
+          {/* 12. COST PRESSURE ANALYSIS */}
+          <CostPressureAnalysis data={analyticsData?.costPressureAnalysis} />
 
           {/* STEP 3: WHERE WILL IT HAPPEN? */}
           {/* 13 & 14. 🗺️ GEOGRAPHIC INTELLIGENCE (INDIA MAP & SIDE PANEL) */}
@@ -121,14 +116,9 @@ export const AnalyticsPage = () => {
             onApplyFilter={applyCrossFilter}
           />
 
-          {/* 15. 🏛️ STATE OUTLOOK */}
-          <StateOutlookSection data={analyticsData?.stateOutlook} />
-
           {/* 16 & 17. MP OUTLOOK & AGENCY INTEL */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <MpOutlookSection data={analyticsData?.mpOutlook} />
-            <AgencyOutlookSection data={analyticsData?.agencyOutlook} />
-          </div>
+          <MpOutlookSection data={analyticsData?.mpOutlook} />
+          <AgencyOutlookSection data={analyticsData?.agencyOutlook} />
 
           {/* 18. 🔎 PATTERN DISCOVERY */}
           <PatternDiscoverySection data={analyticsData?.patternDiscovery} />

@@ -84,7 +84,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset }) => {
   return (
     <div className="mb-6 transition-all">
       {/* Filter Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5 items-end">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2.5 items-end">
         {/* Financial Year */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
@@ -163,26 +163,6 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset }) => {
               ...SECTORS.map((sec) => ({ value: sec, label: sec })),
             ]}
             defaultLabel="All Sectors"
-          />
-        </div>
-
-        {/* Work Status */}
-        <div>
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-            Work Status
-          </label>
-          <CustomSelect
-            value={filters.status}
-            onChange={(val) => onFilterChange('status', val)}
-            options={[
-              { value: '', label: 'All Statuses' },
-              { value: 'COMPLETED', label: 'Completed' },
-              { value: 'ONGOING', label: 'Ongoing' },
-              { value: 'NEAR_COMPLETION', label: 'Near Completion' },
-              { value: 'STARTING', label: 'Starting' },
-              { value: 'DELAYED', label: 'Delayed' },
-            ]}
-            defaultLabel="All Statuses"
           />
         </div>
       </div>

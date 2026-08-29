@@ -75,28 +75,7 @@ export const GeographicIntelligenceMap = ({
             <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
               Geographic Intelligence & Spatial Analytics
             </h3>
-            <p className="text-xs font-semibold text-slate-500 mt-0.5">
-              Interactive 543 Parliamentary Constituency GIS Map with 10 analytical metric layers and side panel drilldown
-            </p>
           </div>
-        </div>
-
-        {/* Map Metric Layer Dropdown Selector */}
-        <div className="flex items-center gap-2">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">
-            Map Metric:
-          </label>
-          <select
-            value={selectedMapMetric}
-            onChange={(e) => setSelectedMapMetric(e.target.value)}
-            className="text-xs font-bold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
-          >
-            {MAP_METRICS.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.label}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 

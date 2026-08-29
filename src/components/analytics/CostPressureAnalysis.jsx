@@ -27,20 +27,10 @@ export const CostPressureAnalysis = ({ data }) => {
           </div>
           <div>
             <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              Cost Pressure Analysis & Sector Inflation
+              Average Cost Pressure Analysis
             </h3>
-            <p className="text-xs font-semibold text-slate-500 mt-0.5">
-              Sectoral cost escalation trajectory: Comparing baseline unit costs against forecasted budget requirements
-            </p>
           </div>
         </div>
-
-        {highestInflationSector && (
-          <div className="flex items-center gap-2 text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200">
-            <AlertTriangle className="w-4 h-4 text-rose-600" />
-            <span>Highest Inflation: {highestInflationSector.type} (+{highestInflationSector.inflationRatePct}%)</span>
-          </div>
-        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
