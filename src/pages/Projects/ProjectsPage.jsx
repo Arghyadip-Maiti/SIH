@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useProjects } from '../../hooks/useProjects';
-import { LoadingState } from '../../components/ui/LoadingState';
+import { ProjectsSkeletonPreloader } from '../../components/ui/SkeletonPreloader';
 import { ErrorState } from '../../components/ui/ErrorState';
 
 import { ProjectHeader } from '../../components/projects/ProjectHeader';
@@ -37,6 +37,22 @@ export const ProjectsPage = () => {
     refetch,
   } = useProjects();
 
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    if (!loading && statistics.kpis.totalProjects) {
+      setIsFadingOut(true);
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 1000); // Wait for the fade out transition
+      return () => clearTimeout(timer);
+    } else if (loading && !statistics.kpis.totalProjects) {
+      setShowSkeleton(true);
+      setIsFadingOut(false);
+    }
+  }, [loading, statistics.kpis.totalProjects]);
+
   // Sync initial query params from URL (e.g., ?state=Maharashtra&district=Pune)
   useEffect(() => {
     const urlState = searchParams.get('state');
@@ -52,9 +68,29 @@ export const ProjectsPage = () => {
     if (urlRisk) handleFilterChange('riskLevel', urlRisk);
   }, [searchParams, handleFilterChange]);
 
-  if (loading && !statistics.kpis.totalProjects) {
-    return <LoadingState message="Loading MPLADS projects dataset & analytics..." />;
-  }
+  // Handle project selection in-place to preserve scroll position and eliminate page refresh/flash
+  const handleSelectProject = (proj) => {
+    setSelectedProject(proj);
+    window.history.pushState({ projectModalOpen: true }, '', `#project-${encodeURIComponent(proj.id)}`);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+    if (window.location.hash.startsWith('#project-')) {
+      window.history.back();
+    }
+  };
+
+  // Close modal on browser Back button without unmounting page or resetting scroll position
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedProject) {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedProject, setSelectedProject]);
 
   if (error && !statistics.kpis.totalProjects) {
     return (
@@ -67,63 +103,77 @@ export const ProjectsPage = () => {
   }
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn">
-      {/* 1. Header */}
-      <ProjectHeader
-        lastUpdated="27 Aug 2026"
-        refreshing={loading}
-        onRefresh={refetch}
-      />
+    <div className="relative min-h-full">
+      {/* Skeleton Overlay */}
+      {showSkeleton && (
+        <div 
+          className={`absolute inset-0 z-50 transition-opacity duration-1000 bg-white ${
+            isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <ProjectsSkeletonPreloader message="Loading MPLADS Project Master Directory & Analytics..." />
+        </div>
+      )}
 
-      {/* 2. Global Project Filters Bar */}
-      <ProjectFilterBar
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onReset={resetFilters}
-      />
+      {/* Real Content */}
+      {statistics.kpis.totalProjects > 0 && (
+        <div 
+          className={`space-y-6 pb-12 transition-opacity duration-1000 ${
+            isFadingOut ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          {/* 1. Header */}
+          <ProjectHeader
+            lastUpdated="27 Aug 2026"
+            refreshing={loading}
+            onRefresh={refetch}
+          />
 
-      {/* 3. Major KPI Cards (Derived from single source statistics.kpis) */}
-      <ProjectKPICards kpis={statistics.kpis} />
+          {/* 2. Global Project Filters Bar */}
+          <ProjectFilterBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={resetFilters}
+          />
 
-      {/* 4. Visualizations: Project Status & Risk Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ProjectStatusSection statusDistribution={statistics.statusDistribution} />
-        <ProjectRiskSummarySection riskDistribution={statistics.riskDistribution} />
-      </div>
+          {/* 3. Major KPI Cards (Derived from single source statistics.kpis) */}
+          <ProjectKPICards kpis={statistics.kpis} />
 
-      {/* 5. Sector Analytics & State Performance Ranking */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ProjectTypeAnalyticsSection projectTypeDistribution={statistics.projectTypeDistribution} />
-        <StateDistrictPerformanceSection
-          statePerformance={statistics.statePerformance}
-        />
-      </div>
+          {/* 4. Visualizations: Project Status & Risk Summary */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ProjectStatusSection statusDistribution={statistics.statusDistribution} />
+            <ProjectRiskSummarySection riskDistribution={statistics.riskDistribution} />
+          </div>
 
-      {/* 6. Projects Master Data Table */}
-      <ProjectTableSection
-        projects={paginatedProjects}
-        pagination={pagination}
-        sortConfig={sortConfig}
-        tableSearch={tableSearch}
-        onSort={handleSort}
-        onTableSearchChange={handleTableSearchChange}
-        onSelectProject={(proj) => {
-          setSelectedProject(proj);
-          navigate(`/projects/${encodeURIComponent(proj.id)}`, { state: { from: '/projects' } });
-        }}
-      />
+          {/* 5. Sector Analytics & State Performance Ranking */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ProjectTypeAnalyticsSection projectTypeDistribution={statistics.projectTypeDistribution} />
+            <StateDistrictPerformanceSection
+              statePerformance={statistics.statePerformance}
+            />
+          </div>
 
-      {/* 7. Member of Parliament (MP) Performance Section */}
-      <MPPerformanceSection mpPerformance={statistics.mpPerformance} />
+          {/* 6. Projects Master Data Table */}
+          <ProjectTableSection
+            projects={paginatedProjects}
+            pagination={pagination}
+            sortConfig={sortConfig}
+            tableSearch={tableSearch}
+            onSort={handleSort}
+            onTableSearchChange={handleTableSearchChange}
+            onSelectProject={handleSelectProject}
+          />
+
+          {/* 7. Member of Parliament (MP) Performance Section */}
+          <MPPerformanceSection mpPerformance={statistics.mpPerformance} />
+        </div>
+      )}
 
       {/* 8. Selected Project Details View Modal */}
       {selectedProject && (
         <ProjectDetailsView
           project={selectedProject}
-          onClose={() => {
-            setSelectedProject(null);
-            navigate('/projects', { replace: false });
-          }}
+          onClose={handleCloseProject}
         />
       )}
     </div>

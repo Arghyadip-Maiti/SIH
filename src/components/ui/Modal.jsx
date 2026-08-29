@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export const Modal = ({
@@ -25,10 +26,15 @@ export const Modal = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs transition-opacity">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) onClose();
+      }}
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-modalBackdrop"
+    >
       <div
-        className={`bg-white rounded-xl  border border-slate-200 w-full ${maxWidth} overflow-hidden transform transition-all`}
+        className={`bg-white rounded-2xl shadow-2xl border-0 w-full ${maxWidth} overflow-hidden animate-modalPop`}
       >
         {title && (
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
@@ -48,6 +54,7 @@ export const Modal = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldAlert, ArrowUpDown, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 import { Card } from '../ui/Card';
+import { CustomSelect } from '../ui/CustomSelect';
 
 export const ProjectsRequiringAttentionTable = ({
   projects = [],
@@ -244,20 +245,21 @@ export const ProjectsRequiringAttentionTable = ({
 
               {/* Per-Page Rows Selector Dropdown */}
               <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-slate-200">
-                <span className="text-slate-500 font-semibold">Rows:</span>
-                <select
+                <span className="text-slate-500">Rows:</span>
+                <CustomSelect
                   value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value));
+                  onChange={(val) => {
+                    setPageSize(Number(val));
                     setCurrentPage(1);
                   }}
-                  className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 font-mono text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-600"
-                >
-                  <option value={10}>10</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
+                  options={[
+                    { value: 10, label: '10' },
+                    { value: 25, label: '25' },
+                    { value: 50, label: '50' },
+                    { value: 100, label: '100' },
+                  ]}
+                  placement="top"
+                />
               </div>
             </div>
 

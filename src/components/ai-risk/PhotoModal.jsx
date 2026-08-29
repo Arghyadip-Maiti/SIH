@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { X, MapPin, Clock, Camera, ShieldAlert } from 'lucide-react';
 
 export const PhotoModal = ({ isOpen, onClose, photoData = {} }) => {
@@ -15,9 +16,14 @@ export const PhotoModal = ({ isOpen, onClose, photoData = {} }) => {
     matchedStage = null,
   } = photoData;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full  overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) onClose();
+      }}
+      className="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 animate-modalBackdrop"
+    >
+      <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border-0 animate-modalPop">
         <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
           <div className="flex items-center gap-2">
             <Camera className="w-5 h-5 text-slate-700" />
@@ -98,6 +104,7 @@ export const PhotoModal = ({ isOpen, onClose, photoData = {} }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

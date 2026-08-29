@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../ui/Card';
 import { CustomSelect } from '../ui/CustomSelect';
-import { UserCheck, Search, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { UserCheck, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DUMMY_AVATARS = [
   'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
@@ -159,7 +159,8 @@ export const MPPerformanceSection = ({ mpPerformance = [] }) => {
             {paginatedMPs.map((mp, idx) => (
               <div
                 key={mp.mpId}
-                className="p-4 rounded-2xl border border-slate-200 bg-slate-100 hover:bg-slate-200/50 transition-all space-y-3 group"
+                onClick={() => navigate(`/mp/${encodeURIComponent(mp.mpId)}`)}
+                className="p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50/70 hover:border-slate-300 hover:shadow-xs active:scale-[0.99] transition-all shadow-2xs space-y-3 group cursor-pointer"
               >
                 {/* MP Header with Top-Right Profile Picture Avatar */}
                 <div className="flex items-start justify-between gap-3">
@@ -176,7 +177,7 @@ export const MPPerformanceSection = ({ mpPerformance = [] }) => {
                   </div>
 
                   {/* MP Profile Picture Avatar */}
-                  <div className="relative w-[54px] h-[68px] rounded-[20px] overflow-hidden border-2 border-slate-600/80 shrink-0 bg-slate-200 transition-transform">
+                  <div className="relative w-[54px] h-[68px] rounded-[20px] overflow-hidden shrink-0 bg-slate-100 transition-transform shadow-xs group-hover:scale-105">
                     <img
                       src={mp.avatarUrl || DUMMY_AVATARS[idx % DUMMY_AVATARS.length]}
                       alt={mp.mpName}
@@ -187,11 +188,11 @@ export const MPPerformanceSection = ({ mpPerformance = [] }) => {
 
                 {/* Fund Utilization & Risk Score */}
                 <div className="grid grid-cols-2 gap-2 mt-1">
-                  <div className="p-2.5 bg-white rounded-xl border border-slate-100 ">
+                  <div className="p-2.5 bg-white rounded-xl shadow-xs">
                     <span className="text-[10px] font-extrabold text-slate-400 uppercase block">Fund Utilization</span>
                     <span className="text-sm font-mono font-black text-slate-700">{mp.utilization}%</span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-100 ">
+                  <div className="p-2.5 bg-white rounded-xl shadow-xs">
                     <span className="text-[10px] font-extrabold text-slate-400 uppercase block">Avg Risk Score</span>
                     <span className={`text-sm font-mono font-black ${
                       mp.averageRiskScore <= 30 ? 'text-emerald-600' : mp.averageRiskScore <= 60 ? 'text-amber-600' : 'text-rose-600'
@@ -202,33 +203,24 @@ export const MPPerformanceSection = ({ mpPerformance = [] }) => {
                 </div>
 
                 {/* Works Breakdown Pills */}
-                <div className="grid grid-cols-4 gap-1.5 text-center text-[10px] font-bold mt-1">
-                  <div className="p-1.5 bg-transparent rounded-xl">
+                <div className="grid grid-cols-4 gap-1.5 text-center text-[10px] font-bold mt-1 bg-white p-2 rounded-xl shadow-xs">
+                  <div className="p-1 rounded-lg">
                     <span className="text-slate-500 block text-[9px] uppercase">Total</span>
                     <span className="font-mono font-black text-slate-900">{mp.totalProjects}</span>
                   </div>
-                  <div className="p-1.5 bg-transparent text-emerald-600 rounded-xl">
+                  <div className="p-1 text-emerald-600 rounded-lg">
                     <span className="block text-[9px] uppercase">Done</span>
                     <span className="font-mono font-black">{mp.completedProjects}</span>
                   </div>
-                  <div className="p-1.5 bg-transparent text-slate-900 rounded-xl">
+                  <div className="p-1 text-slate-900 rounded-lg">
                     <span className="block text-[9px] uppercase">Ongoing</span>
                     <span className="font-mono font-black">{mp.ongoingProjects}</span>
                   </div>
-                  <div className="p-1.5 bg-transparent text-rose-600 rounded-xl">
+                  <div className="p-1 text-rose-600 rounded-lg">
                     <span className="block text-[9px] uppercase">Delayed</span>
                     <span className="font-mono font-black">{mp.delayedProjects}</span>
                   </div>
                 </div>
-
-                {/* View Details Button */}
-                <button
-                  onClick={() => navigate(`/mp/${encodeURIComponent(mp.mpId)}`)}
-                  className="w-full mt-2 py-2.5 px-3 bg-black hover:bg-black/90 text-white font-extrabold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span>View Details</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </button>
               </div>
             ))}
           </div>

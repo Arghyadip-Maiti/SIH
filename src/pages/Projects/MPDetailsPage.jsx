@@ -18,6 +18,8 @@ import {
   Gauge,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
+import { ProjectDetailsView } from '../../components/projects/ProjectDetailsView';
+import { MPSkeletonPreloader } from '../../components/ui/SkeletonPreloader';
 
 const DUMMY_AVATARS = [
   'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
@@ -180,11 +182,53 @@ const SpeedometerGauge = ({ value = 0, label = 'Metric', max = 100, unit = '%', 
 export const MPDetailsPage = () => {
   const { mpId } = useParams();
   const navigate = useNavigate();
-  const { projects } = useProjects();
+  const { projects, loading, error } = useProjects();
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    if (!loading && projects.length > 0) {
+      setIsFadingOut(true);
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (loading && projects.length === 0) {
+      setShowSkeleton(true);
+      setIsFadingOut(false);
+    }
+  }, [loading, projects.length]);
+
+  const handleSelectProject = (proj) => {
+    setSelectedProject(proj);
+    window.history.pushState({ projectModalOpen: true }, '', `#project-${encodeURIComponent(proj.id)}`);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+    if (window.location.hash.startsWith('#project-')) {
+      window.history.back();
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedProject) {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedProject]);
 
   // Scroll to top on page load or mpId change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    const mainEl = document.querySelector('main');
+    if (mainEl) {
+      mainEl.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
   }, [mpId]);
 
   const decodedMpId = decodeURIComponent(mpId || '');
@@ -219,7 +263,7 @@ export const MPDetailsPage = () => {
     return projects.slice(0, 8);
   }, [projects, mpRecord]);
 
-  if (!mpRecord) {
+  if (!mpRecord && !loading) {
     return (
       <div className="p-12 text-center space-y-4">
         <h2 className="text-xl font-extrabold text-slate-900">Member of Parliament Record Not Found</h2>
@@ -236,30 +280,47 @@ export const MPDetailsPage = () => {
     return `₹${(val / 100000).toFixed(1)} Lakhs`;
   };
 
-  const avatarUrl = DUMMY_AVATARS[Math.abs(mpRecord.mpName.length) % DUMMY_AVATARS.length];
+  const avatarUrl = mpRecord ? DUMMY_AVATARS[Math.abs(mpRecord.mpName.length) % DUMMY_AVATARS.length] : DUMMY_AVATARS[0];
 
   return (
-    <div className="space-y-7 pb-16 animate-fadeIn">
-      {/* ------------------------------------------------------------------------- */}
-      {/* TOP NAVIGATION & HEADER BAR */}
-      {/* ------------------------------------------------------------------------- */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <button
-          onClick={() => navigate('/projects')}
-          className="flex items-center gap-2 text-xs font-extrabold text-slate-600 hover:text-slate-700 bg-white border border-slate-200 px-4 py-2 rounded-xl  transition-all hover: cursor-pointer"
+    <div className="relative min-h-full">
+      {/* Skeleton Overlay */}
+      {showSkeleton && (
+        <div 
+          className={`absolute inset-0 z-50 transition-opacity duration-1000 bg-white ${
+            isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Projects Master Directory</span>
-        </button>
-
-        <div className="flex items-center gap-2 text-xs text-slate-500 font-semibold">
-          <span className="font-mono bg-slate-100 text-slate-800 px-3 py-1 rounded-lg border border-slate-300">
-            MP ID: {mpRecord.mpId}
-          </span>
-          <span>&bull;</span>
-          <span>MPLADS Performance Dashboard</span>
+          <MPSkeletonPreloader message={`Loading MP Performance Profile & Analytics for ${decodedMpId || 'MP'}...`} />
         </div>
-      </div>
+      )}
+
+      {/* Real Content */}
+      {mpRecord && (
+        <div 
+          className={`space-y-7 pb-16 transition-opacity duration-1000 ${
+            isFadingOut ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          {/* ------------------------------------------------------------------------- */}
+          {/* TOP NAVIGATION & HEADER BAR */}
+          {/* ------------------------------------------------------------------------- */}
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-1 text-slate-700 hover:text-black transition-transform hover:-translate-x-0.5 cursor-pointer inline-flex items-center justify-center focus:outline-none"
+              title="Go back"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
+            </button>
+
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-semibold">
+              <span className="font-mono bg-slate-100 text-slate-800 px-3 py-1 rounded-lg border border-slate-300">
+                MP ID: {mpRecord.mpId}
+              </span>
+            </div>
+          </div>
 
       {/* ------------------------------------------------------------------------- */}
       {/* MP HERO PROFILE BANNER CARD WITH CLASSY MATTE SPEEDOMETER GAUGES */}
@@ -437,11 +498,7 @@ export const MPDetailsPage = () => {
                 return (
                   <tr
                     key={proj.id}
-                    onClick={() =>
-                      navigate(`/projects/${encodeURIComponent(proj.id)}`, {
-                        state: { from: `/mp/${encodeURIComponent(mpRecord.mpId)}` },
-                      })
-                    }
+                    onClick={() => handleSelectProject(proj)}
                     className="hover:bg-slate-100/70 transition-colors cursor-pointer group"
                   >
                     <td className="p-3.5 space-y-0.5">
@@ -525,7 +582,17 @@ export const MPDetailsPage = () => {
         </div>
       </div>
     </div>
-  );
+  )}
+
+  {/* Selected Project Modal View */}
+  {selectedProject && (
+    <ProjectDetailsView
+      project={selectedProject}
+      onClose={handleCloseProject}
+    />
+  )}
+</div>
+);
 };
 
 export default MPDetailsPage;

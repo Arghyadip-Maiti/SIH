@@ -57,6 +57,34 @@ export const StateRiskOverviewSection = ({
     if (onResetState) onResetState();
   };
 
+  // Dynamic pagination range builder matching default design
+  const getPageItems = (current, total) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages = new Set();
+    pages.add(1);
+    pages.add(total);
+    pages.add(current);
+    if (current - 1 > 1) pages.add(current - 1);
+    if (current + 1 < total) pages.add(current + 1);
+
+    const sortedPages = Array.from(pages).sort((a, b) => a - b);
+    const items = [];
+
+    for (let i = 0; i < sortedPages.length; i++) {
+      if (i > 0 && sortedPages[i] - sortedPages[i - 1] > 1) {
+        items.push(`ellipsis-${i}`);
+      }
+      items.push(sortedPages[i]);
+    }
+
+    return items;
+  };
+
+  const pageItems = getPageItems(currentPage, totalPages);
+
   return (
     <Card header={
       <div className="flex flex-col gap-3 w-full">
@@ -89,7 +117,11 @@ export const StateRiskOverviewSection = ({
 
         {/* Section Search Filter Bar */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
-          <div className="relative flex-1 min-w-[200px] max-w-[320px]">
+          <div className="text-xs font-semibold text-slate-500 font-mono">
+            <span>Showing {totalCount} of {data.length} States & UTs</span>
+          </div>
+
+          <div className="relative min-w-[200px] max-w-[320px]">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
             <input
               type="text"
@@ -107,10 +139,6 @@ export const StateRiskOverviewSection = ({
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
-          </div>
-
-          <div className="text-xs font-semibold text-slate-500 font-mono">
-            <span>Showing {totalCount} of {data.length} States & UTs</span>
           </div>
         </div>
 
@@ -176,46 +204,58 @@ export const StateRiskOverviewSection = ({
             })}
           </div>
 
-          {/* Pagination Controls - Blue Themed */}
+          {/* Pagination Controls - Matching Default Design */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 mt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 mt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
               <div>
                 Showing <strong className="text-slate-800 font-mono">{((currentPage - 1) * pageSize) + 1}</strong> to{' '}
                 <strong className="text-slate-800 font-mono">{Math.min(totalCount, currentPage * pageSize)}</strong> of{' '}
                 <strong className="text-slate-800 font-mono">{totalCount}</strong> States & UTs
               </div>
 
-              <div className="flex flex-wrap items-center gap-1.5">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="p-1.5 rounded-full text-slate-800 hover:bg-slate-200/70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   title="Previous Page"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={`state-page-${pageNum}`}
-                    type="button"
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`min-w-[32px] h-[32px] px-2 rounded-lg text-xs font-bold font-mono transition-all ${
-                      pageNum === currentPage
-                        ? 'bg-black text-white scale-105 border border-black'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
+                {pageItems.map((item) => {
+                  if (typeof item === 'string' && item.startsWith('ellipsis')) {
+                    return (
+                      <span key={item} className="px-1 text-slate-800 font-semibold select-none">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  const pageNum = item;
+                  const isActive = pageNum === currentPage;
+                  return (
+                    <button
+                      key={`state-page-${pageNum}`}
+                      type="button"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`min-w-[32px] h-[32px] flex items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                        isActive
+                          ? 'bg-black text-white'
+                          : 'text-slate-800 hover:bg-slate-200/70 bg-transparent'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
 
                 <button
                   type="button"
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="p-1.5 rounded-full text-slate-800 hover:bg-slate-200/70 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   title="Next Page"
                 >
                   <ChevronRight className="w-4 h-4" />

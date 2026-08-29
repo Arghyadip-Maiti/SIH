@@ -1,14 +1,15 @@
-import { Bot, Activity, Clock, ShieldCheck } from 'lucide-react';
+import { Bot, Activity, Clock } from 'lucide-react';
 
 export const AIRiskHeader = ({
   totalActiveProjects = 0,
   lastAnalysisTime = 'Today, 10:42 AM',
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-16">
+      {/* Left: Title + subtitle */}
       <div>
         <div className="flex items-center gap-3 mb-1">
-          <div className="p-2 rounded-xl bg-slate-800 text-white ">
+          <div className="p-2 rounded-xl bg-slate-800 text-white">
             <Bot className="w-6 h-6" />
           </div>
           <div>
@@ -24,22 +25,28 @@ export const AIRiskHeader = ({
                 <span>AI SYSTEM ACTIVE</span>
               </span>
             </div>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">
-              AI-powered early warning system for currently running MPLADS projects across India.
-            </p>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700">
-          <Activity className="w-4 h-4 text-slate-700" />
-          <span>Currently monitoring: <strong>{totalActiveProjects.toLocaleString()} active projects</strong></span>
+      {/* Right: Stacked stat rows — number wrapped in compact box */}
+      <div className="flex flex-col gap-2">
+        {/* Row 1: Currently monitoring */}
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+          <Activity className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+          <span>Currently monitoring:</span>
+          <span className="font-mono font-black text-slate-900 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-lg text-xs">
+            {totalActiveProjects.toLocaleString()} active projects
+          </span>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700">
-          <Clock className="w-4 h-4 text-slate-500" />
-          <span>Last analysis: <strong>{lastAnalysisTime}</strong></span>
+        {/* Row 2: Last analysis */}
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+          <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+          <span>Last analysis:</span>
+          <span className="font-mono font-black text-slate-900 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-lg text-xs">
+            {lastAnalysisTime}
+          </span>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   MapPin,
@@ -24,6 +25,7 @@ import {
   ShieldCheck,
   Check,
   ChevronRight,
+  ChevronDown,
   Receipt,
   DollarSign,
   Filter,
@@ -36,6 +38,38 @@ export const ProjectDetailsView = ({ project, onClose }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null); // Lightbox photo
   const [mapType, setMapType] = useState('roadmap'); // 'roadmap' | 'satellite'
   const [financialFilter, setFinancialFilter] = useState('all'); // 'all' | 'anomaly'
+  const [expandedSections, setExpandedSections] = useState({
+    basicInfo: false,
+    financial: false,
+    ledger: false,
+    milestones: false,
+    location: false,
+  });
+
+  const toggleSection = (sectionKey) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey],
+    }));
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (selectedPhoto) {
+          setSelectedPhoto(null);
+        } else if (onClose) {
+          onClose();
+        }
+      }
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose, selectedPhoto]);
 
   if (!project) return null;
 
@@ -295,20 +329,25 @@ export const ProjectDetailsView = ({ project, onClose }) => {
   const googleMapEmbedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=14&output=embed&t=${mapType === 'satellite' ? 'k' : 'm'}`;
   const externalGoogleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
-  return (
-    <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[1100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-3xl border border-slate-200  max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+  return createPortal(
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) onClose();
+      }}
+      className="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-[10000] flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-modalBackdrop"
+    >
+      <div className="bg-white rounded-3xl border-0 shadow-2xl max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto animate-modalPop">
         
         {/* ========================================================================= */}
         {/* MODAL TOP HEADER */}
         {/* ========================================================================= */}
-        <div className="p-6 bg-slate-900 text-white flex items-start justify-between border-b border-slate-800 shrink-0 relative overflow-hidden">
+        <div className="p-6 bg-black text-white flex items-start justify-between border-b border-neutral-800 shrink-0 relative overflow-hidden">
           {/* Subtle background glow element */}
-          <div className="absolute -top-24 -right-24 w-72 h-72 bg-slate-800/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-neutral-800/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-2 pr-6 z-10">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="font-mono text-xs font-bold text-slate-500 bg-blue-950/90 px-3 py-1 rounded-lg border border-blue-800/80 ">
+              <span className="font-mono text-xs font-bold text-neutral-300 bg-neutral-900 px-3 py-1 rounded-lg border border-neutral-800">
                 {p.id}
               </span>
               <span className={`px-3 py-1 rounded-full text-xs font-bold  ${statusBadge.bg}`}>
@@ -317,7 +356,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
               <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${riskBadge.bg}`}>
                 AI Risk Score: {p.riskScore}/100 ({p.riskLevel})
               </span>
-              <span className="bg-indigo-950/80 text-slate-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-800">
+              <span className="bg-neutral-900 text-neutral-300 text-xs font-bold px-3 py-1 rounded-full border border-neutral-800">
                 FY {p.financialYear}
               </span>
             </div>
@@ -325,8 +364,8 @@ export const ProjectDetailsView = ({ project, onClose }) => {
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white pt-1">
               {p.name}
             </h2>
-            <p className="text-sm text-slate-300 font-medium flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1 text-slate-200">
+            <p className="text-sm text-neutral-300 font-medium flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1 text-neutral-200">
                 <MapPin className="w-4 h-4 text-rose-400 shrink-0" />
                 {p.district}, {p.state}
               </span>
@@ -339,7 +378,7 @@ export const ProjectDetailsView = ({ project, onClose }) => {
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all  z-10 shrink-0"
+            className="p-2.5 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 transition-all z-10 shrink-0"
             title="Close modal"
           >
             <X className="w-6 h-6" />
@@ -354,592 +393,641 @@ export const ProjectDetailsView = ({ project, onClose }) => {
           {/* ------------------------------------------------------------------------- */}
           {/* SECTION 1: BASIC INFORMATION (ENLARGED & PROMINENT) */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100/30 p-6 sm:p-7 rounded-3xl border border-slate-200/90  space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 flex-wrap gap-2">
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden transition-all shadow-xs">
+            <div
+              onClick={() => toggleSection('basicInfo')}
+              className="p-6 sm:p-7 flex items-center justify-between flex-wrap gap-3 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+            >
               <h3 className="text-lg sm:text-xl font-black uppercase tracking-wider text-slate-800 flex items-center gap-2.5">
-                <div className="p-2 bg-slate-800 text-white rounded-xl ">
+                <div className="p-2 bg-slate-800 text-white rounded-xl">
                   <FileText className="w-5 h-5" />
                 </div>
                 <span>Basic Information</span>
+                <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${expandedSections.basicInfo ? 'rotate-180' : ''}`} />
               </h3>
-              <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200 ">
+              <span className="text-xs font-semibold text-white bg-black px-3 py-1.5 rounded-xl border border-black hidden sm:inline-block">
                 Official Sanctioned Project Record
               </span>
             </div>
 
-            {/* Enlarged Key Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-slate-700" /> Project Title
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg leading-snug">{p.name}</p>
-              </div>
+            {expandedSections.basicInfo && (
+              <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-0 space-y-6 animate-fadeIn">
+                {/* Enlarged Key Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Building className="w-3.5 h-3.5 text-slate-700" /> Project Title
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg leading-snug">{p.name}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-slate-700" /> Unique Project ID
-                </span>
-                <p className="font-mono font-black text-slate-800 text-base sm:text-lg">{p.id}</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Tag className="w-3.5 h-3.5 text-slate-700" /> Unique Project ID
+                    </span>
+                    <p className="font-mono font-black text-slate-800 text-base sm:text-lg">{p.id}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-slate-700" /> State &amp; District
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.district}, {p.state}</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-700" /> State &amp; District
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.district}, {p.state}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-slate-700" /> Parliamentary Constituency
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.constituencyName} ({p.constituencyId})</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Globe className="w-3.5 h-3.5 text-slate-700" /> Parliamentary Constituency
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.constituencyName} ({p.constituencyId})</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-slate-700" /> Member of Parliament (MP)
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.mpName} <span className="text-xs text-slate-700 font-bold bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">{p.house}</span></p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-slate-700" /> Member of Parliament (MP)
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.mpName} <span className="text-xs text-slate-700 font-bold bg-white px-2 py-0.5 rounded-full border border-slate-300">{p.house}</span></p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-slate-700" /> Sector Work Category
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.projectType}</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5 text-slate-700" /> Sector Work Category
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.projectType}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <HardHat className="w-3.5 h-3.5 text-slate-700" /> Nodal Implementing Agency
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.implementingAgency}</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <HardHat className="w-3.5 h-3.5 text-slate-700" /> Nodal Implementing Agency
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.implementingAgency}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-slate-700" /> Executing Contractor
-                </span>
-                <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.contractor}</p>
-              </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Building className="w-3.5 h-3.5 text-slate-700" /> Executing Contractor
+                    </span>
+                    <p className="font-extrabold text-slate-900 text-base sm:text-lg">{p.contractor}</p>
+                  </div>
 
-              <div className="p-4 bg-white border border-slate-200/90 rounded-2xl  hover: transition- space-y-1">
-                <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider block flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-700" /> Financial Year
-                </span>
-                <p className="font-mono font-black text-slate-900 text-base sm:text-lg">FY {p.financialYear}</p>
-              </div>
-            </div>
+                  <div className="p-4 bg-slate-50/70 border border-slate-200/90 rounded-2xl space-y-1">
+                    <span className="text-slate-400 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-slate-700" /> Financial Year
+                    </span>
+                    <p className="font-mono font-black text-slate-900 text-base sm:text-lg">FY {p.financialYear}</p>
+                  </div>
+                </div>
 
-            {/* Prominent Project Description & Scope Box */}
-            <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-2">
-              <span className="text-slate-500 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-500" /> Project Scope &amp; Functional Description
-              </span>
-              <p className="text-slate-800 text-sm sm:text-base font-medium leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200/70">
-                {p.description}
-              </p>
-            </div>
+                {/* Prominent Project Description & Scope Box */}
+                <div className="p-5 bg-slate-50/70 border border-slate-200 rounded-2xl space-y-2">
+                  <span className="text-slate-500 text-xs uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-500" /> Project Scope &amp; Functional Description
+                  </span>
+                  <p className="text-slate-800 text-sm sm:text-base font-medium leading-relaxed pt-1">
+                    {p.description}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ------------------------------------------------------------------------- */}
-          {/* SECTION 2: FINANCIAL ALLOCATION, PROGRESS & ITEMIZED COST ANOMALY AUDIT */}
+          {/* SECTION 2: FINANCIAL ALLOCATION & PROGRESS EXECUTION */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="space-y-6">
-            <h3 className="text-base font-black uppercase tracking-wider text-emerald-700 flex items-center gap-2 border-b border-slate-200 pb-2">
-              <div className="p-1.5 bg-emerald-600 text-white rounded-lg ">
-                <TrendingUp className="w-4 h-4" />
-              </div>
-              <span>Financial Allocation &amp; Progress Execution</span>
-            </h3>
-
-            {/* Financial Overview Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 bg-slate-100/80 border border-slate-300 rounded-2xl ">
-                <span className="text-slate-800 text-xs uppercase font-extrabold block">Estimated Cost</span>
-                <span className="text-xl sm:text-2xl font-mono font-black text-slate-950">{formatCurrency(p.estimatedCost)}</span>
-              </div>
-
-              <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl ">
-                <span className="text-emerald-700 text-xs uppercase font-extrabold block">Sanctioned Amount</span>
-                <span className="text-xl sm:text-2xl font-mono font-black text-emerald-950">{formatCurrency(p.sanctionedAmount)}</span>
-              </div>
-
-              <div className="p-4 bg-slate-100/80 border border-slate-300 rounded-2xl ">
-                <span className="text-slate-800 text-xs uppercase font-extrabold block">Expenditure Spent</span>
-                <span className="text-xl sm:text-2xl font-mono font-black text-indigo-950">{formatCurrency(p.expenditure)}</span>
-              </div>
-
-              <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl ">
-                <span className="text-amber-700 text-xs uppercase font-extrabold block">Unutilized Funds</span>
-                <span className="text-xl sm:text-2xl font-mono font-black text-amber-950">{formatCurrency(p.unutilizedAmount)}</span>
-              </div>
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden transition-all shadow-xs">
+            <div
+              onClick={() => toggleSection('financial')}
+              className="p-6 sm:p-7 flex items-center justify-between flex-wrap gap-3 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+            >
+              <h3 className="text-base sm:text-lg font-black uppercase tracking-wider text-emerald-700 flex items-center gap-2.5">
+                <div className="p-2 bg-emerald-600 text-white rounded-xl">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+                <span>Financial Allocation &amp; Progress Execution</span>
+                <ChevronDown className={`w-5 h-5 text-emerald-600 transition-transform duration-300 ${expandedSections.financial ? 'rotate-180' : ''}`} />
+              </h3>
+              <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 hidden sm:inline-block">
+                {p.progress}% Physical / {p.financialProgress}% Financial
+              </span>
             </div>
 
-            {/* Progress Bars Comparison */}
-            <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
-              <div className="flex justify-between items-center flex-wrap gap-2">
-                <span className="font-extrabold text-sm text-slate-800">Physical vs Financial Progress Comparison</span>
-                <span className="font-mono text-xs font-bold text-slate-800 bg-slate-200 px-3 py-1 rounded-full">
-                  {p.progress}% Physical / {p.financialProgress}% Financial
-                </span>
-              </div>
+            {expandedSections.financial && (
+              <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-0 space-y-6 animate-fadeIn">
+                {/* Financial Overview Metrics (Clean Text Layout without Boxes) */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-2">
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase font-extrabold block tracking-wider">Estimated Cost</span>
+                    <span className="text-xl sm:text-2xl font-mono font-black text-slate-900 mt-1 block">{formatCurrency(p.estimatedCost)}</span>
+                  </div>
 
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                    <span>Physical Progress</span>
-                    <span className="font-mono">{p.progress}%</span>
+                  <div>
+                    <span className="text-emerald-700 text-xs uppercase font-extrabold block tracking-wider">Sanctioned Amount</span>
+                    <span className="text-xl sm:text-2xl font-mono font-black text-emerald-700 mt-1 block">{formatCurrency(p.sanctionedAmount)}</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-slate-800 transition-all duration-500"
-                      style={{ width: `${Math.min(100, p.progress)}%` }}
-                    />
-                  </div>
-                </div>
 
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                    <span>Financial Progress (Disbursement)</span>
-                    <span className="font-mono text-emerald-700">{p.financialProgress}%</span>
+                  <div>
+                    <span className="text-slate-500 text-xs uppercase font-extrabold block tracking-wider">Expenditure Spent</span>
+                    <span className="text-xl sm:text-2xl font-mono font-black text-slate-900 mt-1 block">{formatCurrency(p.expenditure)}</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-emerald-500 transition-all duration-500"
-                      style={{ width: `${Math.min(100, p.financialProgress)}%` }}
-                    />
+
+                  <div>
+                    <span className="text-amber-700 text-xs uppercase font-extrabold block tracking-wider">Unutilized Funds</span>
+                    <span className="text-xl sm:text-2xl font-mono font-black text-amber-700 mt-1 block">{formatCurrency(p.unutilizedAmount)}</span>
                   </div>
                 </div>
-              </div>
 
-              {p.paymentProgressMismatch && (
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs font-medium flex items-center gap-2.5">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
-                  <span>
-                    <strong>Disbursement Mismatch Warning:</strong> Financial disbursement ({p.financialProgress}%) significantly exceeds physical milestone progress ({p.progress}%).
-                  </span>
-                </div>
-              )}
-            </div>
+                {/* Progress Bars Comparison (Clean Text & Bar Layout without Outer Box) */}
+                <div className="space-y-4 pt-2">
+                  <div className="flex justify-between items-center flex-wrap gap-2">
+                    <span className="font-extrabold text-sm text-slate-800">Physical vs Financial Progress Comparison</span>
+                    <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                      {p.progress}% Physical / {p.financialProgress}% Financial
+                    </span>
+                  </div>
 
-            {/* NEW SUBSECTION: CONTRACTOR ITEMIZED EXPENSE LEDGER & BACKEND AI COST ANOMALY DETECTION */}
-            <div className="bg-white rounded-3xl border border-slate-200  p-6 space-y-5">
-              <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-4">
-                <div>
-                  <h4 className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 flex items-center gap-2.5">
-                    <div className="p-2 bg-emerald-600 text-white rounded-xl ">
-                      <Receipt className="w-5 h-5" />
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                        <span>Physical Progress</span>
+                        <span className="font-mono">{p.progress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-slate-800 transition-all duration-500"
+                          style={{ width: `${Math.min(100, p.progress)}%` }}
+                        />
+                      </div>
                     </div>
-                    <span>Contractor Itemized Expense Ledger &amp; AI Cost Audit</span>
-                  </h4>
-                  <p className="text-xs text-slate-500 font-medium pt-1">
-                    Date-wise breakdown of contractor claims. Backend AI audit models scan each itemized cost for price inflation or billing anomalies.
-                  </p>
-                </div>
 
+                    <div>
+                      <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                        <span>Financial Progress (Disbursement)</span>
+                        <span className="font-mono text-emerald-700">{p.financialProgress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                          style={{ width: `${Math.min(100, p.financialProgress)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {p.paymentProgressMismatch && (
+                    <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-xl text-amber-900 text-xs font-medium flex items-center gap-2.5">
+                      <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                      <span>
+                        <strong>Disbursement Mismatch Warning:</strong> Financial disbursement ({p.financialProgress}%) significantly exceeds physical milestone progress ({p.progress}%).
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ------------------------------------------------------------------------- */}
+          {/* SECTION 3: CONTRACTOR ITEMIZED EXPENSE LEDGER & AI COST AUDIT */}
+          {/* ------------------------------------------------------------------------- */}
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden transition-all shadow-xs">
+            <div
+              onClick={() => toggleSection('ledger')}
+              className="p-6 sm:p-7 flex items-center justify-between flex-wrap gap-3 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+            >
+              <div>
+                <h4 className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 flex items-center gap-2.5">
+                  <div className="p-2 bg-emerald-600 text-white rounded-xl">
+                    <Receipt className="w-5 h-5" />
+                  </div>
+                  <span>Contractor Itemized Expense Ledger &amp; AI Cost Audit</span>
+                  <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${expandedSections.ledger ? 'rotate-180' : ''}`} />
+                </h4>
+                <p className="text-xs text-slate-500 font-medium pt-1">
+                  Date-wise breakdown of contractor claims. Backend AI audit models scan each itemized cost for price inflation or billing anomalies.
+                </p>
+              </div>
+            </div>
+
+            {expandedSections.ledger && (
+              <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-0 space-y-5 animate-fadeIn">
                 {/* Filter Switcher */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between flex-wrap gap-3 border-t border-slate-100 pt-4">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Filtered Claims Overview</span>
                   <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-bold">
                     <button
-                      onClick={() => setFinancialFilter('all')}
-                      className={`px-3 py-1.5 rounded-lg transition-all ${financialFilter === 'all' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFinancialFilter('all');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg transition-all ${financialFilter === 'all' ? 'bg-white text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}
                     >
                       All Expenses ({financialTransactions.length})
                     </button>
                     <button
-                      onClick={() => setFinancialFilter('anomaly')}
-                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 ${financialFilter === 'anomaly' ? 'bg-amber-500 text-white ' : 'text-amber-700 hover:text-amber-900'}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFinancialFilter('anomaly');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 ${financialFilter === 'anomaly' ? 'bg-amber-500 text-white' : 'text-amber-700 hover:text-amber-900'}`}
                     >
                       <AlertTriangle className="w-3.5 h-3.5" />
                       <span>AI Anomalies ({totalAnomalies})</span>
                     </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Transactions List */}
-              <div className="space-y-4">
-                {filteredTransactions.length > 0 ? (
-                  filteredTransactions.map((tx) => (
-                    <div
-                      key={tx.id}
-                      className={`p-4 rounded-2xl border transition-all space-y-3 ${
-                        tx.status === 'anomaly'
-                          ? 'bg-amber-50/60 border-amber-300/90 '
-                          : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-50'
-                      }`}
-                    >
-                      {/* Top Row: Date, Cause, Category & Amount */}
-                      <div className="flex items-start justify-between flex-wrap gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-200/80 px-2 py-0.5 rounded">
-                              🗓️ {tx.date}
-                            </span>
-                            <span className="text-[11px] font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300">
-                              {tx.category}
-                            </span>
-                            <span className="text-[11px] font-mono text-slate-500">
-                              Inv: #{tx.invoiceRef}
-                            </span>
+                {/* Transactions List */}
+                <div className="space-y-4">
+                  {filteredTransactions.length > 0 ? (
+                    filteredTransactions.map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/70 hover:bg-slate-50 transition-all space-y-3"
+                      >
+                        {/* Top Row: Date, Cause, Category & Amount */}
+                        <div className="flex items-start justify-between flex-wrap gap-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-200/80 px-2 py-0.5 rounded">
+                                🗓️ {tx.date}
+                              </span>
+                              <span className="text-[11px] font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-300">
+                                {tx.category}
+                              </span>
+                              <span className="text-[11px] font-mono text-slate-500">
+                                Inv: #{tx.invoiceRef}
+                              </span>
+                            </div>
+
+                            <h5 className="font-extrabold text-sm sm:text-base text-slate-900 pt-0.5">
+                              {tx.cause}
+                            </h5>
+                            <p className="text-xs text-slate-500 font-medium">
+                              Billed by Vendor: <strong className="text-slate-700">{tx.vendor}</strong>
+                            </p>
                           </div>
 
-                          <h5 className="font-extrabold text-sm sm:text-base text-slate-900 pt-0.5">
-                            {tx.cause}
-                          </h5>
-                          <p className="text-xs text-slate-500 font-medium">
-                            Billed by Vendor: <strong className="text-slate-700">{tx.vendor}</strong>
+                          <div className="text-right space-y-1">
+                            <span className="text-slate-400 text-[10px] uppercase font-extrabold block">Billed Expenditure</span>
+                            <span className="text-lg sm:text-xl font-mono font-black text-slate-900">
+                              {formatCurrency(tx.amount)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Row: BACKEND AI COST VERIFICATION & ANOMALY FINDING BOX */}
+                        <div
+                          className={`p-3 rounded-xl border-0 text-xs space-y-1 ${
+                            tx.status === 'anomaly'
+                              ? 'bg-amber-50 text-amber-950'
+                              : 'bg-emerald-50/80 text-emerald-950'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between font-bold text-[11px] uppercase tracking-wider">
+                            <span className="flex items-center gap-1.5">
+                              {tx.status === 'anomaly' ? (
+                                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                              ) : (
+                                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                              )}
+                              <span className={tx.status === 'anomaly' ? 'text-amber-900 font-extrabold' : 'text-emerald-900 font-extrabold'}>
+                                {tx.status === 'anomaly' ? 'Backend AI Cost Anomaly Flagged' : 'Backend AI Cost Verified'}
+                              </span>
+                            </span>
+                            <span className="font-mono text-[10px] opacity-80">System Cost Engine</span>
+                          </div>
+
+                          <p className="text-[11px] font-medium leading-relaxed">
+                            {tx.aiAnalysis}
                           </p>
                         </div>
-
-                        <div className="text-right space-y-1">
-                          <span className="text-slate-400 text-[10px] uppercase font-extrabold block">Billed Expenditure</span>
-                          <span className="text-lg sm:text-xl font-mono font-black text-slate-900">
-                            {formatCurrency(tx.amount)}
-                          </span>
-                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs">
+                      No cost anomalies detected in this project&apos;s itemized financial claims.
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
-                      {/* Bottom Row: BACKEND AI COST VERIFICATION & ANOMALY FINDING BOX */}
-                      <div
-                        className={`p-3 rounded-xl border text-xs space-y-1 ${
-                          tx.status === 'anomaly'
-                            ? 'bg-amber-100/80 border-amber-300 text-amber-950'
-                            : 'bg-emerald-50/80 border-emerald-200 text-emerald-950'
+          {/* ------------------------------------------------------------------------- */}
+          {/* SECTION 4: STAGE-WISE MILESTONE PHOTO GALLERIES (25%, 50%, 75%, 100%) */}
+          {/* ------------------------------------------------------------------------- */}
+          <div className="bg-zinc-900 rounded-3xl text-white border border-zinc-800 overflow-hidden transition-all shadow-xs">
+            {/* Header */}
+            <div
+              onClick={() => toggleSection('milestones')}
+              className="p-6 sm:p-7 flex items-center justify-between flex-wrap gap-3 cursor-pointer select-none hover:bg-zinc-800/60 transition-colors"
+            >
+              <div>
+                <h3 className="text-base sm:text-xl font-black uppercase tracking-wider text-white flex items-center gap-2.5">
+                  <span>MILESTONE TRACKER &amp; VERIFICATION</span>
+                  <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-300 ${expandedSections.milestones ? 'rotate-180' : ''}`} />
+                </h3>
+              </div>
+
+              <div className="hidden sm:flex items-center gap-2 bg-zinc-800/90 px-3.5 py-1.5 rounded-xl border border-zinc-700 text-xs font-mono">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span className="text-zinc-200 font-bold">Backend AI Computer Vision</span>
+              </div>
+            </div>
+
+            {expandedSections.milestones && (
+              <div className="px-6 sm:px-7 pb-6 sm:pb-7 pt-0 space-y-6 animate-fadeIn">
+                {/* INTERACTIVE STAGE SELECTOR TABS (25%, 50%, 75%, 100%) */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {milestoneStages.map((stage) => {
+                    const isSelected = selectedStagePercentage === stage.percentage;
+                    const isCompleted = currProg >= stage.percentage;
+                    const isMismatch = p.paymentProgressMismatch && isCompleted && stage.percentage >= 50;
+
+                    return (
+                      <button
+                        key={stage.percentage}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedStagePercentage(stage.percentage);
+                        }}
+                        className={`p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+                          isSelected
+                            ? 'bg-zinc-800 border-zinc-500 text-white ring-2 ring-zinc-600 scale-[1.02]'
+                            : isCompleted
+                            ? isMismatch
+                              ? 'bg-amber-950/40 border-amber-700/80 text-amber-200 hover:bg-amber-900/50'
+                              : 'bg-zinc-800/80 border-zinc-700 text-zinc-200 hover:bg-zinc-700/80'
+                            : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:bg-zinc-800/50'
                         }`}
                       >
-                        <div className="flex items-center justify-between font-bold text-[11px] uppercase tracking-wider">
-                          <span className="flex items-center gap-1.5">
-                            {tx.status === 'anomaly' ? (
-                              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-                            ) : (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                            )}
-                            <span className={tx.status === 'anomaly' ? 'text-amber-900 font-extrabold' : 'text-emerald-900 font-extrabold'}>
-                              {tx.status === 'anomaly' ? 'Backend AI Cost Anomaly Flagged' : 'Backend AI Cost Verified'}
-                            </span>
+                        <div className="flex items-center justify-between font-mono text-xs font-extrabold mb-1">
+                          <span className={isSelected ? 'text-white' : 'text-zinc-400'}>
+                            {stage.percentage}% Milestone
                           </span>
-                          <span className="font-mono text-[10px] opacity-80">System Cost Engine</span>
+                          {isCompleted ? (
+                            <span className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold ${isSelected ? 'bg-white/20 text-white' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'}`}>
+                              <Check className="w-3 h-3" /> {stage.photos.length} Photos
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-zinc-400">Pending</span>
+                          )}
                         </div>
 
-                        <p className="text-[11px] font-medium leading-relaxed">
-                          {tx.aiAnalysis}
+                        <p className={`font-black text-xs truncate ${isSelected ? 'text-white' : 'text-zinc-200'}`}>
+                          {stage.title}
+                        </p>
+
+                        <div className="flex items-center justify-between pt-2 text-[10px] opacity-80">
+                          <span>{stage.stageName}</span>
+                          <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'translate-x-1 text-white' : 'text-zinc-400'}`} />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* SELECTED STAGE GALLERY CONTAINER */}
+                <div className="p-5 bg-zinc-950/80 rounded-3xl border border-zinc-800 space-y-5">
+                  {/* Active Stage Header Bar */}
+                  <div className="flex items-center justify-between flex-wrap gap-3 border-b border-zinc-800 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 bg-zinc-800 text-white rounded-2xl font-mono font-black text-sm">
+                        {currentActiveStage.percentage}%
+                      </div>
+                      <div>
+                        <h4 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                          <span>{currentActiveStage.title}</span>
+                          <span className="text-xs font-normal text-zinc-400 font-mono">({currentActiveStage.stageName})</span>
+                        </h4>
+                        <p className="text-xs text-zinc-400 font-medium">{currentActiveStage.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 ${
+                        isStageCompleted
+                          ? isStageMismatch
+                            ? 'bg-amber-950 text-amber-300 border border-amber-700'
+                            : 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                          : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
+                      }`}>
+                        {isStageCompleted && !isStageMismatch && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                        {isStageMismatch && <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />}
+                        {!isStageCompleted && <Clock className="w-3.5 h-3.5 text-zinc-400" />}
+                        <span>
+                          {isStageCompleted
+                            ? isStageMismatch
+                              ? 'AI Discrepancy Flagged'
+                              : 'Milestone Verified by System AI'
+                            : `Pending Execution (${currProg}% Current Progress)`}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* LIST OF PHOTOS AT THIS STAGE */}
+                  {isStageCompleted ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between text-xs text-zinc-400 font-semibold">
+                        <span className="flex items-center gap-1.5">
+                          <ImageIcon className="w-4 h-4 text-zinc-400" />
+                          <span>Submitted Photo Evidence Gallery ({currentActiveStage.photos.length} Images at {currentActiveStage.percentage}% Stage)</span>
+                        </span>
+                        <span>Contractor: <strong className="text-zinc-200">{p.contractor}</strong></span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {currentActiveStage.photos.map((photo, pIdx) => (
+                          <div
+                            key={photo.id || pIdx}
+                            className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between group"
+                          >
+                            {/* Image Container */}
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedPhoto({ ...photo, stageName: currentActiveStage.stageName, percentage: currentActiveStage.percentage });
+                              }}
+                              className="relative aspect-video bg-black overflow-hidden cursor-pointer"
+                            >
+                              <img
+                                src={photo.url}
+                                alt={photo.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-zinc-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span className="bg-white/90 text-zinc-900 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                                  <Maximize2 className="w-3.5 h-3.5" /> Expand Photo &amp; AI Data
+                                </span>
+                              </div>
+
+                              <div className="absolute top-2.5 left-2.5 bg-zinc-900/90 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-zinc-800">
+                                Photo #{pIdx + 1}
+                              </div>
+
+                              <div className="absolute bottom-2.5 right-2.5 bg-zinc-950/90 text-white text-[10px] font-mono px-2 py-0.5 rounded-md border border-zinc-800">
+                                📍 {photo.lat.toFixed(4)}° N, {photo.lng.toFixed(4)}° E
+                              </div>
+                            </div>
+
+                            {/* Photo Information & System AI Opinion */}
+                            <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                              <div>
+                                <div className="flex items-center justify-between text-[11px] text-zinc-400 font-bold mb-1">
+                                  <span className="text-zinc-500 font-mono">Stage Photo {pIdx + 1} of {currentActiveStage.photos.length}</span>
+                                  <span>{photo.submissionDate}</span>
+                                </div>
+                                <h5 className="font-extrabold text-sm text-white leading-tight">{photo.title}</h5>
+                              </div>
+
+                              {/* BACKEND AI OPINION FOR THIS PHOTO */}
+                              <div className="p-3 bg-zinc-950 rounded-xl border border-zinc-800 space-y-1 text-xs">
+                                <div className="flex items-center gap-1.5 text-zinc-400 font-bold text-[11px] uppercase">
+                                  <Bot className="w-3.5 h-3.5 shrink-0" />
+                                  <span>System AI Opinion Analysis:</span>
+                                </div>
+                                <p className="text-zinc-300 text-[11px] font-medium leading-relaxed">
+                                  {photo.aiOpinion}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    /* Pending Empty State */
+                    <div className="p-8 text-center bg-zinc-900/60 rounded-2xl border border-dashed border-zinc-800 space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 text-zinc-400 flex items-center justify-center mx-auto">
+                        <Clock className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <h5 className="font-extrabold text-base text-white">Stage Photo Submission Pending</h5>
+                        <p className="text-xs text-zinc-400 max-w-md mx-auto">
+                          Physical progress for this project is currently evaluated at <strong>{currProg}%</strong>. Contractor photo submissions for the <strong>{currentActiveStage.percentage}% milestone stage</strong> will automatically list here once the physical work reaches this level.
                         </p>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs">
-                    No cost anomalies detected in this project&apos;s itemized financial claims.
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* ------------------------------------------------------------------------- */}
-          {/* SECTION 3: STAGE-WISE MILESTONE PHOTO GALLERIES (25%, 50%, 75%, 100%) */}
+          {/* SECTION 5: LOCATION & GOOGLE MAPS IFRAME */}
           {/* ------------------------------------------------------------------------- */}
-          <div className="space-y-6 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-6 sm:p-7 rounded-3xl text-white ">
-            {/* Header */}
-            <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-4">
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden transition-all shadow-xs">
+            <div
+              onClick={() => toggleSection('location')}
+              className="p-6 flex items-center justify-between flex-wrap gap-3 cursor-pointer select-none hover:bg-slate-50/70 transition-colors"
+            >
               <div>
-                <h3 className="text-base sm:text-xl font-black uppercase tracking-wider text-white flex items-center gap-2.5">
-                  <div className="p-2 bg-slate-700 text-white rounded-xl ">
-                    <Bot className="w-5 h-5" />
-                  </div>
-                  <span>Milestone Stage Photo Galleries &amp; AI Verification</span>
-                </h3>
-                <p className="text-xs text-slate-300 font-medium pt-1">
-                  Click on any stage below (25%, 50%, 75%, 100%) to view the contractor photo gallery and automated backend AI verification report.
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 bg-slate-800/90 px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs font-mono">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span className="text-slate-200 font-bold">Backend AI Computer Vision</span>
-              </div>
-            </div>
-
-            {/* INTERACTIVE STAGE SELECTOR TABS (25%, 50%, 75%, 100%) */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {milestoneStages.map((stage) => {
-                const isSelected = selectedStagePercentage === stage.percentage;
-                const isCompleted = currProg >= stage.percentage;
-                const isMismatch = p.paymentProgressMismatch && isCompleted && stage.percentage >= 50;
-
-                return (
-                  <button
-                    key={stage.percentage}
-                    onClick={() => setSelectedStagePercentage(stage.percentage)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
-                      isSelected
-                        ? 'bg-gradient-to-r from-slate-700 to-slate-700 border-white/60 text-white  ring-2 ring-slate-500 scale-[1.02]'
-                        : isCompleted
-                        ? isMismatch
-                          ? 'bg-amber-950/40 border-amber-700/80 text-amber-200 hover:bg-amber-900/50'
-                          : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700/80'
-                        : 'bg-slate-800/30 border-slate-700/40 text-slate-400 hover:bg-slate-800/50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between font-mono text-xs font-extrabold mb-1">
-                      <span className={isSelected ? 'text-white' : 'text-slate-500'}>
-                        {stage.percentage}% Milestone
-                      </span>
-                      {isCompleted ? (
-                        <span className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold ${isSelected ? 'bg-white/20 text-white' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'}`}>
-                          <Check className="w-3 h-3" /> {stage.photos.length} Photos
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-slate-400">Pending</span>
-                      )}
-                    </div>
-
-                    <p className={`font-black text-xs truncate ${isSelected ? 'text-white' : 'text-slate-200'}`}>
-                      {stage.title}
-                    </p>
-
-                    <div className="flex items-center justify-between pt-2 text-[10px] opacity-80">
-                      <span>{stage.stageName}</span>
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'translate-x-1 text-white' : 'text-slate-400'}`} />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* SELECTED STAGE GALLERY CONTAINER */}
-            <div className="p-5 bg-slate-950/80 rounded-3xl border border-slate-800 space-y-5">
-              {/* Active Stage Header Bar */}
-              <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-slate-800 text-white rounded-2xl font-mono font-black text-sm ">
-                    {currentActiveStage.percentage}%
-                  </div>
-                  <div>
-                    <h4 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                      <span>{currentActiveStage.title}</span>
-                      <span className="text-xs font-normal text-slate-400 font-mono">({currentActiveStage.stageName})</span>
-                    </h4>
-                    <p className="text-xs text-slate-400 font-medium">{currentActiveStage.description}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 ${
-                    isStageCompleted
-                      ? isStageMismatch
-                        ? 'bg-amber-950 text-amber-300 border border-amber-700'
-                        : 'bg-emerald-950 text-emerald-300 border border-emerald-700'
-                      : 'bg-slate-800 text-slate-400 border border-slate-700'
-                  }`}>
-                    {isStageCompleted && !isStageMismatch && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
-                    {isStageMismatch && <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />}
-                    {!isStageCompleted && <Clock className="w-3.5 h-3.5 text-slate-400" />}
-                    <span>
-                      {isStageCompleted
-                        ? isStageMismatch
-                          ? 'AI Discrepancy Flagged'
-                          : 'Milestone Verified by System AI'
-                        : `Pending Execution (${currProg}% Current Progress)`}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {/* LIST OF PHOTOS AT THIS STAGE */}
-              {isStageCompleted ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
-                    <span className="flex items-center gap-1.5">
-                      <ImageIcon className="w-4 h-4 text-slate-500" />
-                      <span>Submitted Photo Evidence Gallery ({currentActiveStage.photos.length} Images at {currentActiveStage.percentage}% Stage)</span>
-                    </span>
-                    <span>Contractor: <strong className="text-slate-200">{p.contractor}</strong></span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {currentActiveStage.photos.map((photo, pIdx) => (
-                      <div
-                        key={photo.id || pIdx}
-                        className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800  hover:border-slate-700 transition-all flex flex-col justify-between group"
-                      >
-                        {/* Image Container */}
-                        <div
-                          onClick={() => setSelectedPhoto({ ...photo, stageName: currentActiveStage.stageName, percentage: currentActiveStage.percentage })}
-                          className="relative aspect-video bg-black overflow-hidden cursor-pointer"
-                        >
-                          <img
-                            src={photo.url}
-                            alt={photo.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl  flex items-center gap-1.5">
-                              <Maximize2 className="w-3.5 h-3.5" /> Expand Photo &amp; AI Data
-                            </span>
-                          </div>
-
-                          <div className="absolute top-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-slate-800 ">
-                            Photo #{pIdx + 1}
-                          </div>
-
-                          <div className="absolute bottom-2.5 right-2.5 bg-slate-950/90 text-white text-[10px] font-mono px-2 py-0.5 rounded-md border border-slate-800 ">
-                            📍 {photo.lat.toFixed(4)}° N, {photo.lng.toFixed(4)}° E
-                          </div>
-                        </div>
-
-                        {/* Photo Information & System AI Opinion */}
-                        <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                          <div>
-                            <div className="flex items-center justify-between text-[11px] text-slate-400 font-bold mb-1">
-                              <span className="text-slate-500 font-mono">Stage Photo {pIdx + 1} of {currentActiveStage.photos.length}</span>
-                              <span>{photo.submissionDate}</span>
-                            </div>
-                            <h5 className="font-extrabold text-sm text-white leading-tight">{photo.title}</h5>
-                          </div>
-
-                          {/* BACKEND AI OPINION FOR THIS PHOTO */}
-                          <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs">
-                            <div className="flex items-center gap-1.5 text-slate-500 font-bold text-[11px] uppercase">
-                              <Bot className="w-3.5 h-3.5 shrink-0" />
-                              <span>System AI Opinion Analysis:</span>
-                            </div>
-                            <p className="text-slate-300 text-[11px] font-medium leading-relaxed">
-                              {photo.aiOpinion}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                /* Pending Empty State */
-                <div className="p-8 text-center bg-slate-900/60 rounded-2xl border border-dashed border-slate-800 space-y-3">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
-                    <Clock className="w-6 h-6" />
-                  </div>
-                  <div className="space-y-1">
-                    <h5 className="font-extrabold text-base text-white">Stage Photo Submission Pending</h5>
-                    <p className="text-xs text-slate-400 max-w-md mx-auto">
-                      Physical progress for this project is currently evaluated at <strong>{currProg}%</strong>. Contractor photo submissions for the <strong>{currentActiveStage.percentage}% milestone stage</strong> will automatically list here once the physical work reaches this level.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* ------------------------------------------------------------------------- */}
-          {/* SECTION 4: LOCATION & GOOGLE MAPS IFRAME */}
-          {/* ------------------------------------------------------------------------- */}
-          <div className="space-y-4 bg-white p-6 rounded-3xl border border-slate-200 ">
-            <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-3">
-              <div>
-                <h3 className="text-base sm:text-lg font-black uppercase tracking-wider text-rose-700 flex items-center gap-2">
-                  <div className="p-2 bg-rose-600 text-white rounded-xl ">
+                <h3 className="text-base sm:text-lg font-black uppercase tracking-wider text-black flex items-center gap-2">
+                  <div className="p-2 bg-black text-white rounded-xl">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <span>Geographic Location &amp; Site Map</span>
+                  <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${expandedSections.location ? 'rotate-180' : ''}`} />
                 </h3>
                 <p className="text-xs text-slate-500 font-medium pt-0.5">
                   Exact physical coordinates and live Google Maps iframe view of the sanctioned work site
                 </p>
               </div>
+            </div>
 
-              {/* Map controls */}
-              <div className="flex items-center gap-2">
-                <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-bold">
-                  <button
-                    onClick={() => setMapType('roadmap')}
-                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'roadmap' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
+            {expandedSections.location && (
+              <div className="px-6 pb-6 pt-0 space-y-4 animate-fadeIn">
+                {/* Map controls */}
+                <div className="flex items-center justify-between flex-wrap gap-3 border-t border-slate-100 pt-4">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-bold">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMapType('roadmap');
+                        }}
+                        className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'roadmap' ? 'bg-white text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}
+                      >
+                        Roadmap
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMapType('satellite');
+                        }}
+                        className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'satellite' ? 'bg-white text-slate-900' : 'text-slate-500 hover:text-slate-900'}`}
+                      >
+                        Satellite
+                      </button>
+                    </div>
+                  </div>
+
+                  <a
+                    href={externalGoogleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors"
                   >
-                    Roadmap
-                  </button>
-                  <button
-                    onClick={() => setMapType('satellite')}
-                    className={`px-3 py-1.5 rounded-lg transition-all ${mapType === 'satellite' ? 'bg-white text-slate-900 ' : 'text-slate-500 hover:text-slate-900'}`}
-                  >
-                    Satellite
-                  </button>
+                    <span>Open Google Maps</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
 
-                <a
-                  href={externalGoogleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors "
-                >
-                  <span>Open Google Maps</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
+                {/* Coordinates metadata bar */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
+                    <Navigation className="w-4 h-4 text-rose-600 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Exact GPS Coordinates</span>
+                      <span className="font-mono font-bold text-slate-900">{p.latitude?.toFixed(6)}° N, {p.longitude?.toFixed(6)}° E</span>
+                    </div>
+                  </div>
 
-            {/* Coordinates metadata bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-                <Navigation className="w-4 h-4 text-rose-600 shrink-0" />
-                <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Exact GPS Coordinates</span>
-                  <span className="font-mono font-bold text-slate-900">{p.latitude?.toFixed(6)}° N, {p.longitude?.toFixed(6)}° E</span>
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
+                    <MapPin className="w-4 h-4 text-slate-700 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">District &amp; Constituency</span>
+                      <span className="font-bold text-slate-900">{p.district}, {p.state} ({p.constituencyName})</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <div>
+                      <span className="text-[10px] text-emerald-700 uppercase font-bold block">Geofence Status</span>
+                      <span className="font-bold text-emerald-950">GPS Geotag Verified (Accuracy: &plusmn;3m)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* GOOGLE MAPS IFRAME */}
+                <div className="relative rounded-2xl overflow-hidden border border-slate-300 bg-slate-100">
+                  <iframe
+                    title={`Google Maps Location for ${p.name}`}
+                    src={googleMapEmbedUrl}
+                    width="100%"
+                    height="380"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="w-full h-[360px] sm:h-[400px] rounded-2xl"
+                  />
                 </div>
               </div>
-
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-slate-700 shrink-0" />
-                <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">District &amp; Constituency</span>
-                  <span className="font-bold text-slate-900">{p.district}, {p.state} ({p.constituencyName})</span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <div>
-                  <span className="text-[10px] text-emerald-700 uppercase font-bold block">Geofence Status</span>
-                  <span className="font-bold text-emerald-950">GPS Geotag Verified (Accuracy: &plusmn;3m)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* GOOGLE MAPS IFRAME */}
-            <div className="relative rounded-2xl overflow-hidden border border-slate-300  bg-slate-100">
-              <iframe
-                title={`Google Maps Location for ${p.name}`}
-                src={googleMapEmbedUrl}
-                width="100%"
-                height="380"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-[360px] sm:h-[400px] rounded-2xl"
-              />
-            </div>
+            )}
           </div>
 
-        </div>
+          {/* Footer Text under the scroll */}
+          <div className="pt-6 pb-2 text-center border-t border-slate-200">
+            <p className="text-xs text-slate-500 font-medium">
+              Sanctioned under MPLADS Scheme &bull; Project ID: <strong className="text-slate-800">{p.id}</strong>
+            </p>
+          </div>
 
-        {/* ========================================================================= */}
-        {/* MODAL BOTTOM ACTIONS */}
-        {/* ========================================================================= */}
-        <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex justify-between items-center shrink-0">
-          <span className="text-xs text-slate-500 font-medium hidden sm:inline">
-            Sanctioned under MPLADS Scheme &bull; Project ID: <strong>{p.id}</strong>
-          </span>
-          <Button
-            onClick={onClose}
-            variant="primary"
-            size="md"
-            className="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl "
-          >
-            Close Details
-          </Button>
         </div>
       </div>
 
@@ -947,16 +1035,21 @@ export const ProjectDetailsView = ({ project, onClose }) => {
       {/* LIGHTBOX FOR FULL PHOTO VIEWING & AI ANALYSIS REPORT */}
       {/* ========================================================================= */}
       {selectedPhoto && (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-[1300] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden border border-slate-800  flex flex-col max-h-[90vh]">
-            <div className="p-4 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedPhoto(null);
+          }}
+          className="fixed inset-0 bg-zinc-950/90 backdrop-blur-lg z-[10100] flex items-center justify-center p-4 animate-modalBackdrop"
+        >
+          <div className="relative max-w-4xl w-full bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl flex flex-col max-h-[90vh] animate-modalPop">
+            <div className="p-4 bg-zinc-950 text-white flex items-center justify-between border-b border-zinc-800">
               <div>
-                <h4 className="font-extrabold text-sm text-slate-400">{selectedPhoto.stageName || 'Milestone Photo'} - {selectedPhoto.title}</h4>
-                <p className="text-xs text-slate-400">Contractor: {p.contractor} &bull; Date: {selectedPhoto.submissionDate}</p>
+                <h4 className="font-extrabold text-sm text-zinc-300">{selectedPhoto.stageName || 'Milestone Photo'} - {selectedPhoto.title}</h4>
+                <p className="text-xs text-zinc-400">Contractor: {p.contractor} &bull; Date: {selectedPhoto.submissionDate}</p>
               </div>
               <button
                 onClick={() => setSelectedPhoto(null)}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white"
+                className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -970,18 +1063,18 @@ export const ProjectDetailsView = ({ project, onClose }) => {
               />
             </div>
 
-            <div className="p-4 bg-slate-950 text-slate-300 text-xs space-y-2 border-t border-slate-800">
+            <div className="p-4 bg-zinc-950 text-zinc-300 text-xs space-y-2 border-t border-zinc-800">
               <div className="flex justify-between items-center flex-wrap gap-2">
                 <span className="font-mono text-emerald-400 font-bold">
                   📍 GPS Geotag: {selectedPhoto.lat ? selectedPhoto.lat.toFixed(6) : lat}° N, {selectedPhoto.lng ? selectedPhoto.lng.toFixed(6) : lng}° E
                 </span>
-                <span className="bg-indigo-950 text-slate-400 px-2.5 py-0.5 rounded-full border border-indigo-800 font-bold text-[10px] flex items-center gap-1">
-                  <Bot className="w-3 h-3 text-slate-500" /> Backend AI Computer Vision Verified
+                <span className="bg-zinc-800 text-zinc-300 px-2.5 py-0.5 rounded-full border border-zinc-700 font-bold text-[10px] flex items-center gap-1">
+                  <Bot className="w-3 h-3 text-zinc-400" /> Backend AI Computer Vision Verified
                 </span>
               </div>
-              <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                <span className="font-bold text-slate-500 block uppercase text-[10px] tracking-wider">Backend AI System Opinion:</span>
-                <p className="text-slate-300 leading-relaxed font-medium">
+              <div className="bg-zinc-900 p-3 rounded-xl border border-zinc-800 space-y-1">
+                <span className="font-bold text-zinc-400 block uppercase text-[10px] tracking-wider">Backend AI System Opinion:</span>
+                <p className="text-zinc-300 leading-relaxed font-medium">
                   {selectedPhoto.aiOpinion}
                 </p>
               </div>
@@ -990,7 +1083,8 @@ export const ProjectDetailsView = ({ project, onClose }) => {
         </div>
       )}
 
-    </div>
+    </div>,
+    document.body
   );
 };
 
