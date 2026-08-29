@@ -6,10 +6,11 @@
 
 export const DEFAULT_SETTINGS = {
   profile: {
-    name: 'Admin User',
-    role: 'Administrator',
-    department: 'Ministry of Statistics & Programme Implementation',
-    email: 'admin@example.gov.in',
+    name: 'Rajesh V. Sharma',
+    role: 'Ministry Administrator',
+    department: 'Ministry of Statistics & Programme Implementation (MoSPI)',
+    email: 'rajesh.sharma@gov.in',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
   },
   notifications: {
     projectAlerts: true,

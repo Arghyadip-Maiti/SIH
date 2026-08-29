@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { settingsService } from '../services/api/settingsService';
 import { DEFAULT_SETTINGS } from '../data/mock/defaultSettings';
+import { useApp } from '../context/AppContext';
+import { applyTheme } from '../utils/themeUtils';
 
 export const useSettings = () => {
+  const { updateCurrentUser, updateDashboardPreferences } = useApp();
   const [activeTab, setActiveTab] = useState('profile');
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
@@ -22,6 +25,12 @@ export const useSettings = () => {
       const res = await settingsService.getSettings();
       if (res.success || res.data) {
         setSettings(res.data);
+        if (res.data?.appearance?.theme) {
+          applyTheme(res.data.appearance.theme);
+        }
+        if (res.data?.dashboardPreferences && updateDashboardPreferences) {
+          updateDashboardPreferences(res.data.dashboardPreferences);
+        }
       }
     } catch (err) {
       console.error('[Settings Fetch Error]', err);
@@ -29,35 +38,45 @@ export const useSettings = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [updateDashboardPreferences]);
 
   useEffect(() => {
     fetchSettings();
   }, [fetchSettings]);
 
   // Show Toast Feedback Notification
-  const triggerToast = (msg) => {
+  const triggerToast = useCallback((msg) => {
     setToastMessage(msg);
-  };
+  }, []);
 
-  const closeToast = () => {
+  const closeToast = useCallback(() => {
     setToastMessage(null);
-  };
+  }, []);
 
   // Save Settings Section Handler
-  const saveSectionSettings = async (sectionKey, updatedSectionData, successText = 'Settings saved successfully') => {
+  const saveSectionSettings = useCallback(async (sectionKey, updatedSectionData, successText = 'Settings saved successfully') => {
     setSaving(true);
     try {
+      const current = settings || {};
       const updatedFull = {
-        ...settings,
+        ...current,
         [sectionKey]: {
-          ...settings[sectionKey],
+          ...(current[sectionKey] || {}),
           ...updatedSectionData,
         },
       };
       const res = await settingsService.updateSettings(updatedFull);
       if (res.success) {
         setSettings(res.data);
+        if (sectionKey === 'profile' && updateCurrentUser) {
+          updateCurrentUser(updatedSectionData);
+        }
+        if (sectionKey === 'appearance' && updatedSectionData.theme) {
+          applyTheme(updatedSectionData.theme);
+        }
+        if (sectionKey === 'dashboardPreferences' && updateDashboardPreferences) {
+          updateDashboardPreferences(updatedSectionData);
+        }
         triggerToast(`✓ ${successText}`);
         return true;
       }
@@ -68,15 +87,18 @@ export const useSettings = () => {
     } finally {
       setSaving(false);
     }
-  };
+  }, [settings, updateCurrentUser, updateDashboardPreferences, triggerToast]);
 
   // Reset Preferences Handler
-  const confirmResetPreferences = async () => {
+  const confirmResetPreferences = useCallback(async () => {
     setSaving(true);
     try {
       const res = await settingsService.resetPreferences();
       if (res.success) {
         setSettings(res.data);
+        if (res.data?.dashboardPreferences && updateDashboardPreferences) {
+          updateDashboardPreferences(res.data.dashboardPreferences);
+        }
         setIsResetModalOpen(false);
         triggerToast('✓ Dashboard preferences reset to defaults');
       }
@@ -86,7 +108,7 @@ export const useSettings = () => {
     } finally {
       setSaving(false);
     }
-  };
+  }, [triggerToast]);
 
   return {
     activeTab,

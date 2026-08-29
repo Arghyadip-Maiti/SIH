@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, KeyRound, Monitor, LogOut, Lock, CheckCircle2 } from 'lucide-react';
+import { Shield, KeyRound } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 
 export const SecuritySettings = ({
@@ -29,12 +29,8 @@ export const SecuritySettings = ({
     triggerToast('✓ Password updated successfully');
   };
 
-  const handleSignOutOtherSessions = () => {
-    triggerToast('✓ Signed out from all other device sessions');
-  };
-
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-2xl bg-indigo-50 text-indigo-700 border border-indigo-100">
@@ -43,7 +39,7 @@ export const SecuritySettings = ({
           <div>
             <h3 className="text-lg font-black text-slate-900">Security & Authentication</h3>
             <p className="text-xs font-semibold text-slate-500 mt-0.5">
-              Manage account authentication credentials and active device sessions
+              Manage account authentication credentials and password settings
             </p>
           </div>
         </div>
@@ -68,41 +64,6 @@ export const SecuritySettings = ({
           >
             Change Password
           </button>
-        </div>
-
-        {/* Active Sessions Panel */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-              Active Sessions
-            </h4>
-            <button
-              onClick={handleSignOutOtherSessions}
-              className="text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1.5"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out Other Sessions</span>
-            </button>
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700">
-                <Monitor className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xs font-extrabold text-slate-900 flex items-center gap-2">
-                  <span>Current Device (Mac / Chrome)</span>
-                  <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md border border-emerald-200">
-                    Active Now
-                  </span>
-                </div>
-                <p className="text-[11px] font-medium text-slate-500 mt-0.5">
-                  Official MoSPI Administrative Workstation
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 

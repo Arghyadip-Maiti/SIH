@@ -3,12 +3,11 @@ import { SettingsNav } from '../../components/settings/SettingsNav';
 import { ProfileSettings } from '../../components/settings/ProfileSettings';
 import { DashboardPreferences } from '../../components/settings/DashboardPreferences';
 import { SecuritySettings } from '../../components/settings/SecuritySettings';
-import { DataPreferences } from '../../components/settings/DataPreferences';
 import { AppearanceSettings } from '../../components/settings/AppearanceSettings';
 import { AboutSettings } from '../../components/settings/AboutSettings';
 import { ToastNotification } from '../../components/ui/ToastNotification';
 import { Modal } from '../../components/ui/Modal';
-import { Settings as SettingsIcon, AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 export const SettingsPage = () => {
   const {
@@ -49,19 +48,13 @@ export const SettingsPage = () => {
   return (
     <div className="space-y-6 pb-16">
       {/* PAGE HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-100 inline-flex items-center gap-1.5">
-              <SettingsIcon className="w-3.5 h-3.5" />
-              Administrative Control Panel
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight font-sans">
             Settings
           </h1>
-          <p className="text-xs font-medium text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Manage your account, dashboard preferences, notifications and system preferences.
+          <p className="text-sm text-slate-500 mt-1">
+            Manage your account, dashboard preferences, and system preferences.
           </p>
         </div>
       </div>
@@ -102,14 +95,6 @@ export const SettingsPage = () => {
                 securityData={settings.security}
                 onSave={(data, text) => saveSectionSettings('security', data, text)}
                 triggerToast={triggerToast}
-              />
-            )}
-
-            {activeTab === 'data' && (
-              <DataPreferences
-                dataPreferences={settings.dataPreferences}
-                onSave={(data, text) => saveSectionSettings('dataPreferences', data, text)}
-                saving={saving}
               />
             )}
 

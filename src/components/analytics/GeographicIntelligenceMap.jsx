@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Map, Layers, X, ExternalLink, ShieldAlert, CheckCircle2, AlertCircle } from 'lucide-react';
 import { LokSabhaConstituencyMap } from '../maps/LokSabhaConstituencyMap';
+import { useApp } from '../../context/AppContext';
 
 export const GeographicIntelligenceMap = ({
   analyticsData,
   filters = {},
   onApplyFilter,
 }) => {
+  const { dashboardPreferences } = useApp();
   const [selectedConstituency, setSelectedConstituency] = useState(null);
-  const [selectedMapMetric, setSelectedMapMetric] = useState('utilization');
+  const [selectedMapMetric, setSelectedMapMetric] = useState(() => dashboardPreferences?.mapMetric || 'utilization');
+
+  useEffect(() => {
+    if (dashboardPreferences?.mapMetric) {
+      setSelectedMapMetric(dashboardPreferences.mapMetric);
+    }
+  }, [dashboardPreferences?.mapMetric]);
 
   const MAP_METRICS = [
     { id: 'utilization', label: 'Fund Utilization Rate (%)' },

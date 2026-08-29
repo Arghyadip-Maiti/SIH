@@ -88,3 +88,126 @@ body {
 path.leaflet-interactive:focus {
   outline: none !important;
 }
+
+@variant dark (&:where(.dark, .dark *));
+
+/* Dark mode theme overrides */
+html.dark {
+  background-color: #0b0f19;
+  color-scheme: dark;
+}
+
+html.dark body {
+  --bg-main: #0b0f19;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-subtle: #1e293b;
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-white {
+  background-color: #111827 !important;
+  color: #f8fafc;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #0b0f19 !important;
+  color: #f8fafc;
+}
+
+html.dark .bg-slate-50\/80 {
+  background-color: rgba(17, 24, 39, 0.8) !important;
+  color: #f8fafc;
+}
+
+html.dark .bg-slate-100 {
+  background-color: #1f2937 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .bg-slate-200 {
+  background-color: #374151 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html.dark .border-slate-200 {
+  border-color: #1f2937 !important;
+}
+
+html.dark .border-slate-100 {
+  border-color: #111827 !important;
+}
+
+html.dark .border-slate-200\/80 {
+  border-color: rgba(31, 41, 55, 0.8) !important;
+}
+
+html.dark header {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark aside {
+  background-color: #0b0f19 !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #1f2937 !important;
+  color: #f8fafc !important;
+  border-color: #374151 !important;
+}
+
+html.dark tr:hover {
+  background-color: rgba(31, 41, 55, 0.6) !important;
+}
+
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1f2937 !important;
+}
+
+/* Table density preferences styling */
+html[data-density="comfortable"] table th,
+html[data-density="comfortable"] table td {
+  padding-top: 0.875rem !important;
+  padding-bottom: 0.875rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+html[data-density="compact"] table th,
+html[data-density="compact"] table td {
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+

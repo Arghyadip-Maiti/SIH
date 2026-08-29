@@ -13,13 +13,21 @@ import AIRiskDetailsPage from './pages/AIRisk/AIRiskDetailsPage';
 import AnalyticsPage from './pages/Analytics/AnalyticsPage';
 import SettingsPage from './pages/Settings/SettingsPage';
 
+import { useApp } from './context/AppContext';
+
+function RootRedirect() {
+  const { dashboardPreferences } = useApp();
+  const target = dashboardPreferences?.landingPage || ROUTES.OVERVIEW;
+  return <Navigate to={target} replace />;
+}
+
 export function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<Navigate to={ROUTES.OVERVIEW} replace />} />
+            <Route index element={<RootRedirect />} />
             <Route path="overview" element={<OverviewPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="projects/:projectId" element={<ProjectDetailsPage />} />

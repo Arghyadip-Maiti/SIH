@@ -9,26 +9,41 @@ import {
   calculateMPPerformance,
 } from '../utils/projectAnalytics';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP } from '../services/api/locationService';
-
-const DEFAULT_FILTERS = {
-  financialYear: '2026-27',
-  house: 'All',
-  state: '',
-  district: '',
-  constituency: '',
-  mp: '',
-  projectType: '',
-  agency: '',
-  contractor: '',
-  status: '',
-  riskLevel: '',
-  costRange: '',
-  progressRange: '',
-};
+import { useApp } from '../context/AppContext';
 
 export const useProjects = (initialFilters = {}) => {
+  const { dashboardPreferences } = useApp();
+  const defaultYear = dashboardPreferences?.financialYear || '2026-27';
+  const defaultView = dashboardPreferences?.projectView || 'All Projects';
+
+  const defaultFilters = useMemo(() => {
+    let status = '';
+    let riskLevel = '';
+    if (defaultView === 'Completed') status = 'Completed';
+    else if (defaultView === 'Ongoing') status = 'Ongoing';
+    else if (defaultView === 'Delayed') status = 'Delayed';
+    else if (defaultView === 'High Risk') riskLevel = 'High';
+
+    return {
+      financialYear: defaultYear,
+      house: 'All',
+      state: '',
+      district: '',
+      constituency: '',
+      mp: '',
+      projectType: '',
+      agency: '',
+      contractor: '',
+      status,
+      riskLevel,
+      costRange: '',
+      progressRange: '',
+      ...initialFilters,
+    };
+  }, [defaultYear, defaultView, initialFilters]);
+
   const [projects, setProjects] = useState([]);
-  const [filters, setFilters] = useState({ ...DEFAULT_FILTERS, ...initialFilters });
+  const [filters, setFilters] = useState(defaultFilters);
   const [tableSearch, setTableSearch] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -106,10 +121,10 @@ export const useProjects = (initialFilters = {}) => {
   }, []);
 
   const resetFilters = useCallback(() => {
-    setFilters(DEFAULT_FILTERS);
+    setFilters(defaultFilters);
     setTableSearch('');
     setCurrentPage(1);
-  }, []);
+  }, [defaultFilters]);
 
   const handleSort = useCallback((sortByField) => {
     setSortConfig((prev) => {

@@ -1,4 +1,5 @@
 import axiosClient from './axiosClient';
+import { getStoredSettings } from './settingsService';
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
@@ -15,7 +16,12 @@ export const userService = {
   async getCurrentUser() {
     if (USE_MOCK) {
       await new Promise((res) => setTimeout(res, 100));
-      return { success: true, data: mockUser };
+      const stored = getStoredSettings();
+      const user = {
+        ...mockUser,
+        ...(stored?.profile || {}),
+      };
+      return { success: true, data: user };
     }
     return axiosClient.get('/user/me');
   },

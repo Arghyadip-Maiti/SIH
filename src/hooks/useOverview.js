@@ -1,22 +1,31 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { analyticsService } from '../services/api/analyticsService';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../services/api/locationService';
-
-const DEFAULT_FILTERS = {
-  financialYear: '2026-27',
-  house: 'All',
-  state: '',
-  district: '',
-  mp: '',
-  projectType: '',
-  status: '',
-  riskLevel: '',
-  agency: '',
-};
+import { useApp } from '../context/AppContext';
 
 export const useOverview = () => {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [activeFilters, setActiveFilters] = useState(DEFAULT_FILTERS);
+  const { dashboardPreferences } = useApp();
+  const defaultYear = dashboardPreferences?.financialYear || '2026-27';
+
+  const defaultFilters = useMemo(() => ({
+    financialYear: defaultYear,
+    house: 'All',
+    state: '',
+    district: '',
+    mp: '',
+    projectType: '',
+    status: '',
+    riskLevel: '',
+    agency: '',
+  }), [defaultYear]);
+
+  const [filters, setFilters] = useState(defaultFilters);
+  const [activeFilters, setActiveFilters] = useState(defaultFilters);
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, financialYear: defaultYear }));
+    setActiveFilters((prev) => ({ ...prev, financialYear: defaultYear }));
+  }, [defaultYear]);
   const [overviewData, setOverviewData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

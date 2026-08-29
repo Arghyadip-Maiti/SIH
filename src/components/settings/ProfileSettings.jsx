@@ -38,7 +38,7 @@ export const ProfileSettings = ({ profileData = {}, onSave, saving }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-2xl bg-blue-50 text-blue-700 border border-blue-100">

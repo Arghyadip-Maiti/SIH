@@ -5,7 +5,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA !== 'false';
 const SETTINGS_STORAGE_KEY = 'mplads_user_settings_v1';
 
 // Helper to retrieve saved settings from localStorage or fallback to defaults
-const getStoredSettings = () => {
+export const getStoredSettings = () => {
   try {
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (raw) {
