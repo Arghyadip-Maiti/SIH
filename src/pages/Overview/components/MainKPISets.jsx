@@ -50,7 +50,7 @@ export const MainKPISets = ({ kpis = {} }) => {
         title="Total Expenditure"
         value={expenditureDisplay}
         icon={CircleDollarSign}
-        iconBgColor="bg-blue-100 text-blue-700"
+        iconBgColor="bg-slate-200 text-slate-800"
         trend="up"
         trendPercentage={kpis.expenditureTrend || 8.2}
         subtitle="vs 2025-26"
@@ -61,7 +61,7 @@ export const MainKPISets = ({ kpis = {} }) => {
         title="Utilization Percentage"
         value={utilizationDisplay}
         icon={Percent}
-        iconBgColor="bg-sky-100 text-sky-700"
+        iconBgColor="bg-slate-200 text-slate-800"
         trend="up"
         trendPercentage={kpis.utilizationTrend || 5.6}
         subtitle="vs 2025-26"
@@ -72,7 +72,7 @@ export const MainKPISets = ({ kpis = {} }) => {
         title="Total Works"
         value={totalWorksDisplay}
         icon={FolderKanban}
-        iconBgColor="bg-indigo-100 text-indigo-700"
+        iconBgColor="bg-slate-200 text-slate-800"
         trend="up"
         trendPercentage={kpis.worksTrend || 5.1}
         subtitle="vs 2025-26"

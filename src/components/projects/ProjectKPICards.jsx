@@ -22,7 +22,7 @@ export const ProjectKPICards = ({ kpis = {} }) => {
       value: kpis.totalProjects?.toLocaleString('en-IN') || '0',
       subtitle: 'Sanctioned works',
       icon: FolderKanban,
-      color: 'text-blue-600 bg-blue-50 border-blue-200',
+      color: 'text-slate-700 bg-slate-100 border-slate-300',
     },
     {
       title: 'SANCTIONED AMOUNT',
@@ -36,7 +36,7 @@ export const ProjectKPICards = ({ kpis = {} }) => {
       value: formatCr(kpis.totalExpenditure),
       subtitle: `${kpis.utilizationPercentage || 0}% Utilized`,
       icon: TrendingUp,
-      color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+      color: 'text-slate-700 bg-slate-100 border-slate-300',
     },
     {
       title: 'COMPLETED PROJECTS',
@@ -50,7 +50,7 @@ export const ProjectKPICards = ({ kpis = {} }) => {
       value: kpis.ongoingCount?.toLocaleString('en-IN') || '0',
       subtitle: 'In execution stage',
       icon: Clock,
-      color: 'text-sky-600 bg-sky-50 border-sky-200',
+      color: 'text-slate-700 bg-slate-100 border-slate-300',
     },
     {
       title: 'NEAR COMPLETION',
@@ -80,7 +80,7 @@ export const ProjectKPICards = ({ kpis = {} }) => {
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
-          <Card key={idx} className="p-4 hover:shadow-md transition-shadow">
+          <Card key={idx} className="p-4 hover: transition-">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">

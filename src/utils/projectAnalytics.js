@@ -37,7 +37,7 @@ export const getStatusBadgeClass = (status) => {
     case 'NEAR_COMPLETION':
       return { label: 'Near Completion', bg: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500', hex: '#F59E0B' };
     case 'ONGOING':
-      return { label: 'Ongoing', bg: 'bg-blue-50 text-blue-700 border-blue-200', dot: 'bg-blue-500', hex: '#2563EB' };
+      return { label: 'Ongoing', bg: 'bg-slate-100 text-slate-800 border-slate-300', dot: 'bg-slate-700', hex: '#475569' };
     case 'STARTING':
       return { label: 'Starting', bg: 'bg-slate-100 text-slate-700 border-slate-300', dot: 'bg-slate-500', hex: '#94A3B8' };
     case 'DELAYED':
@@ -131,7 +131,7 @@ export const calculateStatusDistribution = (projects = []) => {
   return [
     { name: 'Completed', key: 'COMPLETED', count: completed, percentage: Number(((completed / total) * 100).toFixed(1)), color: '#16A34A' },
     { name: 'Near Completion', key: 'NEAR_COMPLETION', count: nearCompletion, percentage: Number(((nearCompletion / total) * 100).toFixed(1)), color: '#F59E0B' },
-    { name: 'Ongoing', key: 'ONGOING', count: ongoing, percentage: Number(((ongoing / total) * 100).toFixed(1)), color: '#2563EB' },
+    { name: 'Ongoing', key: 'ONGOING', count: ongoing, percentage: Number(((ongoing / total) * 100).toFixed(1)), color: '#475569' },
     { name: 'Starting', key: 'STARTING', count: starting, percentage: Number(((starting / total) * 100).toFixed(1)), color: '#94A3B8' },
     { name: 'Delayed', key: 'DELAYED', count: delayed, percentage: Number(((delayed / total) * 100).toFixed(1)), color: '#DC2626' },
   ];
@@ -167,7 +167,7 @@ export const calculateProjectTypeDistribution = (projects = []) => {
     typeMap[t].sanctioned += p.sanctionedAmount || 0;
   });
 
-  const colors = ['#2563EB', '#0284C7', '#16A34A', '#06B6D4', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
+  const colors = ['#475569', '#0284C7', '#16A34A', '#64748b', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
 
   return Object.values(typeMap)
     .sort((a, b) => b.count - a.count)

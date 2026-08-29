@@ -18,18 +18,18 @@ export const getStatusBadgeStyle = (statusKey) => {
       };
     case 'NEAR_COMPLETION':
       return {
-        bg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        dot: 'bg-indigo-600',
+        bg: 'bg-slate-100 text-slate-800 border-slate-300',
+        dot: 'bg-slate-800',
       };
     case 'ONGOING':
       return {
-        bg: 'bg-blue-50 text-blue-700 border-blue-200',
-        dot: 'bg-blue-600',
+        bg: 'bg-slate-100 text-slate-800 border-slate-300',
+        dot: 'bg-slate-800',
       };
     case 'STARTING':
       return {
-        bg: 'bg-sky-50 text-sky-700 border-sky-200',
-        dot: 'bg-sky-600',
+        bg: 'bg-slate-100 text-slate-800 border-slate-300',
+        dot: 'bg-slate-800',
       };
     case 'DELAYED':
       return {

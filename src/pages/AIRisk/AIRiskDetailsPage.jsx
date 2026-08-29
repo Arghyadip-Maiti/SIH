@@ -49,7 +49,7 @@ export const AIRiskDetailsPage = () => {
   if (detailLoading || !activeProjectDetail) {
     return (
       <div className="p-12 text-center">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <div className="w-10 h-10 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <h3 className="text-sm font-extrabold text-slate-800">
           Loading AI Project Investigation Diagnostics...
         </h3>
@@ -97,21 +97,21 @@ export const AIRiskDetailsPage = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate('/ai-risk')}
-        className="inline-flex items-center gap-2 text-xs font-extrabold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-xl transition-colors border border-blue-200/60"
+        className="inline-flex items-center gap-2 text-xs font-extrabold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl transition-colors border border-slate-300/60"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>← Back to AI Risk Monitor</span>
       </button>
 
       {/* 1. Project Header & Large Risk Score Card */}
-      <Card className="p-6 border border-slate-200 rounded-2xl bg-white shadow-xs">
+      <Card className="p-6 border border-slate-200 rounded-2xl bg-white ">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                 ID: {p.id}
               </span>
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-300">
                 {p.projectType}
               </span>
               {p.isFlagged && (
@@ -165,7 +165,7 @@ export const AIRiskDetailsPage = () => {
       {/* 2. Why is this project flagged? (Risk Score Breakdown & Clubbed AI Investigation Summary) */}
       <Card header={
         <div className="flex items-center gap-2">
-          <Bot className="w-5 h-5 text-blue-600" />
+          <Bot className="w-5 h-5 text-slate-700" />
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
             WHY IS THIS PROJECT FLAGGED? — RISK CONTRIBUTION
           </h3>
@@ -173,9 +173,9 @@ export const AIRiskDetailsPage = () => {
       }>
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs">
-            <div className="p-3 rounded-xl bg-blue-50 border border-blue-200">
-              <span className="block text-[10px] font-bold text-blue-700 uppercase">Financial Risk</span>
-              <span className="text-lg font-black text-blue-900 font-mono">{factors.financialScore || 42}%</span>
+            <div className="p-3 rounded-xl bg-slate-100 border border-slate-300">
+              <span className="block text-[10px] font-bold text-slate-800 uppercase">Financial Risk</span>
+              <span className="text-lg font-black text-slate-950 font-mono">{factors.financialScore || 42}%</span>
             </div>
             <div className="p-3 rounded-xl bg-purple-50 border border-purple-200">
               <span className="block text-[10px] font-bold text-purple-700 uppercase">Photo Evidence</span>
@@ -216,7 +216,7 @@ export const AIRiskDetailsPage = () => {
       {/* 3. AI Predictive Analysis */}
       <Card header={
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-indigo-600" />
+          <Sparkles className="w-5 h-5 text-slate-700" />
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
             AI Predictive Analysis
           </h3>
@@ -232,9 +232,9 @@ export const AIRiskDetailsPage = () => {
               <span className="text-[10px] font-extrabold text-amber-700 uppercase block">Cost Overrun Risk</span>
               <span className="text-2xl font-black text-amber-900 font-mono">{pred.costOverrunProbability || 61}%</span>
             </div>
-            <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-xl">
-              <span className="text-[10px] font-extrabold text-blue-700 uppercase block">Predicted Delay</span>
-              <span className="text-2xl font-black text-blue-900 font-mono">43–55 days</span>
+            <div className="p-3.5 bg-slate-100 border border-slate-300 rounded-xl">
+              <span className="text-[10px] font-extrabold text-slate-800 uppercase block">Predicted Delay</span>
+              <span className="text-2xl font-black text-slate-950 font-mono">43–55 days</span>
             </div>
             <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-xl">
               <span className="text-[10px] font-extrabold text-purple-700 uppercase block">Est. Final Cost</span>
@@ -243,7 +243,7 @@ export const AIRiskDetailsPage = () => {
           </div>
 
           <div className="p-4 bg-slate-900 text-white rounded-xl text-xs space-y-2">
-            <h4 className="font-extrabold text-blue-300 flex items-center gap-1.5">
+            <h4 className="font-extrabold text-slate-400 flex items-center gap-1.5">
               <Bot className="w-4 h-4" />
               <span>Why does AI predict this trajectory?</span>
             </h4>
@@ -275,7 +275,7 @@ export const AIRiskDetailsPage = () => {
             </div>
             <div>
               <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">Total Claimed</span>
-              <span className="text-base font-extrabold text-blue-700 font-mono">₹{(fin.totalClaimed / 100000).toFixed(2)}L</span>
+              <span className="text-base font-extrabold text-slate-800 font-mono">₹{(fin.totalClaimed / 100000).toFixed(2)}L</span>
             </div>
             <div>
               <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">Verified Expenditure</span>
@@ -325,7 +325,7 @@ export const AIRiskDetailsPage = () => {
                     <td className="py-2.5 px-3 text-right">
                       <button
                         onClick={() => setSelectedReceipt(stg)}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-lg transition-colors"
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-lg transition-colors"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         <span>View Receipt</span>
@@ -436,7 +436,7 @@ export const AIRiskDetailsPage = () => {
             {/* Timestamp Verification */}
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
               <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-slate-700" />
                 <span>Timestamp Audit</span>
               </h4>
               <div className="space-y-1 text-slate-600">
@@ -517,7 +517,7 @@ export const AIRiskDetailsPage = () => {
         {/* Payment vs Physical Progress Mismatch */}
         <Card header={
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-blue-600" />
+            <TrendingUp className="w-5 h-5 text-slate-700" />
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               Payment Released vs Physical Progress
             </h3>
@@ -540,13 +540,13 @@ export const AIRiskDetailsPage = () => {
 
               <div className="flex items-center justify-between pt-1">
                 <span className="font-semibold text-slate-700">Physical Progress Executed:</span>
-                <span className="font-extrabold font-mono text-blue-700 text-sm">
+                <span className="font-extrabold font-mono text-slate-800 text-sm">
                   {p.physicalProgress}%
                 </span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
                 <div
-                  className="bg-blue-600 h-full rounded-full"
+                  className="bg-slate-800 h-full rounded-full"
                   style={{ width: `${p.physicalProgress}%` }}
                 />
               </div>
@@ -589,7 +589,7 @@ export const AIRiskDetailsPage = () => {
                   type="checkbox"
                   checked={checklist.receipts}
                   onChange={() => toggleChecklist('receipts')}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-slate-700 focus:ring-slate-500"
                 />
                 <span>Verify submitted expenditure receipts</span>
               </label>
@@ -599,7 +599,7 @@ export const AIRiskDetailsPage = () => {
                   type="checkbox"
                   checked={checklist.location}
                   onChange={() => toggleChecklist('location')}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-slate-700 focus:ring-slate-500"
                 />
                 <span>Verify project GPS site location</span>
               </label>
@@ -609,7 +609,7 @@ export const AIRiskDetailsPage = () => {
                   type="checkbox"
                   checked={checklist.progress}
                   onChange={() => toggleChecklist('progress')}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-slate-700 focus:ring-slate-500"
                 />
                 <span>Verify ground physical progress</span>
               </label>
@@ -619,7 +619,7 @@ export const AIRiskDetailsPage = () => {
                   type="checkbox"
                   checked={checklist.expenditure}
                   onChange={() => toggleChecklist('expenditure')}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-slate-700 focus:ring-slate-500"
                 />
                 <span>Review contractor line-item expenditure</span>
               </label>
@@ -630,7 +630,7 @@ export const AIRiskDetailsPage = () => {
             <button
               onClick={handleFlagAction}
               disabled={p.isFlagged}
-              className={`px-5 py-3 rounded-xl font-extrabold text-xs shadow-md transition-all flex items-center gap-2 ${
+              className={`px-5 py-3 rounded-xl font-extrabold text-xs  transition-all flex items-center gap-2 ${
                 p.isFlagged
                   ? 'bg-emerald-600 text-white cursor-default'
                   : 'bg-rose-600 hover:bg-rose-700 text-white'

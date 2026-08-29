@@ -13,7 +13,7 @@ export const DelayAnalyticsSection = ({ delayData = {} }) => {
   } = delayData;
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="Project Delay Trends"

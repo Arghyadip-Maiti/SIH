@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card } from '../../../components/ui/Card';
+
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 export const ProjectStatusSection = ({
@@ -10,8 +10,8 @@ export const ProjectStatusSection = ({
   const data = statusDistribution;
 
   return (
-    <Card header={<h3 className="text-base font-bold text-slate-900">Project Status Overview</h3>}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+    <div className="flex flex-col h-full w-full"><h3 className="text-sm font-bold text-slate-900 mb-4 text-center">Project Status Overview</h3>
+      <div className="grid grid-cols-1 gap-4 items-center">
         {/* Donut Chart with Center Data Overlay & Tooltip Floating Above */}
         <div className="relative h-56 flex items-center justify-center">
           {/* Center Text Overlay Layer (z-0) */}
@@ -54,13 +54,14 @@ export const ProjectStatusSection = ({
                   innerRadius={65}
                   outerRadius={85}
                   paddingAngle={2}
+                  cornerRadius={6}
                   dataKey="count"
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {data.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.color || '#2563EB'}
+                      fill={entry.color || '#475569'}
                       stroke="#FFFFFF"
                       strokeWidth={2}
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -96,31 +97,7 @@ export const ProjectStatusSection = ({
           </div>
         </div>
 
-        {/* Legend Table with Hover Interaction */}
-        <div className="space-y-2 text-xs">
-          {data.map((item, index) => (
-            <div
-              key={item.name}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
-                hoveredIndex === index
-                  ? 'bg-blue-50/70 border-blue-200 shadow-2xs scale-[1.01]'
-                  : 'bg-slate-50 border-slate-100 hover:bg-slate-100/80'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                <span className="font-medium text-slate-700">{item.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-slate-900">{item.count.toLocaleString('en-IN')}</span>
-                <span className="text-slate-400 font-mono text-[11px]">({item.percentage}%)</span>
-              </div>
-            </div>
-          ))}
         </div>
-      </div>
-    </Card>
+    </div>
   );
 };

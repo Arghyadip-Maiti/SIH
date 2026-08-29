@@ -14,7 +14,7 @@ export const CostExpenditureAnalysisSection = ({ costData = {} }) => {
   } = costData;
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="Cost & Expenditure Analysis"
@@ -23,7 +23,7 @@ export const CostExpenditureAnalysisSection = ({ costData = {} }) => {
 
         <div className="flex items-center gap-3">
           <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center gap-2">
-            <Coins className="w-4 h-4 text-blue-600" />
+            <Coins className="w-4 h-4 text-slate-700" />
             <span>Avg Cost: <strong>₹{avgProjectCostLakhs} Lakhs</strong></span>
           </div>
 
@@ -63,7 +63,7 @@ export const CostExpenditureAnalysisSection = ({ costData = {} }) => {
             />
             <Legend verticalAlign="top" align="right" wrapperStyle={{ paddingBottom: '10px', fontSize: '12px' }} />
             <Bar name="Sanctioned (₹ Cr)" dataKey="sanctionedCr" fill="#94A3B8" radius={[6, 6, 0, 0]} barSize={16} />
-            <Bar name="Expenditure (₹ Cr)" dataKey="expenditureCr" fill="#2563EB" radius={[6, 6, 0, 0]} barSize={16} />
+            <Bar name="Expenditure (₹ Cr)" dataKey="expenditureCr" fill="#475569" radius={[6, 6, 0, 0]} barSize={16} />
           </BarChart>
         </ResponsiveContainer>
       </div>

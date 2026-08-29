@@ -9,13 +9,11 @@ import {
 export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
   if (!selectedConstituency) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-md p-8 text-center text-slate-500 min-h-[580px] flex flex-col items-center justify-center animate-fadeIn">
-        <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center mb-4 shadow-sm">
-          <MapPin className="w-8 h-8 animate-pulse" />
-        </div>
+      <div className="bg-white rounded-2xl border border-slate-200/90  p-8 text-center text-slate-500 min-h-[580px] flex flex-col items-center justify-center animate-fadeIn">
+        
         <h4 className="text-base font-bold text-slate-800">No Constituency Selected</h4>
         <p className="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
-          Click any of the 543 Lok Sabha constituencies on the map to inspect complete financial, project status, risk, and performance metrics.
+          Click any state on the map to inspect complete financial, project status, risk, and performance metrics.
         </p>
       </div>
     );
@@ -44,11 +42,11 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
   const riskBadge = getRiskBadge(d.averageRiskScore);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-md p-5 min-h-[580px] space-y-5 animate-fadeIn">
+    <div className="bg-white rounded-2xl border border-slate-200/90  p-5 h-[580px] overflow-y-auto space-y-5 animate-fadeIn">
       {/* 1. BASIC INFORMATION SECTION (ONLY Constituency Name & State Name) */}
       <div className="border-b border-slate-100 pb-4">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 mb-1.5 inline-block">
-          Constituency Details
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 mb-1.5 inline-block">
+          Region Details
         </span>
         <h3 className="text-2xl font-black text-slate-900 tracking-tight capitalize leading-none">
           {d.constituencyName.toLowerCase()}
@@ -61,15 +59,15 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
       {/* 2. FINANCIAL SECTION */}
       <div className="space-y-2.5">
         <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-          <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
+          <TrendingUp className="w-3.5 h-3.5 text-slate-700" />
           <span>Financial</span>
         </h4>
 
         {/* Financial KPI Cards */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="p-2.5 bg-blue-50/70 border border-blue-100 rounded-xl">
-            <span className="text-[10px] font-semibold text-blue-600 uppercase block">Sanctioned</span>
-            <span className="text-base font-mono font-extrabold text-blue-950">{formatCr(d.sanctionedAmount)}</span>
+          <div className="p-2.5 bg-slate-100/70 border border-slate-200 rounded-xl">
+            <span className="text-[10px] font-semibold text-slate-700 uppercase block">Sanctioned</span>
+            <span className="text-base font-mono font-extrabold text-slate-950">{formatCr(d.sanctionedAmount)}</span>
           </div>
 
           <div className="p-2.5 bg-emerald-50/70 border border-emerald-100 rounded-xl">
@@ -82,8 +80,8 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
             <span className="text-base font-mono font-extrabold text-amber-950">{formatCr(unutilized)}</span>
           </div>
 
-          <div className="p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-xl">
-            <span className="text-[10px] font-semibold text-indigo-600 uppercase block">Utilization</span>
+          <div className="p-2.5 bg-slate-100/70 border border-slate-200 rounded-xl">
+            <span className="text-[10px] font-semibold text-slate-700 uppercase block">Utilization</span>
             <span className="text-base font-mono font-extrabold text-indigo-950">{d.utilization}%</span>
           </div>
         </div>
@@ -92,11 +90,11 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
         <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 space-y-1">
           <div className="flex justify-between text-[11px] font-semibold text-slate-600">
             <span>Utilization Progress</span>
-            <span className="font-mono text-blue-600 font-extrabold">{d.utilization}%</span>
+            <span className="font-mono text-slate-700 font-extrabold">{d.utilization}%</span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
             <div
-              className="h-full rounded-full bg-blue-600 transition-all duration-500"
+              className="h-full rounded-full bg-slate-800 transition-all duration-500"
               style={{ width: `${Math.min(100, d.utilization)}%` }}
             />
           </div>
@@ -106,7 +104,7 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
       {/* 3. PROJECTS SECTION */}
       <div className="space-y-2.5">
         <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-          <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+          <Briefcase className="w-3.5 h-3.5 text-slate-700" />
           <span>Projects ({d.totalProjects} Total)</span>
         </h4>
 
@@ -124,7 +122,7 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
           />
           <div
             style={{ width: `${(d.ongoingProjects / d.totalProjects) * 100}%` }}
-            className="bg-blue-500 h-full"
+            className="bg-slate-700 h-full"
             title={`Ongoing: ${d.ongoingProjects}`}
           />
           <div
@@ -149,8 +147,8 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
             <span className="text-[10px] font-bold text-amber-700 block">Near Comp.</span>
             <span className="font-mono font-extrabold text-slate-900 text-sm">{d.nearCompletionProjects}</span>
           </div>
-          <div className="p-1.5 bg-blue-50/70 border border-blue-200/60 rounded-lg">
-            <span className="text-[10px] font-bold text-blue-700 block">Ongoing</span>
+          <div className="p-1.5 bg-slate-100/70 border border-slate-300/60 rounded-lg">
+            <span className="text-[10px] font-bold text-slate-800 block">Ongoing</span>
             <span className="font-mono font-extrabold text-slate-900 text-sm">{d.ongoingProjects}</span>
           </div>
           <div className="p-1.5 bg-slate-50 border border-slate-200/60 rounded-lg">
@@ -168,7 +166,7 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />
             <span>Risk Overview</span>
           </h4>
           <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border flex items-center gap-1 ${riskBadge.color}`}>
@@ -207,7 +205,7 @@ export const ConstituencyDetailsPanel = ({ selectedConstituency }) => {
       {/* 5. PERFORMANCE SECTION */}
       <div className="space-y-2 pt-1 border-t border-slate-100">
         <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-          <Percent className="w-3.5 h-3.5 text-blue-600" />
+          <Percent className="w-3.5 h-3.5 text-slate-700" />
           <span>Performance Indicators</span>
         </h4>
 

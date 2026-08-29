@@ -11,7 +11,7 @@ export const ExpenditureTrendSection = ({
   onMetricChange,
 }) => {
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <SectionHeader
@@ -34,7 +34,7 @@ export const ExpenditureTrendSection = ({
                 onClick={() => onGranularityChange && onGranularityChange(g)}
                 className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-all ${
                   granularity === g
-                    ? 'bg-white text-blue-700 shadow-2xs font-bold'
+                    ? 'bg-white text-slate-800  font-bold'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -47,7 +47,7 @@ export const ExpenditureTrendSection = ({
           <select
             value={metric}
             onChange={(e) => onMetricChange && onMetricChange(e.target.value)}
-            className="text-xs font-semibold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-xs font-semibold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-500"
           >
             <option value="expenditure">Expenditure (₹ Cr)</option>
             <option value="released">Released Funds (₹ Cr)</option>
@@ -62,8 +62,8 @@ export const ExpenditureTrendSection = ({
           <AreaChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorExp" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2563EB" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
+                <stop offset="5%" stopColor="#475569" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#475569" stopOpacity={0.0} />
               </linearGradient>
               <linearGradient id="colorRel" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#16A34A" stopOpacity={0.3} />
@@ -97,7 +97,7 @@ export const ExpenditureTrendSection = ({
             <Area
               type="monotone"
               dataKey="value"
-              stroke="#2563EB"
+              stroke="#475569"
               strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#colorExp)"

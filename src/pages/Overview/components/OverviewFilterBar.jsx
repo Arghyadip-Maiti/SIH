@@ -1,4 +1,5 @@
-import { RotateCcw, X, Filter } from 'lucide-react';
+import { X, Filter } from 'lucide-react';
+import { CustomSelect } from '../../../components/ui/CustomSelect';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP, MP_LOCATION_MAP } from '../../../services/api/locationService';
 
 const STATES = [
@@ -54,23 +55,24 @@ export const OverviewFilterBar = ({
   });
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-3.5 mb-6 transition-all">
+    <div className="mb-6 transition-all">
       {/* Filter Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2.5 items-end">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5 items-end">
         {/* Financial Year */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             Financial Year
           </label>
-          <select
+          <CustomSelect
             value={filters.financialYear}
-            onChange={(e) => onFilterChange('financialYear', e.target.value)}
-            className="w-full h-[34px] text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="2026-27">2026–27</option>
-            <option value="2025-26">2025–26</option>
-            <option value="2024-25">2024–25</option>
-          </select>
+            onChange={(val) => onFilterChange('financialYear', val)}
+            options={[
+              { value: '2026-27', label: '2026–27' },
+              { value: '2025-26', label: '2025–26' },
+              { value: '2024-25', label: '2024–25' }
+            ]}
+            defaultLabel="2026-27"
+          />
         </div>
 
         {/* House */}
@@ -78,15 +80,16 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             House
           </label>
-          <select
+          <CustomSelect
             value={filters.house}
-            onChange={(e) => onFilterChange('house', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="All">All</option>
-            <option value="Lok Sabha">Lok Sabha</option>
-            <option value="Rajya Sabha">Rajya Sabha</option>
-          </select>
+            onChange={(val) => onFilterChange('house', val)}
+            options={[
+              { value: 'All', label: 'All' },
+              { value: 'Lok Sabha', label: 'Lok Sabha' },
+              { value: 'Rajya Sabha', label: 'Rajya Sabha' }
+            ]}
+            defaultLabel="All"
+          />
         </div>
 
         {/* State */}
@@ -94,18 +97,15 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             State
           </label>
-          <select
+          <CustomSelect
             value={filters.state}
-            onChange={(e) => onFilterChange('state', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All States</option>
-            {STATES.map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => onFilterChange('state', val)}
+            options={[
+              { value: '', label: 'All States' },
+              ...STATES.map(st => ({ value: st, label: st }))
+            ]}
+            defaultLabel="All States"
+          />
         </div>
 
         {/* District */}
@@ -113,18 +113,15 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             District
           </label>
-          <select
+          <CustomSelect
             value={filters.district}
-            onChange={(e) => onFilterChange('district', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Districts</option>
-            {availableDistricts.map((dist) => (
-              <option key={dist} value={dist}>
-                {dist}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => onFilterChange('district', val)}
+            options={[
+              { value: '', label: 'All Districts' },
+              ...availableDistricts.map(dist => ({ value: dist, label: dist }))
+            ]}
+            defaultLabel="All Districts"
+          />
         </div>
 
         {/* MP */}
@@ -132,18 +129,15 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             MP
           </label>
-          <select
+          <CustomSelect
             value={filters.mp}
-            onChange={(e) => onFilterChange('mp', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All MPs</option>
-            {availableMPs.map((mpName) => (
-              <option key={mpName} value={mpName}>
-                {mpName}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => onFilterChange('mp', val)}
+            options={[
+              { value: '', label: 'All MPs' },
+              ...availableMPs.map(mp => ({ value: mp, label: mp }))
+            ]}
+            defaultLabel="All MPs"
+          />
         </div>
 
         {/* Sector */}
@@ -151,18 +145,15 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             Sector
           </label>
-          <select
+          <CustomSelect
             value={filters.projectType}
-            onChange={(e) => onFilterChange('projectType', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Sectors</option>
-            {SECTORS.map((sec) => (
-              <option key={sec} value={sec}>
-                {sec}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => onFilterChange('projectType', val)}
+            options={[
+              { value: '', label: 'All Sectors' },
+              ...SECTORS.map(sec => ({ value: sec, label: sec }))
+            ]}
+            defaultLabel="All Sectors"
+          />
         </div>
 
         {/* Work Status */}
@@ -170,32 +161,22 @@ export const OverviewFilterBar = ({
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
             Work Status
           </label>
-          <select
+          <CustomSelect
             value={filters.status}
-            onChange={(e) => onFilterChange('status', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Statuses</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="ONGOING">Ongoing</option>
-            <option value="NEAR_COMPLETION">Near Completion</option>
-            <option value="STARTING">Starting</option>
-            <option value="DELAYED">Delayed</option>
-          </select>
+            onChange={(val) => onFilterChange('status', val)}
+            options={[
+              { value: '', label: 'All Statuses' },
+              { value: 'COMPLETED', label: 'Completed' },
+              { value: 'ONGOING', label: 'Ongoing' },
+              { value: 'NEAR_COMPLETION', label: 'Near Completion' },
+              { value: 'STARTING', label: 'Starting' },
+              { value: 'DELAYED', label: 'Delayed' }
+            ]}
+            defaultLabel="All Statuses"
+          />
         </div>
 
-        {/* Reset Action Button */}
-        <div>
-          <button
-            type="button"
-            onClick={onReset}
-            className="w-full h-[34px] px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none"
-            title="Reset Filters"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-            <span>Reset</span>
-          </button>
-        </div>
+        
       </div>
 
       {/* Active Filter Chips / Badges */}
@@ -207,14 +188,14 @@ export const OverviewFilterBar = ({
           {activeTags.map(([key, val]) => (
             <span
               key={key}
-              className="inline-flex items-center gap-1 text-[11px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200"
+              className="inline-flex items-center gap-1 text-[11px] font-medium bg-slate-200 text-black px-2 py-0.5 rounded-full border border-black"
             >
               <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
               <strong className="font-semibold">{val}</strong>
               <button
                 type="button"
                 onClick={() => onFilterChange(key, key === 'financialYear' ? '2026-27' : key === 'house' ? 'All' : '')}
-                className="hover:text-blue-900 ml-0.5"
+                className="hover:text-slate-600 ml-0.5"
               >
                 <X className="w-3 h-3" />
               </button>

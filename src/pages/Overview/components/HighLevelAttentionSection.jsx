@@ -19,20 +19,20 @@ export const HighLevelAttentionSection = ({
       case 'AlertCircle':
         return <AlertCircle className="w-4 h-4 text-amber-500" />;
       default:
-        return <Building2 className="w-4 h-4 text-blue-600" />;
+        return <Building2 className="w-4 h-4 text-slate-700" />;
     }
   };
 
   const getBadgeStyle = (type) => {
     switch (type) {
       case 'CRITICAL':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'text-red-700';
       case 'HIGH':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'text-orange-700';
       case 'MEDIUM':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'text-amber-700';
       default:
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'text-slate-700';
     }
   };
 
@@ -45,18 +45,18 @@ export const HighLevelAttentionSection = ({
             <div
               key={item.id}
               onClick={() => navigate('/ai-risk')}
-              className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 hover:bg-blue-50/50 hover:border-blue-200 transition-colors cursor-pointer"
+              className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 hover:bg-slate-100/50 hover:border-slate-300 transition-colors cursor-pointer"
             >
-              <div className="p-1.5 rounded-md bg-white border border-slate-200 shrink-0">
+              <div className="shrink-0 flex items-center justify-center">
                 {getAlertIcon(item.icon)}
               </div>
               <div className="flex-1 text-slate-700 font-medium">
-                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-bold mr-2 border ${getBadgeStyle(item.type)}`}>
+                <span className={`inline-flex items-center text-[11px] font-mono font-extrabold mr-1.5 ${getBadgeStyle(item.type)}`}>
                   {item.count}
                 </span>
                 <span>{item.message}</span>
               </div>
-              <span className="text-blue-600 font-semibold text-[11px] shrink-0">Review →</span>
+              <span className="text-slate-700 font-semibold text-[11px] shrink-0">Review →</span>
             </div>
           ))}
         </div>
@@ -66,7 +66,7 @@ export const HighLevelAttentionSection = ({
       <Card
         header={
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
+            <Sparkles className="w-4 h-4 text-slate-700 animate-pulse" />
             <h3 className="text-base font-bold text-slate-900">AI-Generated Overview Insights</h3>
           </div>
         }

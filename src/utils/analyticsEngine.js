@@ -275,7 +275,7 @@ export const calculateStatusDistribution = (projects = []) => {
   return [
     { name: 'Completed', key: 'COMPLETED', count: completed, percentage: Number(((completed / total) * 100).toFixed(1)), color: '#16A34A' },
     { name: 'Near Completion', key: 'NEAR_COMPLETION', count: nearCompletion, percentage: Number(((nearCompletion / total) * 100).toFixed(1)), color: '#F59E0B' },
-    { name: 'Ongoing', key: 'ONGOING', count: ongoing, percentage: Number(((ongoing / total) * 100).toFixed(1)), color: '#2563EB' },
+    { name: 'Ongoing', key: 'ONGOING', count: ongoing, percentage: Number(((ongoing / total) * 100).toFixed(1)), color: '#475569' },
     { name: 'Starting', key: 'STARTING', count: starting, percentage: Number(((starting / total) * 100).toFixed(1)), color: '#94A3B8' },
     { name: 'Delayed', key: 'DELAYED', count: delayed, percentage: Number(((delayed / total) * 100).toFixed(1)), color: '#DC2626' },
   ];
@@ -424,7 +424,7 @@ export const calculateProjectTypeDistribution = (projects = []) => {
     typeMap[t].riskScoreSum += p.riskScore || 0;
   });
 
-  const colors = ['#2563EB', '#0284C7', '#16A34A', '#06B6D4', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
+  const colors = ['#475569', '#0284C7', '#16A34A', '#64748b', '#8B5CF6', '#F59E0B', '#64748B', '#EC4899'];
 
   return Object.values(typeMap)
     .sort((a, b) => b.expenditure - a.expenditure)
@@ -489,7 +489,7 @@ export const calculateStateRankings = (projects = []) => {
       const avgRisk = s.totalProjects > 0 ? Math.round(s.riskScoreSum / s.totalProjects) : 0;
 
       let performanceCategory = 'Satisfactory';
-      let performanceBadge = 'bg-blue-50 text-blue-700 border-blue-200';
+      let performanceBadge = 'bg-slate-100 text-slate-800 border-slate-300';
       if (utilPct >= 80 && compPct >= 70 && avgRisk <= 35) {
         performanceCategory = 'Top Performing';
         performanceBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200';
@@ -683,7 +683,7 @@ export const calculateAgencyPerformance = (projects = []) => {
     const avgDelay = ag.delayedProjects > 0 ? Math.round(ag.delayDaysSum / ag.delayedProjects) : 0;
 
     let performance = 'Satisfactory';
-    let statusBadge = 'bg-blue-50 text-blue-700 border-blue-200';
+    let statusBadge = 'bg-slate-100 text-slate-800 border-slate-300';
     if (compPct >= 75 && avgDelay <= 30 && avgRisk <= 35) {
       performance = 'High Performing';
       statusBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200';

@@ -18,12 +18,12 @@ export const PerformanceMatrixSection = ({
       case 'CRITICAL':
         return '#EF4444';
       default:
-        return '#2563EB';
+        return '#475569';
     }
   };
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="Performance Matrix"
@@ -35,7 +35,7 @@ export const PerformanceMatrixSection = ({
           <select
             value={entityType}
             onChange={(e) => onEntityTypeChange && onEntityTypeChange(e.target.value)}
-            className="text-xs font-bold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-xs font-bold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-500"
           >
             <option value="State">State Level</option>
             <option value="District">District Level</option>
@@ -101,7 +101,7 @@ export const PerformanceMatrixSection = ({
         <div className="p-2 rounded-xl bg-amber-50/50 border border-amber-100 text-[11px] font-semibold text-amber-800">
           Top Left: Low Utilization + High Completion
         </div>
-        <div className="p-2 rounded-xl bg-blue-50/50 border border-blue-100 text-[11px] font-semibold text-blue-800">
+        <div className="p-2 rounded-xl bg-slate-100/50 border border-slate-200 text-[11px] font-semibold text-slate-900">
           Bottom Right: High Utilization + Low Completion
         </div>
         <div className="p-2 rounded-xl bg-rose-50/50 border border-rose-100 text-[11px] font-semibold text-rose-800">

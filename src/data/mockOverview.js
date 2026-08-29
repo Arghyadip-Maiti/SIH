@@ -36,7 +36,7 @@ export const mockOverview = {
   // Project Status Breakdown
   projectStatusDistribution: [
     { name: "Completed", key: "COMPLETED", count: 78456, percentage: 63.0, color: "#16A34A" },
-    { name: "Ongoing (In Progress)", key: "ONGOING", count: 32145, percentage: 25.8, color: "#2563EB" },
+    { name: "Ongoing (In Progress)", key: "ONGOING", count: 32145, percentage: 25.8, color: "#475569" },
     { name: "Near Completion", key: "NEAR_COMPLETION", count: 8943, percentage: 7.2, color: "#F59E0B" },
     { name: "Starting", key: "STARTING", count: 3327, percentage: 2.7, color: "#94A3B8" },
     { name: "Delayed", key: "DELAYED", count: 8765, percentage: 7.0, color: "#DC2626" },
@@ -44,10 +44,10 @@ export const mockOverview = {
 
   // Sector-wise Expenditure Distribution
   sectorExpenditure: [
-    { name: "Education & IT", percentage: 28, amountCr: 4438, count: 34800, color: "#2563EB" },
+    { name: "Education & IT", percentage: 28, amountCr: 4438, count: 34800, color: "#475569" },
     { name: "Roads & Bridges", percentage: 22, amountCr: 3482, count: 28200, color: "#0284C7" },
     { name: "Healthcare Infra", percentage: 15, amountCr: 2373, count: 18900, color: "#16A34A" },
-    { name: "Drinking Water Supply", percentage: 12, amountCr: 1932, count: 15400, color: "#06B6D4" },
+    { name: "Drinking Water Supply", percentage: 12, amountCr: 1932, count: 15400, color: "#64748b" },
     { name: "Sanitation & Waste", percentage: 8, amountCr: 1268, count: 11200, color: "#8B5CF6" },
     { name: "Others & Renewable", percentage: 15, amountCr: 2349, count: 16083, color: "#64748B" },
   ],

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card } from '../../../components/ui/Card';
+
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
@@ -12,8 +12,8 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
   );
 
   return (
-    <Card header={<h3 className="text-base font-bold text-slate-900">Sector-wise Expenditure</h3>}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+    <div className="flex flex-col h-full w-full"><h3 className="text-sm font-bold text-slate-900 mb-4 text-center">Sector-wise Expenditure</h3>
+      <div className="grid grid-cols-1 gap-4 items-center">
         {/* Donut Chart with Center Data Overlay & Floating Tooltip Above */}
         <div className="relative h-56 flex items-center justify-center">
           {/* Center Text Overlay Layer (z-0) */}
@@ -56,13 +56,14 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
                   innerRadius={60}
                   outerRadius={82}
                   paddingAngle={2}
+                  cornerRadius={6}
                   dataKey="percentage"
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {data.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.color || '#2563EB'}
+                      fill={entry.color || '#475569'}
                       stroke="#FFFFFF"
                       strokeWidth={2}
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -95,31 +96,7 @@ export const SectorExpenditureSection = ({ sectorDistribution = [] }) => {
           </div>
         </div>
 
-        {/* Legend List with Hover Interactivity */}
-        <div className="space-y-2 text-xs">
-          {data.map((item, index) => (
-            <div
-              key={item.name}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
-                hoveredIndex === index
-                  ? 'bg-blue-50/70 border-blue-200 shadow-2xs scale-[1.01]'
-                  : 'bg-slate-50 border-slate-100 hover:bg-slate-100/80'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                <span className="font-medium text-slate-700">{item.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-semibold text-slate-500">{item.percentage}%</span>
-                <span className="font-mono font-bold text-slate-900">₹{item.amountCr || item.expenditureCr} Cr</span>
-              </div>
-            </div>
-          ))}
         </div>
-      </div>
-    </Card>
+    </div>
   );
 };

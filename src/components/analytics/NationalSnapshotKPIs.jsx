@@ -26,12 +26,12 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
       {/* 1. Total Expenditure */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Total Expenditure
           </span>
-          <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+          <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
             <IndianRupee className="w-4 h-4" />
           </div>
         </div>
@@ -45,7 +45,7 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
       </Card>
 
       {/* 2. Fund Utilization */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Fund Utilization
@@ -64,7 +64,7 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
       </Card>
 
       {/* 3. Projects Completed */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Projects Completed
@@ -82,7 +82,7 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
       </Card>
 
       {/* 4. Projects Delayed */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Projects Delayed
@@ -100,12 +100,12 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
       </Card>
 
       {/* 5. Avg Physical Progress */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Avg Work Progress
           </span>
-          <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+          <div className="p-2 rounded-xl bg-slate-100 text-slate-700">
             <Activity className="w-4 h-4" />
           </div>
         </div>
@@ -114,14 +114,14 @@ export const NationalSnapshotKPIs = ({ kpis = {} }) => {
         </div>
         <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
           <div
-            className="bg-indigo-600 h-1.5 rounded-full transition-all"
+            className="bg-slate-800 h-1.5 rounded-full transition-all"
             style={{ width: `${Math.min(100, Math.max(0, avgProgress))}%` }}
           />
         </div>
       </Card>
 
       {/* 6. Avg Risk Score */}
-      <Card className="p-4 border border-slate-200 rounded-2xl bg-white shadow-2xs hover:shadow-xs transition-all">
+      <Card className="p-4 border border-slate-200 rounded-2xl bg-white  hover: transition-all">
         <div className="flex items-center justify-between gap-2 mb-2">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Avg Risk Score

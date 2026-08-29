@@ -36,7 +36,7 @@ export const Dropdown = ({
 
       {isOpen && (
         <div
-          className={`absolute z-50 mt-2 w-48 rounded-lg bg-white shadow-lg border border-slate-200 py-1 focus:outline-none ${
+          className={`absolute z-50 mt-2 w-48 rounded-lg bg-white  border border-slate-200 py-1 focus:outline-none ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >

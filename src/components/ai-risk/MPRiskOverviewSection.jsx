@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { UserCheck, RotateCcw } from 'lucide-react';
+import { UserCheck } from 'lucide-react';
 import { Card } from '../ui/Card';
 
 export const MPRiskOverviewSection = ({
@@ -19,7 +19,7 @@ export const MPRiskOverviewSection = ({
     <Card header={
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
-          <UserCheck className="w-4 h-4 text-indigo-600 shrink-0" />
+          <UserCheck className="w-4 h-4 text-slate-700 shrink-0" />
           <div>
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
               MP Risk Overview
@@ -39,10 +39,9 @@ export const MPRiskOverviewSection = ({
                 e.stopPropagation();
                 if (onResetMp) onResetMp();
               }}
-              className="h-[30px] px-3 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none shrink-0 shadow-2xs cursor-pointer"
+              className="h-[30px] px-3 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none shrink-0  cursor-pointer"
               title="Reset MP filter"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>Reset</span>
             </button>
           </div>
@@ -84,8 +83,8 @@ export const MPRiskOverviewSection = ({
                   onClick={() => onMpSelect && onMpSelect(m.mpName)}
                   className={`transition-colors cursor-pointer ${
                     isSelected
-                      ? 'bg-blue-50/90 font-bold border-l-4 border-l-blue-600'
-                      : 'hover:bg-blue-50/60'
+                      ? 'bg-slate-100/90 font-bold border-l-4 border-l-blue-600'
+                      : 'hover:bg-slate-100/60'
                   }`}
                   title={`Filter active monitor by ${m.mpName}`}
                 >

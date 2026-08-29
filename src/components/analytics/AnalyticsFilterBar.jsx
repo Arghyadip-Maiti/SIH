@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Filter, RotateCcw, ChevronDown, Sparkles } from 'lucide-react';
+import { Filter, ChevronDown, Sparkles } from 'lucide-react';
 import { STATE_DISTRICT_MAP, MP_LOCATION_MAP } from '../../data/locationMappings';
 
 const FY_OPTIONS = ['2026-27', '2025-26', '2024-25', '2023-24', 'All'];
@@ -57,10 +57,10 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
   }, [filters.state, filters.district]);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-xs p-4 mb-6 transition-all">
+    <div className="bg-white border border-slate-200 rounded-2xl  p-4 mb-6 transition-all">
       <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-blue-50 text-blue-700">
+          <div className="p-1.5 rounded-lg bg-slate-100 text-slate-800">
             <Filter className="w-4 h-4" />
           </div>
           <div>
@@ -78,13 +78,12 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             onClick={onReset}
             className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-colors"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset</span>
           </button>
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="sm:hidden text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1.5 rounded-xl flex items-center gap-1"
+            className="sm:hidden text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1"
           >
             <span>{isExpanded ? 'Hide Filters' : 'Show Filters'}</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -102,7 +101,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.financialYear}
               onChange={(e) => onFilterChange('financialYear', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {FY_OPTIONS.map((fy) => (
                 <option key={fy} value={fy}>
@@ -120,7 +119,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.house}
               onChange={(e) => onFilterChange('house', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {HOUSE_OPTIONS.map((h) => (
                 <option key={h} value={h}>
@@ -138,7 +137,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.state}
               onChange={(e) => onFilterChange('state', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {stateOptions.map((st) => (
                 <option key={st} value={st}>
@@ -156,7 +155,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.district}
               onChange={(e) => onFilterChange('district', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {districtOptions.map((d) => (
                 <option key={d} value={d}>
@@ -174,7 +173,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.mp}
               onChange={(e) => onFilterChange('mp', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {mpOptions.map((m) => (
                 <option key={m} value={m}>
@@ -192,7 +191,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.projectType}
               onChange={(e) => onFilterChange('projectType', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {PROJECT_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -210,7 +209,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.agency}
               onChange={(e) => onFilterChange('agency', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {AGENCIES.map((a) => (
                 <option key={a} value={a}>
@@ -228,7 +227,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.status}
               onChange={(e) => onFilterChange('status', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -246,7 +245,7 @@ export const AnalyticsFilterBar = ({ filters, onFilterChange, onReset, activeCou
             <select
               value={filters.riskLevel}
               onChange={(e) => onFilterChange('riskLevel', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {RISK_LEVELS.map((r) => (
                 <option key={r} value={r}>

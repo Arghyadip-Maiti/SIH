@@ -30,7 +30,7 @@ export const AIRiskPage = () => {
   if (loading && projectsData.length === 0) {
     return (
       <div className="p-12 text-center">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <div className="w-10 h-10 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <h3 className="text-sm font-extrabold text-slate-800">
           Running AI Risk & Anomaly Diagnostics...
         </h3>

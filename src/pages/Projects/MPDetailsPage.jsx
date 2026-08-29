@@ -65,10 +65,10 @@ const SpeedometerGauge = ({ value = 0, label = 'Metric', max = 100, unit = '%', 
     : '#10B981'; // Green (High Utilization)
 
   return (
-    <div className="flex flex-col items-center bg-slate-900/60 backdrop-blur-md px-6 py-4 rounded-3xl border border-white/10 shadow-lg relative group min-w-[240px] sm:min-w-[270px]">
+    <div className="flex flex-col items-center bg-slate-900/60 backdrop-blur-md px-6 py-4 rounded-3xl border border-white/10  relative group min-w-[240px] sm:min-w-[270px]">
       {/* Classy Title Header */}
       <div className="text-xs font-extrabold uppercase tracking-widest text-slate-300 mb-1 flex items-center gap-1.5 font-sans">
-        <Gauge className="w-4 h-4 text-sky-400" />
+        <Gauge className="w-4 h-4 text-slate-500" />
         <span>{label}</span>
       </div>
 
@@ -246,14 +246,14 @@ export const MPDetailsPage = () => {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <button
           onClick={() => navigate('/projects')}
-          className="flex items-center gap-2 text-xs font-extrabold text-slate-600 hover:text-blue-600 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-2xs transition-all hover:shadow-xs cursor-pointer"
+          className="flex items-center gap-2 text-xs font-extrabold text-slate-600 hover:text-slate-700 bg-white border border-slate-200 px-4 py-2 rounded-xl  transition-all hover: cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Projects Master Directory</span>
         </button>
 
         <div className="flex items-center gap-2 text-xs text-slate-500 font-semibold">
-          <span className="font-mono bg-blue-50 text-blue-700 px-3 py-1 rounded-lg border border-blue-200">
+          <span className="font-mono bg-slate-100 text-slate-800 px-3 py-1 rounded-lg border border-slate-300">
             MP ID: {mpRecord.mpId}
           </span>
           <span>&bull;</span>
@@ -264,20 +264,20 @@ export const MPDetailsPage = () => {
       {/* ------------------------------------------------------------------------- */}
       {/* MP HERO PROFILE BANNER CARD WITH CLASSY MATTE SPEEDOMETER GAUGES */}
       {/* ------------------------------------------------------------------------- */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden space-y-6">
-        <div className="absolute -top-24 -right-24 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800  relative overflow-hidden space-y-6">
+        <div className="absolute -top-24 -right-24 w-80 h-80 bg-slate-800/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex items-center justify-between flex-wrap gap-6 relative z-10">
           {/* Left Side: MP Profile Details */}
           <div className="flex items-center gap-5 flex-wrap">
             {/* MP Avatar Image */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-blue-500 shadow-xl shrink-0 bg-slate-800">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-slate-600  shrink-0 bg-slate-800">
               <img src={avatarUrl} alt={mpRecord.mpName} className="w-full h-full object-cover" />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="bg-blue-600/90 text-white font-mono text-xs font-black px-3 py-1 rounded-lg border border-blue-400/40">
+                <span className="bg-slate-800/90 text-white font-mono text-xs font-black px-3 py-1 rounded-lg border border-slate-500/40">
                   {mpRecord.house}
                 </span>
                 <span className="bg-emerald-950 text-emerald-300 font-bold text-xs px-3 py-1 rounded-full border border-emerald-700 flex items-center gap-1">
@@ -326,15 +326,15 @@ export const MPDetailsPage = () => {
         {/* Nodal Contact & Administration Bar */}
         <div className="pt-4 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 relative z-10">
           <div className="flex items-center gap-2">
-            <Landmark className="w-4 h-4 text-blue-400 shrink-0" />
+            <Landmark className="w-4 h-4 text-slate-500 shrink-0" />
             <span>Parliament Nodal Division: <strong>Ministry of Statistics &amp; Programme Implementation (MoSPI)</strong></span>
           </div>
           <div className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+            <Mail className="w-4 h-4 text-slate-500 shrink-0" />
             <span>Official Email: <strong>{mpRecord.mpName.toLowerCase().replace(/[^a-z]/g, '')}@sansad.nic.in</strong></span>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+            <Phone className="w-4 h-4 text-slate-500 shrink-0" />
             <span>Nodal Office: <strong>District Nodal Officer Cell, {mpRecord.constituency}</strong></span>
           </div>
         </div>
@@ -345,34 +345,34 @@ export const MPDetailsPage = () => {
       {/* ------------------------------------------------------------------------- */}
       <div className="space-y-4">
         <h3 className="text-base font-black uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-slate-200 pb-2">
-          <div className="p-1.5 bg-blue-600 text-white rounded-lg shadow-xs">
+          <div className="p-1.5 bg-slate-800 text-white rounded-lg ">
             <TrendingUp className="w-4 h-4" />
           </div>
           <span>MPLADS Financial Allocation &amp; Expenditure Performance</span>
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-1">
+          <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-1">
             <span className="text-slate-500 text-xs uppercase font-extrabold block">Total Sanctioned Fund</span>
             <span className="text-2xl font-mono font-black text-slate-900">{formatCurrency(mpRecord.sanctionedAmount)}</span>
             <span className="text-[11px] text-slate-400 font-semibold block">₹25.00 Cr Sanction Ceiling</span>
           </div>
 
-          <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-1">
+          <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-1">
             <span className="text-slate-500 text-xs uppercase font-extrabold block">Expenditure Incurred</span>
             <span className="text-2xl font-mono font-black text-emerald-700">{formatCurrency(mpRecord.expenditure)}</span>
             <span className="text-[11px] text-slate-400 font-semibold block">Disbursed Field Payouts</span>
           </div>
 
-          <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-1">
+          <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-1">
             <span className="text-slate-500 text-xs uppercase font-extrabold block">Unutilized Balance</span>
             <span className="text-2xl font-mono font-black text-amber-700">{formatCurrency(mpRecord.sanctionedAmount - mpRecord.expenditure)}</span>
             <span className="text-[11px] text-slate-400 font-semibold block">Available for New Sanctions</span>
           </div>
 
-          <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-1">
+          <div className="p-5 bg-white border border-slate-200 rounded-2xl  space-y-1">
             <span className="text-slate-500 text-xs uppercase font-extrabold block">Sanctioned Works</span>
-            <span className="text-2xl font-mono font-black text-blue-700">{mpRecord.totalProjects} Works</span>
+            <span className="text-2xl font-mono font-black text-slate-800">{mpRecord.totalProjects} Works</span>
             <span className="text-[11px] text-slate-400 font-semibold block">{mpRecord.completedProjects} Works Completed</span>
           </div>
         </div>
@@ -387,8 +387,8 @@ export const MPDetailsPage = () => {
             <span className="text-xs uppercase font-extrabold block text-emerald-700">Completed Works</span>
             <span className="text-xl font-mono font-black">{mpRecord.completedProjects}</span>
           </div>
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-center text-blue-950">
-            <span className="text-xs uppercase font-extrabold block text-blue-700">Ongoing Works</span>
+          <div className="p-4 bg-slate-100 border border-slate-300 rounded-2xl text-center text-slate-950">
+            <span className="text-xs uppercase font-extrabold block text-slate-800">Ongoing Works</span>
             <span className="text-xl font-mono font-black">{mpRecord.ongoingProjects}</span>
           </div>
           <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-center text-rose-950">
@@ -401,11 +401,11 @@ export const MPDetailsPage = () => {
       {/* ------------------------------------------------------------------------- */}
       {/* SECTION 2: SANCTIONED WORKS DIRECTORY FOR THIS MP */}
       {/* ------------------------------------------------------------------------- */}
-      <div className="space-y-4 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 shadow-xs">
+      <div className="space-y-4 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200 ">
         <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-200 pb-4">
           <div>
             <h3 className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 flex items-center gap-2.5">
-              <div className="p-2 bg-blue-600 text-white rounded-xl shadow-xs">
+              <div className="p-2 bg-slate-800 text-white rounded-xl ">
                 <FolderKanban className="w-5 h-5" />
               </div>
               <span>Sanctioned Infrastructure Works ({mpProjects.length} Projects Loaded)</span>
@@ -417,7 +417,7 @@ export const MPDetailsPage = () => {
         </div>
 
         {/* Projects Table */}
-        <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-2xs">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 ">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-100/80 text-slate-700 uppercase font-black tracking-wider text-[11px] border-b border-slate-200">
@@ -442,11 +442,11 @@ export const MPDetailsPage = () => {
                         state: { from: `/mp/${encodeURIComponent(mpRecord.mpId)}` },
                       })
                     }
-                    className="hover:bg-blue-50/70 transition-colors cursor-pointer group"
+                    className="hover:bg-slate-100/70 transition-colors cursor-pointer group"
                   >
                     <td className="p-3.5 space-y-0.5">
-                      <span className="font-mono font-bold text-blue-700 text-[11px] block">{proj.id}</span>
-                      <span className="font-extrabold text-slate-900 text-sm block group-hover:text-blue-600 transition-colors">
+                      <span className="font-mono font-bold text-slate-800 text-[11px] block">{proj.id}</span>
+                      <span className="font-extrabold text-slate-900 text-sm block group-hover:text-slate-700 transition-colors">
                         {proj.name}
                       </span>
                       <span className="text-[11px] text-slate-500 block">{proj.district}, {proj.state}</span>
@@ -459,14 +459,14 @@ export const MPDetailsPage = () => {
                     <td className="p-3.5 font-mono font-bold text-slate-900">
                       {formatCurrency(proj.sanctionedAmount)}
                     </td>
-                    <td className="p-3.5 font-mono font-bold text-indigo-700">
+                    <td className="p-3.5 font-mono font-bold text-slate-800">
                       {formatCurrency(proj.expenditure)}
                     </td>
                     <td className="p-3.5">
                       <div className="space-y-1 w-24">
                         <span className="font-mono font-bold text-slate-900">{proj.progress}%</span>
                         <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                          <div className="h-full bg-blue-600 rounded-full" style={{ width: `${Math.min(100, proj.progress)}%` }} />
+                          <div className="h-full bg-slate-800 rounded-full" style={{ width: `${Math.min(100, proj.progress)}%` }} />
                         </div>
                       </div>
                     </td>
@@ -491,10 +491,10 @@ export const MPDetailsPage = () => {
       {/* ------------------------------------------------------------------------- */}
       {/* SECTION 3: BACKEND AI CONSTITUENCY AUDIT & COMPLIANCE REPORT */}
       {/* ------------------------------------------------------------------------- */}
-      <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 sm:p-7 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+      <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-6 sm:p-7 rounded-3xl border border-slate-800  space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-indigo-600 text-white rounded-xl shadow-xs">
+            <div className="p-2 bg-slate-800 text-white rounded-xl ">
               <Bot className="w-5 h-5" />
             </div>
             <div>

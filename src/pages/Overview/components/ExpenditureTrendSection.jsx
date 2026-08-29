@@ -1,4 +1,5 @@
 import { Card } from '../../../components/ui/Card';
+import { HouseExpenditureSection } from './HouseExpenditureSection';
 import {
   LineChart,
   Line,
@@ -12,12 +13,13 @@ import {
 export const ExpenditureTrendSection = ({
   expenditureTrend = [],
   worksCompletedTrend = [],
+  houseExpenditure = {},
 }) => {
   const expData = expenditureTrend;
   const worksData = worksCompletedTrend;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
       {/* 1. Expenditure Trend Over Years */}
       <Card header={<h3 className="text-base font-bold text-slate-900">Expenditure Trend Over Years (₹ Cr)</h3>}>
         <div className="h-64 w-full">
@@ -33,16 +35,19 @@ export const ExpenditureTrendSection = ({
               <Line
                 type="monotone"
                 dataKey="current"
-                stroke="#2563EB"
+                stroke="#475569"
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#2563EB' }}
+                dot={{ r: 4, fill: '#475569' }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Card>
+      
+      
 
+      
       {/* 2. Works Completed Over Years */}
       <Card header={<h3 className="text-base font-bold text-slate-900">Works Completed Over Years</h3>}>
         <div className="h-64 w-full">
@@ -58,15 +63,18 @@ export const ExpenditureTrendSection = ({
               <Line
                 type="monotone"
                 dataKey="completed"
-                stroke="#16A34A"
+                stroke="#475569"
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#16A34A' }}
+                dot={{ r: 4, fill: '#475569' }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Card>
+      {/* 2. House-wise Expenditure Breakdown (Middle) */}
+      <HouseExpenditureSection houseExpenditure={houseExpenditure} disableWrapper={true} />
     </div>
   );
 };
+

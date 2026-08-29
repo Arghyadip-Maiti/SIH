@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Filter, RotateCcw, Search, ChevronDown, X } from 'lucide-react';
+import { Filter, Search, ChevronDown, X } from 'lucide-react';
 import { STATE_DISTRICT_MAP } from '../../data/locationMappings';
 
 const PROJECT_TYPES = [
@@ -67,10 +67,10 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
   }, [filters]);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-xs p-4 mb-6 transition-all">
+    <div className="bg-white border border-slate-200 rounded-2xl  p-4 mb-6 transition-all">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-blue-50 text-blue-700">
+          <div className="p-1.5 rounded-lg bg-slate-100 text-slate-800">
             <Filter className="w-4 h-4" />
           </div>
           <div>
@@ -92,13 +92,13 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
               placeholder="Search Project ID, MP Name, Location..."
               value={filters.search || ''}
               onChange={(e) => onFilterChange('search', e.target.value)}
-              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             />
           </div>
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="sm:hidden text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1.5 rounded-xl flex items-center gap-1 shrink-0"
+            className="sm:hidden text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1 shrink-0"
           >
             <span>{isExpanded ? 'Hide' : 'Filters'}</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -116,7 +116,7 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             <select
               value={filters.state || 'All States'}
               onChange={(e) => onFilterChange('state', e.target.value)}
-              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {stateOptions.map((st) => (
                 <option key={st} value={st}>
@@ -134,7 +134,7 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             <select
               value={filters.district || 'All Districts'}
               onChange={(e) => onFilterChange('district', e.target.value)}
-              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {districtOptions.map((d) => (
                 <option key={d} value={d}>
@@ -152,7 +152,7 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             <select
               value={filters.projectType || 'All Types'}
               onChange={(e) => onFilterChange('projectType', e.target.value)}
-              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {PROJECT_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -170,7 +170,7 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             <select
               value={filters.agency || 'All Agencies'}
               onChange={(e) => onFilterChange('agency', e.target.value)}
-              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {AGENCIES.map((a) => (
                 <option key={a} value={a}>
@@ -188,7 +188,7 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             <select
               value={filters.anomalyType || 'All Anomalies'}
               onChange={(e) => onFilterChange('anomalyType', e.target.value)}
-              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[34px] text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
             >
               {ANOMALY_TYPES.map((a) => (
                 <option key={a} value={a}>
@@ -206,7 +206,6 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
               className="w-full h-[34px] px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none"
               title="Reset Filters"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>Reset</span>
             </button>
           </div>
@@ -222,14 +221,14 @@ export const AIRiskFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
           {activeTags.map(([key, val]) => (
             <span
               key={key}
-              className="inline-flex items-center gap-1 text-[11px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200"
+              className="inline-flex items-center gap-1 text-[11px] font-medium bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full border border-slate-300"
             >
               <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
               <strong className="font-semibold">{val}</strong>
               <button
                 type="button"
                 onClick={() => onFilterChange(key, key === 'state' ? 'All States' : key === 'district' ? 'All Districts' : key === 'projectType' ? 'All Types' : key === 'agency' ? 'All Agencies' : key === 'anomalyType' ? 'All Anomalies' : '')}
-                className="hover:text-blue-900 ml-0.5"
+                className="hover:text-slate-950 ml-0.5"
               >
                 <X className="w-3 h-3" />
               </button>

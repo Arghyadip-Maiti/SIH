@@ -13,14 +13,14 @@ export const HouseExpenditureSection = ({ houseExpenditure = {} }) => {
 
   const data = [
     { name: 'Lok Sabha', value: lokSabha, percentage: lokSabhaPct, color: '#16A34A' },
-    { name: 'Rajya Sabha', value: rajyaSabha, percentage: rajyaSabhaPct, color: '#2563EB' },
+    { name: 'Rajya Sabha', value: rajyaSabha, percentage: rajyaSabhaPct, color: '#475569' },
   ];
 
   return (
     <Card header={<h3 className="text-base font-bold text-slate-900">House-wise Expenditure</h3>}>
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col items-center justify-center">
         {/* Half Donut Chart */}
-        <div className="relative h-44 w-full sm:w-1/2 flex items-center justify-center">
+        <div className="relative h-64 w-full flex items-center justify-center">
           {/* Center Text Overlay Layer (z-0) */}
           <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-center pointer-events-none z-0">
             {hoveredIndex !== null && data[hoveredIndex] ? (
@@ -57,10 +57,11 @@ export const HouseExpenditureSection = ({ houseExpenditure = {} }) => {
                   cy="70%"
                   startAngle={180}
                   endAngle={0}
-                  innerRadius={55}
-                  outerRadius={75}
+                  innerRadius={85}
+                  outerRadius={115}
                   paddingAngle={3}
                   dataKey="value"
+                  cornerRadius={6}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {data.map((entry, index) => (
@@ -99,47 +100,7 @@ export const HouseExpenditureSection = ({ houseExpenditure = {} }) => {
           </div>
         </div>
 
-        {/* Legend Box */}
-        <div className="w-full sm:w-1/2 space-y-3 text-xs">
-          <div
-            onMouseEnter={() => setHoveredIndex(0)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            className={`p-2.5 rounded-lg border flex items-center justify-between transition-all cursor-pointer ${
-              hoveredIndex === 0
-                ? 'bg-emerald-100/70 border-emerald-300 shadow-2xs scale-[1.01]'
-                : 'bg-emerald-50/70 border-emerald-100 hover:bg-emerald-100/50'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-              <span className="font-semibold text-slate-800">Lok Sabha</span>
-            </div>
-            <div className="text-right">
-              <div className="font-mono font-bold text-emerald-900">₹{lokSabha.toLocaleString('en-IN')} Cr</div>
-              <div className="text-[10px] text-slate-500">({lokSabhaPct}%)</div>
-            </div>
-          </div>
-
-          <div
-            onMouseEnter={() => setHoveredIndex(1)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            className={`p-2.5 rounded-lg border flex items-center justify-between transition-all cursor-pointer ${
-              hoveredIndex === 1
-                ? 'bg-blue-100/70 border-blue-300 shadow-2xs scale-[1.01]'
-                : 'bg-blue-50/70 border-blue-100 hover:bg-blue-100/50'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-              <span className="font-semibold text-slate-800">Rajya Sabha</span>
-            </div>
-            <div className="text-right">
-              <div className="font-mono font-bold text-blue-900">₹{rajyaSabha.toLocaleString('en-IN')} Cr</div>
-              <div className="text-[10px] text-slate-500">({rajyaSabhaPct}%)</div>
-            </div>
-          </div>
         </div>
-      </div>
     </Card>
   );
 };

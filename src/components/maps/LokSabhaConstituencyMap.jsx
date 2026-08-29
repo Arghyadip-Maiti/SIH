@@ -13,7 +13,7 @@ import { ConstituencyTooltip } from './ConstituencyTooltip';
 import { Button } from '../ui/Button';
 import { LoadingState } from '../ui/LoadingState';
 import { ErrorState } from '../ui/ErrorState';
-import { RotateCcw, Layers } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import ReactDOMServer from 'react-dom/server';
 
 // Inner component to dynamically control map bounds & view reset
@@ -118,7 +118,7 @@ export const LokSabhaConstituencyMap = ({
         fillColor: color,
         fillOpacity: isSelected ? 0.95 : 0.75,
         weight: isSelected ? 3 : 0.8,
-        color: isSelected ? '#1E40AF' : '#334155',
+        color: isSelected ? '#1e293b' : '#334155',
       };
     },
     [filters, selectedMetric, selectedConstituency, constituencyDataMap]
@@ -186,14 +186,14 @@ export const LokSabhaConstituencyMap = ({
   return (
     <div className="space-y-3">
       {/* Map Control Bar Above Map */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 ">
         <div className="flex items-center gap-2.5">
-          <Layers className="w-4 h-4 text-blue-600" />
+          <Layers className="w-4 h-4 text-slate-700" />
           <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Map Metric:</label>
           <select
             value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value)}
-            className="text-xs font-semibold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-xs font-semibold bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-500"
           >
             {METRIC_OPTIONS.map((opt) => (
               <option key={opt.id} value={opt.id}>
@@ -205,7 +205,7 @@ export const LokSabhaConstituencyMap = ({
 
         <div className="flex items-center gap-2">
           {selectedConstituency && (
-            <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
+            <span className="text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-300">
               Selected: {selectedConstituency.constituencyName}
             </span>
           )}
@@ -216,18 +216,21 @@ export const LokSabhaConstituencyMap = ({
             size="sm"
             className="text-slate-700 border-slate-200 hover:bg-slate-50 font-semibold text-xs py-1.5 px-3 rounded-xl flex items-center gap-1.5"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Map</span>
           </Button>
         </div>
       </div>
 
       {/* React Leaflet Map Canvas Box */}
-      <div className="relative w-full h-[580px] rounded-2xl border border-slate-200 shadow-inner overflow-hidden z-0">
+      <div className="relative w-full h-[580px] rounded-2xl border border-slate-200  overflow-hidden z-0">
         <MapContainer
           center={[22.5937, 78.9629]}
           zoom={5}
-          scrollWheelZoom={false}
+          scrollWheelZoom={true}
+        wheelPxPerZoomLevel={120}
+        wheelDebounceTime={100}
+        zoomDelta={0.5}
+        zoomSnap={0.5}
           className="w-full h-full bg-slate-100"
           zoomControl={true}
         >

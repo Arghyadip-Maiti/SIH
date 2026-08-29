@@ -1,5 +1,6 @@
-import { RotateCcw, X, Filter } from 'lucide-react';
+import { X, Filter } from 'lucide-react';
 import { STATE_DISTRICT_MAP, DISTRICT_STATE_MAP } from '../../services/api/locationService';
+import { CustomSelect } from '../ui/CustomSelect';
 
 export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
   const availableDistricts = filters.state
@@ -15,181 +16,175 @@ export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
   });
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs p-4 transition-all">
+    <div className="mb-6 transition-all">
       {/* Grid of 12 Filter Controls (6 cols x 2 rows) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 items-end">
-        {/* 1. Financial Year */}
-        <div>
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Financial Year</label>
-          <select
-            value={filters.financialYear || '2026-27'}
-            onChange={(e) => onFilterChange('financialYear', e.target.value)}
-            className="w-full h-[34px] text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="2026-27">2026-27</option>
-            <option value="2025-26">2025-26</option>
-            <option value="2024-25">2024-25</option>
-          </select>
-        </div>
-
-        {/* 2. State */}
-        <div>
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">State</label>
-          <select
-            value={filters.state || ''}
-            onChange={(e) => onFilterChange('state', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All States</option>
-            {Object.keys(STATE_DISTRICT_MAP).map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* 3. District */}
-        <div>
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">District</label>
-          <select
-            value={filters.district || ''}
-            onChange={(e) => onFilterChange('district', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Districts</option>
-            {availableDistricts.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* 4. Location Input Box */}
-        <div>
+      {/* Grid of Filter Controls */}
+      {/* Grid of Filter Controls */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-6 items-end">
+        {/* 4 & 5. Location and MP Name (Stacked) */}
+        <div className="flex flex-col justify-between h-full row-span-2 gap-4">
+          <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Location</label>
           <input
             type="text"
             value={filters.constituency || ''}
             onChange={(e) => onFilterChange('constituency', e.target.value)}
             placeholder="Constituency / Area..."
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400 font-medium"
+            className="w-full h-[34px] text-xs bg-transparent text-slate-700 border border-black rounded-lg px-2.5 focus:outline-none placeholder:text-slate-400 font-bold"
           />
         </div>
-
-        {/* 5. MP Name Input Box */}
-        <div>
+          <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">MP Name</label>
           <input
             type="text"
             value={filters.mp || ''}
             onChange={(e) => onFilterChange('mp', e.target.value)}
             placeholder="Search MP name..."
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400 font-medium"
+            className="w-full h-[34px] text-xs bg-transparent text-slate-700 border border-black rounded-lg px-2.5 focus:outline-none placeholder:text-slate-400 font-bold"
           />
         </div>
-
+        </div>
+        {/* 1. Financial Year */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Financial Year</label>
+          <CustomSelect
+            value={filters.financialYear || '2026-27'}
+            onChange={(val) => onFilterChange('financialYear', val)}
+            options={[
+              { value: '2026-27', label: '2026-27' },
+              { value: '2025-26', label: '2025-26' },
+              { value: '2024-25', label: '2024-25' }
+            ]}
+            className="w-full"
+          />
+        </div>
+        {/* 2. State */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">State</label>
+          <CustomSelect
+            value={filters.state || ''}
+            onChange={(val) => onFilterChange('state', val)}
+            options={[
+              { value: '', label: 'All States' },
+              ...Object.keys(STATE_DISTRICT_MAP).map(st => ({ value: st, label: st }))
+            ]}
+            className="w-full"
+          />
+        </div>
+        {/* 3. District */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">District</label>
+          <CustomSelect
+            value={filters.district || ''}
+            onChange={(val) => onFilterChange('district', val)}
+            options={[
+              { value: '', label: 'All Districts' },
+              ...availableDistricts.map(d => ({ value: d, label: d }))
+            ]}
+            className="w-full"
+          />
+        </div>
         {/* 6. House */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">House</label>
-          <select
+          <CustomSelect
             value={filters.house || 'All'}
-            onChange={(e) => onFilterChange('house', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="All">All Houses</option>
-            <option value="Lok Sabha">Lok Sabha</option>
-            <option value="Rajya Sabha">Rajya Sabha</option>
-          </select>
+            onChange={(val) => onFilterChange('house', val)}
+            options={[
+              { value: 'All', label: 'All Houses' },
+              { value: 'Lok Sabha', label: 'Lok Sabha' },
+              { value: 'Rajya Sabha', label: 'Rajya Sabha' }
+            ]}
+            className="w-full"
+          />
         </div>
-
-        {/* 7. Project Type / Sector */}
+        {/* 7. Project Type */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Project Type</label>
-          <select
+          <CustomSelect
             value={filters.projectType || ''}
-            onChange={(e) => onFilterChange('projectType', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Types</option>
-            <option value="Education & IT">Education &amp; IT</option>
-            <option value="Roads & Bridges">Roads &amp; Bridges</option>
-            <option value="Healthcare Infrastructure">Healthcare Infra</option>
-            <option value="Drinking Water Supply">Drinking Water</option>
-            <option value="Sanitation & Solid Waste">Sanitation &amp; Waste</option>
-            <option value="Renewable Energy">Renewable Energy</option>
-            <option value="Community Infrastructure">Community Infra</option>
-            <option value="Irrigation & Flood Control">Irrigation &amp; Flood</option>
-            <option value="Sports & Youth Welfare">Sports &amp; Youth</option>
-          </select>
+            onChange={(val) => onFilterChange('projectType', val)}
+            options={[
+              { value: '', label: 'All Types' },
+              { value: 'Education & IT', label: 'Education & IT' },
+              { value: 'Roads & Bridges', label: 'Roads & Bridges' },
+              { value: 'Healthcare Infrastructure', label: 'Healthcare Infra' },
+              { value: 'Drinking Water Supply', label: 'Drinking Water' },
+              { value: 'Sanitation & Solid Waste', label: 'Sanitation & Waste' },
+              { value: 'Renewable Energy', label: 'Renewable Energy' },
+              { value: 'Community Infrastructure', label: 'Community Infra' },
+              { value: 'Irrigation & Flood Control', label: 'Irrigation & Flood' },
+              { value: 'Sports & Youth Welfare', label: 'Sports & Youth' }
+            ]}
+            className="w-full"
+          />
         </div>
-
+        
         {/* 8. Status */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Status</label>
-          <select
+          <CustomSelect
             value={filters.status || ''}
-            onChange={(e) => onFilterChange('status', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Statuses</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="ONGOING">Ongoing</option>
-            <option value="NEAR_COMPLETION">Near Completion</option>
-            <option value="STARTING">Starting</option>
-            <option value="DELAYED">Delayed</option>
-          </select>
+            onChange={(val) => onFilterChange('status', val)}
+            options={[
+              { value: '', label: 'All Statuses' },
+              { value: 'COMPLETED', label: 'Completed' },
+              { value: 'ONGOING', label: 'Ongoing' },
+              { value: 'NEAR_COMPLETION', label: 'Near Completion' },
+              { value: 'STARTING', label: 'Starting' },
+              { value: 'DELAYED', label: 'Delayed' }
+            ]}
+            className="w-full"
+          />
         </div>
-
         {/* 9. Risk Level */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Risk Level</label>
-          <select
+          <CustomSelect
             value={filters.riskLevel || ''}
-            onChange={(e) => onFilterChange('riskLevel', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Risk Levels</option>
-            <option value="CRITICAL">🔴 Critical (81-100)</option>
-            <option value="HIGH">🟠 High (61-80)</option>
-            <option value="MEDIUM">🟡 Medium (31-60)</option>
-            <option value="LOW">🟢 Low (0-30)</option>
-          </select>
+            onChange={(val) => onFilterChange('riskLevel', val)}
+            options={[
+              { value: '', label: 'All Risk Levels' },
+              { value: 'CRITICAL', label: '🔴 Critical (81-100)' },
+              { value: 'HIGH', label: '🟠 High (61-80)' },
+              { value: 'MEDIUM', label: '🟡 Medium (31-60)' },
+              { value: 'LOW', label: '🟢 Low (0-30)' }
+            ]}
+            className="w-full"
+          />
         </div>
-
-        {/* 10. Cost Range */}
-        <div>
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cost Range</label>
-          <select
-            value={filters.costRange || ''}
-            onChange={(e) => onFilterChange('costRange', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Costs</option>
-            <option value="<50L">&lt; ₹50 Lakhs</option>
-            <option value="50L-1Cr">₹50L – ₹1 Cr</option>
-            <option value=">1Cr">&gt; ₹1 Cr</option>
-          </select>
-        </div>
-
-        {/* 11. Progress Range */}
+        {/* 10. Progress Range */}
         <div>
           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Progress Range</label>
-          <select
+          <CustomSelect
             value={filters.progressRange || ''}
-            onChange={(e) => onFilterChange('progressRange', e.target.value)}
-            className="w-full h-[34px] text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Progress</option>
-            <option value="0-30">0 – 30% (Starting)</option>
-            <option value="30-80">30 – 80% (Ongoing)</option>
-            <option value="80-99">80 – 99% (Near Comp.)</option>
-            <option value="100">100% (Completed)</option>
-          </select>
+            onChange={(val) => onFilterChange('progressRange', val)}
+            options={[
+              { value: '', label: 'All Progress' },
+              { value: '0-30', label: '0 – 30% (Starting)' },
+              { value: '30-80', label: '30 – 80% (Ongoing)' },
+              { value: '80-99', label: '80 – 99% (Near Comp.)' },
+              { value: '100', label: '100% (Completed)' }
+            ]}
+            className="w-full"
+          />
         </div>
-
-        {/* 12. Permanent Reset Action Button (Bottom Right Slot) */}
+        {/* 11. Cost Range */}
+        <div>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cost Range</label>
+          <CustomSelect
+            value={filters.costRange || ''}
+            onChange={(val) => onFilterChange('costRange', val)}
+            options={[
+              { value: '', label: 'All Costs' },
+              { value: '<50L', label: '< ₹50 Lakhs' },
+              { value: '50L-1Cr', label: '₹50L – ₹1 Cr' },
+              { value: '>1Cr', label: '> ₹1 Cr' }
+            ]}
+            className="w-full"
+          />
+        </div>
+        {/* 13. Permanent Reset Action Button */}
         <div>
           <button
             type="button"
@@ -197,7 +192,6 @@ export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
             className="w-full h-[34px] px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none"
             title="Reset Filters"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             <span>Reset</span>
           </button>
         </div>
@@ -212,14 +206,14 @@ export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
           {activeTags.map(([key, val]) => (
             <span
               key={key}
-              className="inline-flex items-center gap-1 text-[11px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200"
+              className="inline-flex items-center gap-1 text-[11px] font-medium bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full border border-slate-300"
             >
               <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
               <strong className="font-semibold">{val}</strong>
               <button
                 type="button"
                 onClick={() => onFilterChange(key, key === 'financialYear' ? '2026-27' : key === 'house' ? 'All' : '')}
-                className="hover:text-blue-900 ml-0.5"
+                className="hover:text-slate-950 ml-0.5"
               >
                 <X className="w-3 h-3" />
               </button>

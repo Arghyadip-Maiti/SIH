@@ -6,7 +6,7 @@ export const ProjectStatusDistributionSection = ({ data = [], onStatusClick }) =
   const total = data.reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <SectionHeader
         title="Project Status Distribution"
         subtitle="Breakdown of works by active implementation stage"
@@ -26,6 +26,7 @@ export const ProjectStatusDistributionSection = ({ data = [], onStatusClick }) =
                 innerRadius={55}
                 outerRadius={85}
                 paddingAngle={3}
+                  cornerRadius={6}
                 onClick={(entry) => onStatusClick && onStatusClick(entry.key)}
                 className="cursor-pointer"
               >
@@ -63,7 +64,7 @@ export const ProjectStatusDistributionSection = ({ data = [], onStatusClick }) =
             >
               <div className="flex items-center gap-2.5">
                 <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                <span className="text-xs font-semibold text-slate-800 group-hover:text-blue-700">
+                <span className="text-xs font-semibold text-slate-800 group-hover:text-slate-800">
                   {item.name}
                 </span>
               </div>

@@ -36,7 +36,7 @@ export const StatePerformanceSection = ({ data = [], onStateSelect }) => {
   }, [data, searchTerm, sortField, sortAsc]);
 
   return (
-    <Card className="p-5 border border-slate-200 rounded-2xl bg-white shadow-2xs">
+    <Card className="p-5 border border-slate-200 rounded-2xl bg-white ">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <SectionHeader
           title="State Performance Rankings"
@@ -51,7 +51,7 @@ export const StatePerformanceSection = ({ data = [], onStateSelect }) => {
             placeholder="Search State..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
           />
         </div>
       </div>
@@ -112,7 +112,7 @@ export const StatePerformanceSection = ({ data = [], onStateSelect }) => {
                 <tr
                   key={row.state}
                   onClick={() => onStateSelect && onStateSelect(row.state)}
-                  className="hover:bg-blue-50/40 cursor-pointer transition-colors"
+                  className="hover:bg-slate-100/40 cursor-pointer transition-colors"
                 >
                   <td className="py-3 px-3 font-extrabold text-slate-400 text-center">{index + 1}</td>
                   <td className="py-3 px-3 font-bold text-slate-900">{row.state}</td>
