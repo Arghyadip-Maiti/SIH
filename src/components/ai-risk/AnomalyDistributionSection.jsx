@@ -6,16 +6,11 @@ export const AnomalyDistributionSection = ({ data = [] }) => {
 
   return (
     <Card header={
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart2 className="w-4 h-4 text-purple-600" />
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-            Anomaly Types Distribution
-          </h3>
-        </div>
-        <span className="text-[11px] font-semibold text-slate-500">
-          Visual Summary
-        </span>
+      <div className="flex items-center gap-2">
+        <BarChart2 className="w-4 h-4 text-purple-600" />
+        <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
+          Anomaly Types Distribution
+        </h3>
       </div>
     }>
       <div className="space-y-3 py-1">

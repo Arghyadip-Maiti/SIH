@@ -17,16 +17,11 @@ export const RiskDistributionSection = ({ data = [] }) => {
 
   return (
     <Card header={
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-slate-700" />
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
-            Risk Tier Volume Distribution
-          </h3>
-        </div>
-        <span className="text-[11px] font-semibold text-slate-500">
-          Visual Summary
-        </span>
+      <div className="flex items-center gap-2">
+        <Shield className="w-4 h-4 text-slate-700" />
+        <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
+          Risk Tier Volume Distribution
+        </h3>
       </div>
     }>
       <div className="space-y-4">

@@ -33,7 +33,7 @@ export const MobileSidebar = () => {
       />
 
       {/* Drawer */}
-      <aside className="relative flex-1 max-w-xs w-full bg-slate-50 text-slate-800 flex flex-col h-full z-10">
+      <aside className="relative flex-1 max-w-xs w-full bg-slate-100 text-slate-800 flex flex-col h-full z-10">
         {/* Header with Official Ashoka Stambha Logo */}
         <div className="h-20 px-5 flex items-center justify-between ">
           <div className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export const MobileSidebar = () => {
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="text-slate-500 hover:text-slate-900 p-1 rounded-lg hover:bg-slate-100 transition-colors"
+            className="text-slate-500 hover:text-slate-900 p-1 rounded-lg hover:bg-slate-200/60 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -70,8 +70,8 @@ export const MobileSidebar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3.5 px-3.5 py-3 rounded-xl text-sm transition-all ${
                     isActive
-                      ? 'bg-slate-200 text-slate-900 font-bold '
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium'
+                      ? 'bg-white text-slate-900 font-bold shadow-xs border border-slate-200/80'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-medium'
                   }`
                 }
               >

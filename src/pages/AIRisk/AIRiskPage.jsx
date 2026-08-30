@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useAiRiskData } from '../../hooks/useAiRiskData';
 import { AIRiskHeader } from '../../components/ai-risk/AIRiskHeader';
 import { AIRiskFilterBar } from '../../components/ai-risk/AIRiskFilterBar';
@@ -8,8 +9,32 @@ import { AnomalyDistributionSection } from '../../components/ai-risk/AnomalyDist
 import { StateRiskOverviewSection } from '../../components/ai-risk/StateRiskOverviewSection';
 import { AgencyRiskOverviewSection } from '../../components/ai-risk/AgencyRiskOverviewSection';
 import { MPRiskOverviewSection } from '../../components/ai-risk/MPRiskOverviewSection';
+import { ProjectDetailsView } from '../../components/projects/ProjectDetailsView';
 
 export const AIRiskPage = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleSelectProject = (proj) => {
+    setSelectedProject(proj);
+    window.history.pushState({ projectModalOpen: true }, '', `#project-${encodeURIComponent(proj.id)}`);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+    if (window.location.hash.startsWith('#project-')) {
+      window.history.back();
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedProject) {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedProject]);
   const {
     filters,
     projectsData,
@@ -51,7 +76,7 @@ export const AIRiskPage = () => {
   }
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-8 pb-12">
       {/* 1. Header with System Active indicator & Counts */}
       <AIRiskHeader
         totalActiveProjects={kpis.totalActiveProjects}
@@ -71,6 +96,7 @@ export const AIRiskPage = () => {
       {/* 4. Projects Requiring Attention Table (Main Section) */}
       <ProjectsRequiringAttentionTable
         projects={projectsData}
+        onProjectClick={handleSelectProject}
       />
 
       {/* 5. Risk Distribution & Anomaly Distribution Charts */}
@@ -106,6 +132,14 @@ export const AIRiskPage = () => {
           />
         </div>
       </div>
+
+      {/* Selected Project Modal View */}
+      {selectedProject && (
+        <ProjectDetailsView
+          project={selectedProject}
+          onClose={handleCloseProject}
+        />
+      )}
     </div>
   );
 };

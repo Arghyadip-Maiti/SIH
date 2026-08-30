@@ -213,7 +213,7 @@ export const ProjectFilterBar = ({ filters = {}, onFilterChange, onReset }) => {
           <button
             type="button"
             onClick={onReset}
-            className="w-full h-[34px] px-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors focus:outline-none"
+            className="h-[34px] px-5 text-xs font-medium text-black bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-300 hover:border-slate-400 rounded-xl inline-flex items-center justify-center transition-all shadow-2xs cursor-pointer focus:outline-none"
             title="Reset Filters"
           >
             <span>Reset</span>

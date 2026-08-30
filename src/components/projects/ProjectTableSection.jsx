@@ -173,7 +173,7 @@ export const ProjectTableSection = ({
                   <tr
                     key={p.id}
                     onClick={() => onSelectProject && onSelectProject(p)}
-                    className="group even:bg-slate-50 transition-colors cursor-pointer"
+                    className="group even:bg-slate-50/60 hover:bg-blue-50/70 transition-all duration-150 cursor-pointer active:scale-[0.998]"
                     title="Click row to view full project details"
                   >
                     {/* Project ID */}
